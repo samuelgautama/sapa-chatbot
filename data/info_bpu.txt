@@ -1,0 +1,151 @@
+# Informasi Program BPJS Ketenagakerjaan untuk Peserta Bukan Penerima Upah (BPU)
+
+> Catatan penyusunan: dokumen ini mengonsolidasikan Brosur BPU 2026, materi Sosialisasi BPU, dan hasil verifikasi ke bpjsketenagakerjaan.go.id per September 2026. Brosur BPU 2025 tidak lagi dipakai sebagai sumber karena beberapa angkanya sudah diperbarui di versi 2026. Jika ada perbedaan angka antara dokumen ini dengan brosur cetak yang lebih baru, dokumen resmi terbaru yang berlaku.
+
+## 1. Definisi dan Kategori Pekerja BPU
+Pekerja Bukan Penerima Upah (BPU) adalah orang perorangan yang melakukan kegiatan usaha ekonomi secara mandiri untuk memperoleh penghasilan (bukan digaji oleh pemberi kerja).
+
+**Contoh profesi**: pemilik usaha, seniman, dokter, pengacara/advokat, freelancer, petani, sopir angkot, mitra ojek online, pedagang, nelayan, marbot masjid, dan sejenisnya.
+
+**Kategori peserta BPU meliputi**:
+- Pemberi kerja (perseorangan)
+- Pekerja di luar hubungan kerja / pekerja mandiri
+- Pekerja bukan penerima upah lainnya: peserta pelatihan kerja, instruktur lembaga pelatihan kerja, **peserta magang**, siswa/mahasiswa kerja praktik, tenaga honorer, atau narapidana yang dipekerjakan dalam proses asimilasi pada pemberi kerja selain penyelenggara negara
+
+## 2. Syarat dan Kanal Pendaftaran
+
+**Syarat pendaftaran:**
+1. Memiliki Nomor Induk Kependudukan (NIK) / Kartu Tanda Penduduk (KTP)
+2. Belum mencapai usia 65 tahun
+3. Memiliki kegiatan usaha/pekerjaan (maksimal 2 jenis pekerjaan yang dapat didaftarkan sebagai peserta BPU)
+4. Dasar penghasilan yang didaftarkan minimal Rp1.000.000/bulan
+
+**Kanal PENDAFTARAN** (untuk mendaftar sebagai peserta baru):
+- Online: website resmi https://bpjsketenagakerjaan.go.id/bpu, Aplikasi JMO (Jamsostek Mobile)
+- Offline: Kantor BPJS Ketenagakerjaan, Agen Perisai, wadah, dan Payment Point yang bekerja sama
+
+**Kanal PEMBAYARAN** iuran (setelah terdaftar, memakai NIK sebagai nomor pembayaran):
+- Perbankan: BNI, Livin by Mandiri, BSI, BCA mobile, BTN, BRImo, Bank BJB, BRILink
+- Dompet digital & QRIS: LinkAja!, ShopeePay, Dana, OVO, Gopay, QRIS
+- Ritel/mitra: Alfamart, Dan-Dan, Grab, Gojek
+
+> Catatan penting: kanal pendaftaran dan kanal pembayaran TIDAK selalu sama channel-nya. Sampaikan ke calon peserta bahwa mendaftar sebaiknya lewat JMO/website/kantor cabang/Agen Perisai, sedangkan channel seperti Gojek/Alfamart/dompet digital dipakai untuk BAYAR iuran bulanan setelah terdaftar, bukan untuk mendaftar pertama kali.
+
+## 3. Ketentuan Iuran Program BPU (Tarif Normal)
+Peserta BPU dapat mendaftar bertahap: JKK & JKM saja, atau JKK + JKM + JHT sekaligus.
+
+| Program | Besaran Iuran Normal |
+|---|---|
+| Jaminan Kecelakaan Kerja (JKK) | 1% dari dasar penghasilan yang dilaporkan |
+| Jaminan Kematian (JKM) | Nominal tetap Rp6.800/bulan |
+| Jaminan Hari Tua (JHT) | 2% dari dasar penghasilan yang dilaporkan |
+
+**Contoh simulasi (tarif normal, tanpa diskon):**
+- Dasar penghasilan Rp1.000.000/bulan → JKK Rp10.000, JKM Rp6.800, JHT Rp20.000
+  - Iuran 2 program (JKK+JKM): Rp16.800/bulan
+  - Iuran 3 program (JKK+JKM+JHT): Rp36.800/bulan
+- Dasar penghasilan Rp2.000.000/bulan → JKK Rp20.000, JKM Rp6.800, JHT Rp40.000
+
+## 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU
+**Dasar hukum**: Peraturan Pemerintah (PP) Nomor 50 Tahun 2025 tentang Penyesuaian Iuran JKK dan JKM bagi Peserta BPU (menyesuaikan PP Nomor 44 Tahun 2015).
+
+**Berlaku untuk**: iuran JKK dan JKM saja. **Iuran JHT TIDAK didiskon** (tetap 2% seperti biasa).
+
+**Periode berlaku (berbeda per sektor):**
+- Peserta BPU sektor **transportasi** (ojek online, kurir, sopir angkutan umum): **Januari 2026 – Maret 2027**
+- Peserta BPU **di luar sektor transportasi** (pedagang, petani, nelayan, UMKM, dll — mayoritas target akuisisi program magang ini): **April 2026 – Desember 2026**
+
+**Syarat & pengecualian:**
+- Berlaku untuk peserta BARU maupun yang SUDAH terdaftar sebelumnya
+- TIDAK berlaku bagi peserta BPU yang iuran JKK/JKM-nya dibayarkan melalui APBN/APBD
+- Manfaat perlindungan JKK & JKM tetap penuh, tidak berkurang meski iuran didiskon
+
+**Contoh simulasi DENGAN diskon (dasar penghasilan Rp1.000.000/bulan):**
+| Program | Normal | Setelah Diskon 50% |
+|---|---|---|
+| JKK | Rp10.000 | Rp5.000 |
+| JKM | Rp6.800 | Rp3.400 |
+| JHT (tidak didiskon) | Rp20.000 | Rp20.000 |
+| **Total 3 program** | Rp36.800 | **≈ Rp28.400** |
+| Total 2 program (JKK+JKM saja) | Rp16.800 | **Rp8.400** |
+
+> ⚠️ Catatan verifikasi tanggal: promo ini bertanggal (punya masa berlaku). Sebelum menyampaikan ke calon peserta, cek dulu tanggal hari ini — kalau sudah lewat Desember 2026 (non-transportasi) atau Maret 2027 (transportasi), diskon ini mungkin sudah tidak berlaku lagi atau sudah diperbarui aturannya. Jangan asumsikan otomatis masih berlaku selamanya.
+
+## 5. Jaminan Kecelakaan Kerja (JKK)
+Perlindungan risiko kecelakaan kerja sejak berangkat dari rumah menuju tempat kerja, saat bekerja, hingga kembali ke rumah — termasuk kekerasan fisik/pelecehan di tempat kerja dan penyakit akibat lingkungan kerja (Penyakit Akibat Kerja/PAK).
+
+**Manfaat utama:**
+- Biaya pengobatan dan perawatan: ditanggung penuh sesuai kebutuhan/indikasi medis, tanpa batas biaya
+- Biaya pengangkutan (maksimum): darat Rp5.000.000, laut Rp2.000.000, udara Rp10.000.000 (jika memakai lebih dari 1 jenis angkutan, berhak atas maksimum masing-masing jenis)
+- Santunan Sementara Tidak Mampu Bekerja (STMB): 100% upah untuk 12 bulan pertama (dirinci: 6 bulan pertama 100% + 6 bulan kedua 100%), lalu 50% upah untuk bulan berikutnya hingga sembuh
+- Santunan Cacat Total Tetap: 56 kali upah yang dilaporkan (dibayar sekaligus), ATAU secara berkala selama 24 bulan @ Rp500.000/bulan
+- Santunan Cacat Anatomis: persentase sesuai tabel × 80 bulan upah
+- Santunan Cacat Fungsi: persentase kurang fungsi × persentase tabel × 80 bulan upah
+- Santunan Kematian akibat kecelakaan kerja: 48 kali upah (sekaligus), atau berkala 24 bulan @ Rp500.000/bulan (total Rp12.000.000) + biaya pemakaman Rp10.000.000
+- Pelayanan Homecare: maksimal Rp20.000.000 untuk durasi maksimal 1 tahun (berdasarkan rekomendasi dokter)
+- Biaya rehabilitasi: alat orthese/prothese seharga patokan RS Pemerintah + 40%, plus biaya rehabilitasi medik
+- Penggantian gigi tiruan: maksimal Rp5.000.000
+- Penggantian alat bantu dengar: maksimal Rp2.500.000
+- Penggantian kacamata: maksimal Rp1.000.000
+- Pemeriksaan diagnostik: diberikan jika peserta terbukti mengalami PAK
+
+**Kedaluwarsa klaim PAK/JKK:**
+- Klaim PAK kedaluwarsa jika diagnosis melebihi 3 tahun sejak hubungan kerja berakhir
+- Hak menuntut gugur jika lewat 5 tahun sejak diagnosis PAK (untuk diagnosis <3 tahun sejak berhenti kerja), atau lewat 5 tahun sejak tanggal kecelakaan kerja
+
+Besaran Iuran JKK BPU: 1% dari dasar penghasilan (lihat Bagian 4 untuk info diskon yang sedang berlaku).
+
+## 6. Jaminan Kematian (JKM)
+Santunan uang tunai untuk ahli waris jika peserta meninggal dunia BUKAN akibat kecelakaan kerja/PAK.
+
+**Total manfaat: Rp42.000.000**, dengan rincian:
+- Santunan Kematian: Rp20.000.000
+- Santunan Berkala (24 bulan, dibayar sekaligus): Rp12.000.000
+- Biaya Pemakaman: Rp10.000.000
+
+**Syarat penting**: manfaat penuh Rp42.000.000 di atas HANYA berlaku jika peserta BPU sudah membayar iuran minimal 3 (tiga) bulan berturut-turut sejak terdaftar. Jika belum memenuhi syarat 3 bulan tersebut, manfaat yang diterima ahli waris HANYA Biaya Pemakaman (Rp10.000.000).
+
+Jika peserta terdaftar di lebih dari 1 segmen kepesertaan berbeda dan meninggal bukan karena JKK/PAK, biaya pemakaman hanya dibayarkan 1 kali.
+
+Besaran Iuran JKM BPU: tetap (flat) Rp6.800/bulan (lihat Bagian 4 untuk info diskon yang sedang berlaku).
+
+## 7. Jaminan Hari Tua (JHT)
+Tabungan bekal hari tua berupa akumulasi seluruh iuran yang disetor ditambah hasil pengembangannya, dibayarkan sekaligus.
+
+**Manfaat JHT cair penuh saat salah satu kondisi berikut terpenuhi:**
+- Peserta mencapai usia 56 tahun
+- Mengalami cacat total tetap
+- Meninggal dunia
+- Berhenti bekerja/usaha (masa tunggu 1 bulan sejak berhenti)
+- Meninggalkan wilayah RI untuk selama-lamanya (khusus WNA)
+
+**Pencairan sebagian** (syarat: masa kepesertaan minimal 10 tahun):
+- Maksimal 30% dari saldo JHT untuk kepemilikan rumah
+- Maksimal 10% dari saldo JHT untuk keperluan lain, persiapan masa pensiun
+
+Besaran Iuran JHT BPU: 2% dari dasar penghasilan (iuran ini TIDAK termasuk dalam diskon PP 50/2025 di Bagian 4).
+
+> Catatan verifikasi: satu materi sosialisasi sebelumnya menyebut JHT BPU memiliki "manfaat tambahan subsidi bunga perumahan". Klaim ini SENGAJA TIDAK dimasukkan ke dokumen ini karena tidak ditemukan di brosur resmi BPU 2026 maupun sumber bpjsketenagakerjaan.go.id yang saya cek, dan manfaat sejenis (Manfaat Layanan Tambahan/MLT perumahan) yang saya ketahui umumnya berlaku untuk segmen Penerima Upah (PU), bukan BPU. Jangan sampaikan klaim ini ke calon peserta sebelum dikonfirmasi ke narahubung resmi.
+
+## 8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM)
+Diberikan maksimal untuk 2 (dua) orang anak peserta, dengan total manfaat maksimal Rp174.000.000.
+
+**Syarat utama:**
+- Peserta meninggal dunia atau cacat total tetap akibat kecelakaan kerja/PAK (JKK): beasiswa langsung berlaku
+- Peserta meninggal dunia BUKAN akibat JKK/PAK: beasiswa berlaku hanya jika peserta sudah memiliki masa iuran minimal 3 (tiga) tahun
+
+**Syarat anak penerima**: masih usia sekolah, belum berusia 23 tahun, belum menikah, dan/atau belum bekerja.
+Pengecualian: anak yang sekolah sambil bekerja tetap berhak jika berstatus pekerja PU (maksimal 6 bulan berturut-turut), peserta BPU, atau berstatus magang.
+
+**Rincian besaran per tahun:**
+| Jenjang | Besaran/anak/tahun | Maksimal Durasi |
+|---|---|---|
+| TK/Sederajat | Rp1.500.000 | 2 tahun |
+| SD/Sederajat | Rp1.500.000 | 6 tahun |
+| SMP/Sederajat | Rp2.000.000 | 3 tahun |
+| SMA/Sederajat | Rp3.000.000 | 3 tahun |
+| Pendidikan Tinggi (maks. S1) / Pelatihan | Rp12.000.000 | 5 tahun |
+
+Anak yang belum usia sekolah saat peserta meninggal/cacat akan menerima beasiswa saat memasuki usia sekolah. Beasiswa berakhir saat anak berusia 23 tahun, menikah, atau sudah bekerja (di luar pengecualian di atas).
+
+Pembayaran dilakukan per tahun (pengajuan tahunan). Jika tidak diajukan tiap tahun, dapat dibayarkan akumulatif untuk maksimal 3 tahun ajaran sebelumnya.

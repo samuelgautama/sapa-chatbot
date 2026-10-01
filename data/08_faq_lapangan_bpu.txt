@@ -1,0 +1,161 @@
+# FAQ Lapangan Akuisisi BPU
+
+> Tujuan: menyediakan jawaban ringkas untuk pertanyaan yang sering muncul saat mahasiswa magang melakukan identifikasi, edukasi, akuisisi, pendaftaran, dan follow-up calon peserta BPU.
+> Sumber utama: `info_bpu.txt`, `info_magang.txt`, `info_umum_bpjs_tk.txt`, dan `proses_pendaftaran_bpu.txt`.
+> Aturan: jangan menambahkan fakta atau prosedur yang tidak didukung sumber. Jika pertanyaan tidak tercakup, arahkan pengguna untuk verifikasi melalui narahubung/kanal resmi.
+
+## A. Definisi dan Identifikasi BPU
+
+### FAQ-01 — Apa itu BPU?
+**Jawaban kanonis:** BPU adalah **Bukan Penerima Upah**.
+Dalam konteks BPJS Ketenagakerjaan, pekerja BPU adalah orang perorangan yang melakukan kegiatan usaha ekonomi secara mandiri untuk memperoleh penghasilan dan bukan digaji oleh pemberi kerja.
+
+### FAQ-02 — Kepanjangan BPU apa?
+**Jawaban:** BPU = **Bukan Penerima Upah**.
+
+### FAQ-03 — BPU itu pekerja seperti apa?
+**Jawaban:** BPU adalah pekerja yang memperoleh penghasilan dari kegiatan usaha/pekerjaan secara mandiri, bukan menerima gaji dari pemberi kerja. Contoh yang tercantum dalam materi: pemilik usaha, seniman, dokter, pengacara/advokat, freelancer, petani, sopir angkot, mitra ojek online, pedagang, nelayan, dan marbot masjid.
+
+### FAQ-04 — Mahasiswa magang termasuk BPU?
+**Jawaban:** Materi BPU mencantumkan peserta magang dan siswa/mahasiswa kerja praktik sebagai bagian dari kategori pekerja bukan penerima upah lainnya. Tetap gunakan sumber/prosedur resmi yang berlaku untuk pendaftaran dan pendampingan.
+
+### FAQ-05 — Apakah BPU sama dengan PU?
+**Jawaban:** Tidak. PU adalah **Penerima Upah**, yaitu pekerja yang menerima gaji/upah dari pemberi kerja. BPU adalah pekerja yang melakukan kegiatan usaha ekonomi secara mandiri. Dalam ringkasan program, BPU mengikuti JKK, JKM, dan JHT, sedangkan PU dapat mengikuti JKK, JKM, JHT, JP, serta JKP jika memenuhi syarat.
+
+### FAQ-06 — Apakah pedagang bisa menjadi peserta BPU?
+**Jawaban:** Pedagang termasuk contoh profesi yang disebutkan sebagai BPU.
+
+### FAQ-07 — Apakah petani bisa menjadi peserta BPU?
+**Jawaban:** Petani termasuk contoh profesi yang disebutkan sebagai BPU.
+
+### FAQ-08 — Apakah nelayan bisa menjadi peserta BPU?
+**Jawaban:** Nelayan termasuk contoh profesi yang disebutkan sebagai BPU.
+
+### FAQ-09 — Apakah driver/ojek online bisa menjadi BPU?
+**Jawaban:** Materi mencantumkan sopir angkot dan mitra ojek online sebagai contoh BPU. Ojek online juga termasuk sektor transportasi untuk konteks periode promo yang berbeda.
+
+### FAQ-10 — Berapa usia maksimal pendaftaran BPU?
+**Jawaban:** Sumber menetapkan syarat belum mencapai usia **65 tahun** saat pendaftaran.
+
+### FAQ-11 — Apa saja syarat dasar pendaftaran BPU?
+**Jawaban:** Sumber mencantumkan:
+1. Memiliki NIK/KTP.
+2. Belum mencapai usia 65 tahun.
+3. Memiliki kegiatan usaha/pekerjaan; maksimal 2 jenis pekerjaan dapat didaftarkan sebagai peserta BPU.
+4. Dasar penghasilan yang didaftarkan minimal Rp1.000.000 per bulan.
+
+> Catatan privasi: chatbot tidak meminta pengguna memasukkan NIK/KTP ke dalam percakapan.
+
+## B. Program dan Iuran
+
+### FAQ-12 — Program BPU apa saja?
+**Jawaban:** Dalam materi BPU, peserta dapat mengikuti JKK, JKM, dan JHT.
+
+### FAQ-13 — Apakah BPU harus langsung mengambil 3 program?
+**Jawaban:** Tidak. Sumber menyebut peserta BPU dapat mendaftar bertahap: **JKK + JKM** saja, atau **JKK + JKM + JHT** sekaligus.
+
+### FAQ-14 — Berapa iuran JKK BPU?
+**Jawaban:** Iuran normal JKK BPU adalah **1% dari dasar penghasilan yang dilaporkan**.
+
+### FAQ-15 — Berapa iuran JKM BPU?
+**Jawaban:** Iuran normal JKM BPU adalah **Rp6.800 per bulan**.
+
+### FAQ-16 — Berapa iuran JHT BPU?
+**Jawaban:** Iuran normal JHT BPU adalah **2% dari dasar penghasilan yang dilaporkan**.
+
+### FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000?
+**Jawaban:** JKK Rp10.000 + JKM Rp6.800 = **Rp16.800 per bulan**.
+
+### FAQ-18 — Berapa iuran 3 program untuk dasar penghasilan Rp1.000.000?
+**Jawaban:** JKK Rp10.000 + JKM Rp6.800 + JHT Rp20.000 = **Rp36.800 per bulan**.
+
+### FAQ-19 — Apakah JHT ikut diskon 50%?
+**Jawaban:** Tidak. Sumber menyatakan diskon 50% hanya berlaku untuk **JKK dan JKM**. JHT tetap 2% seperti biasa.
+
+### FAQ-20 — Apakah semua sektor BPU mendapat periode promo yang sama?
+**Jawaban:** Tidak. Sumber mencantumkan periode berbeda:
+- Transportasi: Januari 2026 – Maret 2027.
+- Di luar transportasi: April 2026 – Desember 2026.
+Sistem harus memeriksa tanggal dan sektor sebelum menyatakan promo masih berlaku.
+
+### FAQ-21 — Apakah peserta lama bisa mendapat promo?
+**Jawaban:** Sumber menyebut promo berlaku untuk peserta baru maupun peserta yang sudah terdaftar sebelumnya, dengan pengecualian yang tercantum di dokumen.
+
+### FAQ-22 — Apakah peserta yang iurannya dibayar APBN/APBD mendapat promo?
+**Jawaban:** Sumber menyebut promo **tidak berlaku** bagi peserta BPU yang iuran JKK/JKM-nya dibayarkan melalui APBN/APBD.
+
+## C. Kanal Pendaftaran dan Pembayaran
+
+### FAQ-23 — Daftar BPU di mana?
+**Jawaban:** Kanal pendaftaran yang dicantumkan: website resmi BPJS Ketenagakerjaan, aplikasi JMO, kantor BPJS Ketenagakerjaan, Agen Perisai, wadah, dan Payment Point yang bekerja sama.
+
+### FAQ-24 — Apakah Gojek/Alfamart/dompet digital dipakai untuk daftar pertama kali?
+**Jawaban:** Tidak menurut catatan dokumen. Kanal seperti Gojek, Alfamart, dan dompet digital digunakan untuk **pembayaran iuran setelah terdaftar**, bukan untuk pendaftaran pertama kali.
+
+### FAQ-25 — Apa bedanya kanal pendaftaran dan kanal pembayaran?
+**Jawaban:** Pendaftaran adalah proses menjadi peserta baru. Pembayaran adalah pembayaran iuran setelah peserta terdaftar. Dokumen menekankan bahwa kedua jenis kanal tersebut tidak selalu sama.
+
+## D. Alur Pendaftaran melalui Mahasiswa Magang
+
+### FAQ-26 — Bagaimana alur pendaftaran BPU melalui mahasiswa magang?
+**Jawaban:**
+1. Calon peserta mengisi formulir yang dibawa mahasiswa magang.
+2. Petugas BPJS memproses pendaftaran dalam waktu 1×24 jam setelah formulir diisi.
+3. Setelah itu peserta membayar iuran menggunakan NIK melalui kanal pembayaran yang tersedia.
+4. Mahasiswa magang melakukan konfirmasi pembayaran.
+5. Setelah pembayaran terkonfirmasi, pastikan peserta menerima bukti/kartu kepesertaan fisik atau digital.
+
+### FAQ-27 — Setelah formulir diisi, apakah mahasiswa langsung memberikan kartu?
+**Jawaban:** Tidak. Alur sumber menyebut formulir diproses petugas terlebih dahulu dalam waktu 1×24 jam. Setelah pembayaran terkonfirmasi, barulah bukti/kartu kepesertaan diterima peserta.
+
+### FAQ-28 — Apa yang dilakukan mahasiswa setelah peserta membayar?
+**Jawaban:** Mahasiswa melakukan **konfirmasi pembayaran** kepada peserta, lalu memastikan bukti/kartu kepesertaan diterima peserta.
+
+### FAQ-29 — Kalau peserta belum membayar setelah pendaftaran diproses?
+**Jawaban:** Lakukan follow-up untuk memastikan status pembayaran, mengikuti alur yang tersedia. Jangan mengarang tenggat atau prosedur tambahan yang tidak tercantum di sumber.
+
+## E. Manfaat Program
+
+### FAQ-30 — Apa itu JKK?
+**Jawaban:** JKK memberikan perlindungan atas risiko kecelakaan kerja dan penyakit akibat kerja. Sumber juga mencantumkan manfaat medis dan beberapa santunan terkait kecelakaan kerja.
+
+### FAQ-31 — Apa itu JKM?
+**Jawaban:** JKM memberikan santunan kepada ahli waris ketika peserta meninggal dunia bukan akibat kecelakaan kerja/PAK, selama kondisi kepesertaan memenuhi ketentuan manfaat.
+
+### FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?
+**Jawaban:** Sumber mencantumkan total manfaat penuh **Rp42.000.000**, terdiri dari santunan kematian Rp20.000.000, santunan berkala Rp12.000.000, dan biaya pemakaman Rp10.000.000. Manfaat penuh tersebut mensyaratkan iuran minimal 3 bulan berturut-turut; jika belum terpenuhi, sumber menyebut hanya biaya pemakaman Rp10.000.000.
+
+### FAQ-33 — Apa itu JHT?
+**Jawaban:** JHT adalah tabungan bekal hari tua berupa akumulasi seluruh iuran yang disetor ditambah hasil pengembangannya dan dibayarkan sekaligus sesuai kondisi pencairan yang memenuhi ketentuan.
+
+### FAQ-34 — Kapan JHT BPU dapat dicairkan penuh?
+**Jawaban:** Sumber mencantumkan antara lain usia 56 tahun, cacat total tetap, meninggal dunia, berhenti bekerja/usaha dengan masa tunggu 1 bulan, atau meninggalkan wilayah RI untuk selama-lamanya bagi WNA.
+
+### FAQ-35 — Apakah JHT bisa dicairkan sebagian?
+**Jawaban:** Sumber menyebut pencairan sebagian memerlukan masa kepesertaan minimal 10 tahun, dengan maksimal 30% untuk kepemilikan rumah atau 10% untuk persiapan masa pensiun/keperluan lain sesuai ketentuan sumber.
+
+## F. Situasi Lapangan
+
+### FAQ-36 — Bagaimana menjelaskan BPU kepada calon peserta secara sederhana?
+**Jawaban yang dapat disampaikan:**
+"BPU adalah Bukan Penerima Upah, yaitu orang yang bekerja atau menjalankan usaha secara mandiri dan tidak menerima gaji dari pemberi kerja. Contohnya bisa pedagang, petani, nelayan, freelancer, atau pekerja mandiri lainnya yang sesuai ketentuan."
+
+### FAQ-37 — Calon peserta bertanya, "Saya cuma mau JKK dan JKM, boleh?"
+**Jawaban:** Boleh. Sumber menyebut BPU dapat mengambil **JKK + JKM** saja atau menambah **JHT** menjadi 3 program.
+
+### FAQ-38 — Calon peserta bertanya, "Kenapa saya harus tahu dasar penghasilan?"
+**Jawaban:** Karena pada BPU, JKK dan JHT dihitung berdasarkan dasar penghasilan yang dilaporkan, sedangkan JKM bersifat tetap Rp6.800 per bulan pada tarif normal.
+
+### FAQ-39 — Calon peserta bertanya, "Bisa saya bayar setelah daftar?"
+**Jawaban:** Dalam alur pendaftaran melalui mahasiswa magang, setelah petugas memproses pendaftaran dalam 1×24 jam, peserta kemudian membayar iuran menggunakan NIK melalui kanal pembayaran yang tersedia.
+
+### FAQ-40 — Jika pertanyaan calon peserta tidak ada di knowledge base?
+**Jawaban:** Jangan menebak. Sampaikan bahwa informasi tersebut belum tersedia di sistem dan arahkan ke sumber/layanan resmi atau narahubung yang sesuai.
+
+## Prinsip Jawaban FAQ
+- Prioritaskan istilah kanonis: **BPU = Bukan Penerima Upah**.
+- Untuk angka iuran, gunakan kalkulator program; jangan meminta LLM menghitung sendiri.
+- Untuk promo, selalu cek tanggal dan sektor.
+- Bedakan pendaftaran dari pembayaran.
+- Jangan meminta NIK, KTP, KK, nomor rekening, nomor telepon, atau data pribadi lain melalui chat.
+- Jangan membuat prosedur, manfaat, atau syarat baru di luar sumber.

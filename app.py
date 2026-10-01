@@ -1,0 +1,559 @@
+import html
+import json
+import re
+from pathlib import Path
+
+import streamlit as st
+import streamlit.components.v1 as components
+
+from chatbot import load_retriever, load_llm, ask
+from theme import get_custom_css, get_layout_script
+
+
+# Wordmark SAPA (ikon + teks, gradient cyan->hijau/olive) dipakai di halaman
+# awal (judul besar) dan navbar (saat chat berjalan). Di-inline sebagai data
+# URI base64 supaya tidak bergantung pada file aset terpisah saat deploy.
+_SAPA_WORDMARK = (
+    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI1IiBoZWlnaHQ9IjM4IiB2aWV3Qm94PSIwIDAgMTI1IDM4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMTdfOSkiPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDFfMTdfOSkiPgo8cGF0aCBkPSJNMjIgMkMyOC42Mjc0IDIgMzQgNy4zNzI1OCAzNCAxNFYyMkMzNCAyOC42Mjc0IDI4LjYyNzQgMzQgMjIgMzRIMlYxNEMyIDcuMzcyNTggNy4zNzI1OCAyIDE0IDJIMjJaTTE1IDVDOS40NzcxNSA1IDUgOS40NzcxNSA1IDE1VjMxSDIxQzI2LjUyMjggMzEgMzEgMjYuNTIyOCAzMSAyMVYxNUMzMSA5LjQ3NzE1IDI2LjUyMjggNSAyMSA1SDE1WiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzE3XzkpIi8+CjxwYXRoIGQ9Ik0yNiAxOEMyNiAxOS4wODk1IDI1Ljc3NzUgMjAuMTY3NiAyNS4zNDYgMjEuMTY4MUMyNC45MTQ2IDIyLjE2ODYgMjQuMjgzMyAyMy4wNzA0IDIzLjQ5MDkgMjMuODE4MkMyMi4wMDc3IDI1LjIyMiAyMC4wNDIyIDI2LjAwMyAxOCAyNkMxNS44NzQ5IDI2IDEzLjk0MTggMjUuMTcwOSAxMi41MDkxIDIzLjgxODJDMTEuNzE2NyAyMy4wNzA0IDExLjA4NTQgMjIuMTY4NiAxMC42NTQgMjEuMTY4MUMxMC4yMjI1IDIwLjE2NzYgOS45OTk5OCAxOS4wODk1IDEwIDE4SDI2WiIgZmlsbD0idXJsKCNwYWludDFfbGluZWFyXzE3XzkpIi8+CjwvZz4KPHBhdGggZD0iTTQ5LjgxNiAzMS4zODRDNDguMzIyNyAzMS4zODQgNDYuOTM2IDMxLjEwNjcgNDUuNjU2IDMwLjU1MkM0NC4zNzYgMjkuOTc2IDQzLjI4OCAyOS4xOTczIDQyLjM5MiAyOC4yMTZDNDEuNDk2IDI3LjIzNDcgNDAuODM0NyAyNi4xMDQgNDAuNDA4IDI0LjgyNEw0My42MDggMjMuNDhDNDQuMTg0IDI0Ljk1MiA0NS4wMjY3IDI2LjA4MjcgNDYuMTM2IDI2Ljg3MkM0Ny4yNDUzIDI3LjY2MTMgNDguNTI1MyAyOC4wNTYgNDkuOTc2IDI4LjA1NkM1MC44MjkzIDI4LjA1NiA1MS41NzYgMjcuOTI4IDUyLjIxNiAyNy42NzJDNTIuODU2IDI3LjM5NDcgNTMuMzQ2NyAyNy4wMTA3IDUzLjY4OCAyNi41MkM1NC4wNTA3IDI2LjAyOTMgNTQuMjMyIDI1LjQ2NCA1NC4yMzIgMjQuODI0QzU0LjIzMiAyMy45NDkzIDUzLjk4NjcgMjMuMjU2IDUzLjQ5NiAyMi43NDRDNTMuMDA1MyAyMi4yMzIgNTIuMjggMjEuODI2NyA1MS4zMiAyMS41MjhMNDYuODQgMjAuMTJDNDUuMDQ4IDE5LjU2NTMgNDMuNjgyNyAxOC43MjI3IDQyLjc0NCAxNy41OTJDNDEuODA1MyAxNi40NCA0MS4zMzYgMTUuMDk2IDQxLjMzNiAxMy41NkM0MS4zMzYgMTIuMjE2IDQxLjY2NjcgMTEuMDQyNyA0Mi4zMjggMTAuMDRDNDIuOTg5MyA5LjAxNiA0My44OTYgOC4yMTYgNDUuMDQ4IDcuNjRDNDYuMjIxMyA3LjA2NCA0Ny41NTQ3IDYuNzc2IDQ5LjA0OCA2Ljc3NkM1MC40NzczIDYuNzc2IDUxLjc3ODcgNy4wMzIgNTIuOTUyIDcuNTQ0QzU0LjEyNTMgOC4wMzQ2NyA1NS4xMjggOC43MTczMyA1NS45NiA5LjU5MkM1Ni44MTMzIDEwLjQ2NjcgNTcuNDMyIDExLjQ4IDU3LjgxNiAxMi42MzJMNTQuNjggMTQuMDA4QzU0LjIxMDcgMTIuNzQ5MyA1My40NzQ3IDExLjc3ODcgNTIuNDcyIDExLjA5NkM1MS40OTA3IDEwLjQxMzMgNTAuMzQ5MyAxMC4wNzIgNDkuMDQ4IDEwLjA3MkM0OC4yNTg3IDEwLjA3MiA0Ny41NjUzIDEwLjIxMDcgNDYuOTY4IDEwLjQ4OEM0Ni4zNzA3IDEwLjc0NCA0NS45MDEzIDExLjEyOCA0NS41NiAxMS42NEM0NS4yNCAxMi4xMzA3IDQ1LjA4IDEyLjcwNjcgNDUuMDggMTMuMzY4QzQ1LjA4IDE0LjEzNiA0NS4zMjUzIDE0LjgxODcgNDUuODE2IDE1LjQxNkM0Ni4zMDY3IDE2LjAxMzMgNDcuMDUzMyAxNi40NjEzIDQ4LjA1NiAxNi43Nkw1Mi4yMTYgMTguMDcyQzU0LjExNDcgMTguNjQ4IDU1LjU0NCAxOS40OCA1Ni41MDQgMjAuNTY4QzU3LjQ2NCAyMS42MzQ3IDU3Ljk0NCAyMi45NjggNTcuOTQ0IDI0LjU2OEM1Ny45NDQgMjUuODkwNyA1Ny41OTIgMjcuMDY0IDU2Ljg4OCAyOC4wODhDNTYuMjA1MyAyOS4xMTIgNTUuMjU2IDI5LjkyMjcgNTQuMDQgMzAuNTJDNTIuODI0IDMxLjA5NiA1MS40MTYgMzEuMzg0IDQ5LjgxNiAzMS4zODRaTTU5LjkxNDUgMzFMNjguMjk4NSA3LjE2SDcyLjk3MDVMODEuMzU0NSAzMUg3Ny4zMjI1TDc1LjQ5ODUgMjUuNjU2SDY1LjgwMjVMNjMuOTQ2NSAzMUg1OS45MTQ1Wk02Ni44OTA1IDIyLjI5Nkg3NC4zNDY1TDcwLjEyMjUgOS44MTZINzEuMTc4NUw2Ni44OTA1IDIyLjI5NlpNODQuMTgyOCAzMVY3LjE2SDkyLjg1NDhDOTQuNDU0OCA3LjE2IDk1Ljg2MjggNy40NTg2NyA5Ny4wNzg4IDguMDU2Qzk4LjMxNjEgOC42MzIgOTkuMjc2MSA5LjQ4NTMzIDk5Ljk1ODggMTAuNjE2QzEwMC42NDEgMTEuNzI1MyAxMDAuOTgzIDEzLjA1ODcgMTAwLjk4MyAxNC42MTZDMTAwLjk4MyAxNi4xNTIgMTAwLjYzMSAxNy40NzQ3IDk5LjkyNjggMTguNTg0Qzk5LjI0NDEgMTkuNjkzMyA5OC4yOTQ4IDIwLjU0NjcgOTcuMDc4OCAyMS4xNDRDOTUuODYyOCAyMS43NDEzIDk0LjQ1NDggMjIuMDQgOTIuODU0OCAyMi4wNEg4Ny45NTg4VjMxSDg0LjE4MjhaTTg3Ljk1ODggMTguNjhIOTIuOTUwOEM5My44MDQxIDE4LjY4IDk0LjU1MDggMTguNTA5MyA5NS4xOTA4IDE4LjE2OEM5NS44MzA4IDE3LjgyNjcgOTYuMzMyMSAxNy4zNTczIDk2LjY5NDggMTYuNzZDOTcuMDU3NCAxNi4xNDEzIDk3LjIzODggMTUuNDE2IDk3LjIzODggMTQuNTg0Qzk3LjIzODggMTMuNzUyIDk3LjA1NzQgMTMuMDM3MyA5Ni42OTQ4IDEyLjQ0Qzk2LjMzMjEgMTEuODIxMyA5NS44MzA4IDExLjM1MiA5NS4xOTA4IDExLjAzMkM5NC41NTA4IDEwLjY5MDcgOTMuODA0MSAxMC41MiA5Mi45NTA4IDEwLjUySDg3Ljk1ODhWMTguNjhaTTEwMC44NTIgMzFMMTA5LjIzNiA3LjE2SDExMy45MDhMMTIyLjI5MiAzMUgxMTguMjZMMTE2LjQzNiAyNS42NTZIMTA2Ljc0TDEwNC44ODQgMzFIMTAwLjg1MlpNMTA3LjgyOCAyMi4yOTZIMTE1LjI4NEwxMTEuMDYgOS44MTZIMTEyLjExNkwxMDcuODI4IDIyLjI5NloiIGZpbGw9InVybCgjcGFpbnQyX2xpbmVhcl8xN185KSIvPgo8L2c+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfMTdfOSIgeDE9IjE4LjQ3MDYiIHkxPSIxOC40NzA2IiB4Mj0iMTguNDcwNiIgeTI9IjI2LjIzNTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwOUZERiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzOUE4NDkiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDFfbGluZWFyXzE3XzkiIHgxPSIxOC45OTA5IiB5MT0iMTcuMjAxOSIgeDI9IjE4Ljk5MDkiIHkyPSIyNS4yMDE5IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDlGREYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMzlBODQ5Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQyX2xpbmVhcl8xN185IiB4MT0iODEuNSIgeTE9Ii0yIiB4Mj0iODEuNSIgeTI9IjMwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDlGREYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzRENjAwIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTdfOSI+CjxyZWN0IHdpZHRoPSIxMjUiIGhlaWdodD0iMzgiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjxjbGlwUGF0aCBpZD0iY2xpcDFfMTdfOSI+CjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIgMikiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K"
+)
+
+
+# ---------------------------------------------------------------------------
+# Konfigurasi halaman
+# ---------------------------------------------------------------------------
+# Ikon tab browser (favicon). Taruh gambar ikon chatbot di folder "assets"
+# sebelah app.py dengan nama "icon" (icon.png / icon.ico / icon.svg / ...).
+# Kalau filenya belum ada, dipakai emoji cadangan supaya app tetap jalan.
+_BASE_DIR = Path(__file__).resolve().parent
+
+
+def load_page_icon(fallback: str = "💬"):
+    for folder in (_BASE_DIR / "assets", _BASE_DIR):
+        for ext in ("png", "ico", "svg", "webp", "jpg", "jpeg"):
+            candidate = folder / f"icon.{ext}"
+            if candidate.is_file():
+                return str(candidate)
+    return fallback
+
+
+st.set_page_config(
+    page_title="SAPA — Teman Magang",
+    page_icon=load_page_icon(),
+    layout="wide",
+    initial_sidebar_state="collapsed",   # sidebar tidak dipakai
+)
+
+
+# ---------------------------------------------------------------------------
+# Session state
+# ---------------------------------------------------------------------------
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "pending_prompt" not in st.session_state:
+    st.session_state.pending_prompt = None
+if "sources_map" not in st.session_state:
+    st.session_state.sources_map = {}
+if "used_actions" not in st.session_state:
+    st.session_state.used_actions = set()
+if "qa_open" not in st.session_state:
+    st.session_state.qa_open = False   # popup bantuan cepat (hanya dipakai saat chat berjalan)
+if "confirm_new_chat" not in st.session_state:
+    st.session_state.confirm_new_chat = False   # dialog konfirmasi tombol "+ Baru"
+
+
+quick_action_defs = [
+    {
+        "key": "identifikasi",
+        "label": "Identifikasi",
+        "icon": "search",
+        "desc": "Cek calon peserta BPU",
+        "prompt": "Saya sedang menemui calon peserta. Bagaimana cara mengecek apakah orang ini termasuk BPU dan apa yang perlu saya tanyakan?",
+    },
+    {
+        "key": "program",
+        "label": "Program",
+        "icon": "menu_book",
+        "desc": "Ringkas JKK, JKM, dan JHT",
+        "prompt": "Bagaimana cara menjelaskan JKK, JKM, dan JHT kepada calon peserta dengan bahasa sederhana?",
+    },
+    {
+        "key": "iuran",
+        "label": "Iuran",
+        "icon": "payments",
+        "desc": "Hitung iuran BPU",
+        "prompt": "Bantu saya menghitung iuran BPU untuk calon peserta berdasarkan penghasilan yang saya sebutkan nanti.",
+    },
+    {
+        "key": "keberatan",
+        "label": "Keberatan",
+        "icon": "forum",
+        "desc": "Bantu jawab keraguan peserta",
+        "prompt": "Calon peserta keberatan dengan iuran. Bantu saya menanggapi keberatan tersebut dengan sopan dan faktual.",
+    },
+    {
+        "key": "pendaftaran",
+        "label": "Pendaftaran",
+        "icon": "how_to_reg",
+        "desc": "Panduan alur pendaftaran",
+        "prompt": "Bagaimana alur pendaftaran BPU melalui mahasiswa magang?",
+    },
+    {
+        "key": "followup",
+        "label": "Follow-up",
+        "icon": "task_alt",
+        "desc": "Tentukan langkah berikutnya",
+        "prompt": "Apa yang perlu saya lakukan setelah pendaftaran calon peserta diproses?",
+    },
+]
+
+
+# ---------------------------------------------------------------------------
+# Helper UI
+# ---------------------------------------------------------------------------
+def start_new_conversation():
+    st.session_state.messages = []
+    st.session_state.pending_prompt = None
+    st.session_state.sources_map = {}
+    st.session_state.used_actions = set()
+    st.session_state.qa_open = False
+
+
+def toggle_quick_actions():
+    st.session_state.qa_open = not st.session_state.qa_open
+
+
+def close_quick_actions():
+    st.session_state.qa_open = False
+
+
+def open_confirm_new_chat():
+    st.session_state.confirm_new_chat = True
+
+
+def close_confirm_new_chat():
+    st.session_state.confirm_new_chat = False
+
+
+def confirm_new_chat_action():
+    start_new_conversation()
+    st.session_state.confirm_new_chat = False
+
+
+def render_quick_action_buttons():
+    """Daftar bantuan cepat (dipakai di chat kosong maupun di dalam popup)."""
+    with st.container(key="quick_actions"):
+        for action in quick_action_defs:
+            is_used = action["key"] in st.session_state.used_actions
+            if st.button(
+                action["desc"],
+                icon=f":material/{action['icon']}:",
+                key=f"qa_{action['key']}",
+                use_container_width=True,
+                type="secondary",
+                disabled=is_used,
+            ):
+                st.session_state.used_actions.add(action["key"])
+                st.session_state.pending_prompt = action["prompt"]
+                st.session_state.qa_open = False   # popup menutup setelah memilih
+                st.rerun()
+
+
+def md_safe(text) -> str:
+    """
+    Jawaban AI dirender sebagai markdown. Tanda '$' dianggap pembuka rumus LaTeX
+    oleh Streamlit, jadi dua '$' dalam satu jawaban bisa merusak tampilan teks.
+    """
+    return str(text).replace("$", r"\$")
+
+
+def render_user_message(text) -> None:
+    """
+    Teks pengguna ditampilkan APA ADANYA: baris baru (Shift+Enter) terjaga,
+    dan karakter seperti * _ # $ < > tidak diparsing sebagai markdown/HTML.
+    """
+    safe = html.escape(str(text)).replace("\n", "<br>")
+    st.markdown(f'<div class="sapa-user-text">{safe}</div>', unsafe_allow_html=True)
+
+
+_COPY_BUTTON_HTML = """<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&display=swap">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+  body {
+    height: 38px; display: flex; align-items: center;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  button {
+    all: unset; box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 7px;
+    height: 32px; padding: 0 13px 0 11px; border-radius: 9px;
+    color: #8B93A3; font-size: 13px; font-weight: 600; line-height: 1;
+    cursor: pointer; user-select: none; -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .18s ease, color .18s ease, transform .12s ease;
+  }
+  button:hover { background: rgba(255,255,255,.07); color: #ECEEF2; }
+  button:active { transform: scale(.96); }
+  button:focus-visible { outline: 2px solid rgba(165,180,252,.65); outline-offset: 1px; }
+  button[data-state="done"]  { color: #86EFAC; background: rgba(134,239,172,.10); }
+  button[data-state="error"] { color: #FCA5A5; background: rgba(252,165,165,.10); }
+
+  .ico { position: relative; width: 16px; height: 16px; flex: none; }
+  .ico svg {
+    position: absolute; inset: 0; width: 16px; height: 16px;
+    fill: none; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .ico .ok { opacity: 0; transform: scale(.5); }
+  button[data-state="done"] .ico .cp { opacity: 0; transform: scale(.5); }
+  button[data-state="done"] .ico .ok { opacity: 1; transform: scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body data-key="__KEY__">
+  <button id="copy" type="button" title="Salin jawaban (format siap WhatsApp)" aria-label="Salin jawaban" data-state="idle">
+    <span class="ico" aria-hidden="true">
+      <svg class="cp" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>
+      <svg class="ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </span>
+    <span class="lbl" aria-live="polite">Salin</span>
+  </button>
+<script>
+  const btn = document.getElementById("copy");
+  const lbl = btn.querySelector(".lbl");
+  const text = __TEXT__;
+  let timer = null;
+
+  function flash(state, label, ms) {
+    clearTimeout(timer);
+    btn.dataset.state = state;
+    lbl.textContent = label;
+    timer = setTimeout(() => { btn.dataset.state = "idle"; lbl.textContent = "Salin"; }, ms);
+  }
+
+  function legacyCopy() {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.cssText = "position:fixed;top:0;left:0;opacity:0;";
+    document.body.appendChild(area);
+    area.select();
+    area.setSelectionRange(0, text.length);
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    area.remove();
+    return ok;
+  }
+
+  async function copyText() {
+    let ok = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      }
+    } catch (e) {}
+    if (!ok) ok = legacyCopy();
+    if (ok) flash("done", "Tersalin", 1800);
+    else flash("error", "Gagal menyalin", 2200);
+  }
+
+  btn.addEventListener("click", copyText);
+</script>
+</body>
+</html>"""
+
+
+def to_whatsapp(text) -> str:
+    """
+    Ubah markdown jawaban AI menjadi teks yang tampil rapi di WhatsApp.
+
+    WhatsApp memakai *tebal*, _miring_, ~coret~ (bukan **tebal** / *miring*),
+    tidak punya heading (#), dan tidak merender [teks](link).
+    """
+    t = str(text).replace("\r\n", "\n")
+
+    # Garis pemisah (---, ***, ___) dibuang; harus sebelum konversi bullet
+    t = re.sub(r"^[ \t]*([-*_])([ \t]*\1){2,}[ \t]*$", "", t, flags=re.M)
+    # Heading (# Judul) -> *Judul*
+    t = re.sub(
+        r"^[ \t]{0,3}#{1,6}[ \t]+(.*?)[ \t]*#*[ \t]*$",
+        lambda m: "**" + re.sub(r"\*\*|__", "", m.group(1)).strip() + "**",
+        t, flags=re.M,
+    )
+    # Bullet (*, +, •, -) -> "- " dengan indentasi tetap
+    t = re.sub(r"^([ \t]*)[*+\u2022\-][ \t]+", r"\1- ", t, flags=re.M)
+    # [teks](https://...) -> teks (https://...)
+    t = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r"\1 (\2)", t)
+    # **tebal** / __tebal__ -> penanda sementara (supaya tidak ikut diubah jadi miring)
+    t = re.sub(r"(\*\*|__)(?=\S)(.+?)(?<=\S)\1", "\x00\\2\x00", t)
+    # ~~coret~~ -> ~coret~
+    t = re.sub(r"~~(?=\S)(.+?)(?<=\S)~~", r"~\1~", t)
+    # *miring* -> _miring_
+    t = re.sub(r"(?<![\w*])\*(?=[^\s*])(.+?)(?<=[^\s*])\*(?![\w*])", r"_\1_", t)
+    # penanda tebal -> *tebal*
+    t = t.replace("\x00", "*")
+
+    t = re.sub(r"[ \t]+\n", "\n", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
+def render_copy_button(text: str, key_suffix: str):
+    # "<" di-escape supaya jawaban yang berisi "</script>" tidak merusak skrip
+    payload = json.dumps(to_whatsapp(text), ensure_ascii=False).replace("<", "\\u003c")
+    page = (
+        _COPY_BUTTON_HTML
+        .replace("__KEY__", html.escape(str(key_suffix)))
+        .replace("__TEXT__", payload)
+    )
+    # Lebar iframe dikunci sedikit di atas lebar tombol (label terpanjang: "Gagal menyalin"),
+    # supaya area di belakang tombol tidak melebar sampai ujung kanan.
+    components.html(page, width=150, height=38, scrolling=False)
+
+
+def render_sources(sources):
+    if not sources:
+        return
+    with st.expander(f"📚 Lihat sumber ({len(sources)})"):
+        blocks = []
+        for index, doc in enumerate(sources, start=1):
+            metadata = getattr(doc, "metadata", {}) or {}
+            source_name = (
+                metadata.get("source_name")
+                or metadata.get("source_file")
+                or f"Sumber {index}"
+            )
+            section = metadata.get("section") or "Bagian umum"
+            body = (getattr(doc, "page_content", "") or "").strip()
+
+            # Satu baris HTML per kartu (tanpa baris kosong) agar tidak dipecah parser markdown
+            blocks.append(
+                '<div class="sapa-src">'
+                '<div class="sapa-src-head">'
+                f'<span class="sapa-src-num">{index}</span>'
+                '<div class="sapa-src-meta">'
+                f'<div class="sapa-src-name">{html.escape(str(source_name))}</div>'
+                f'<div class="sapa-src-section">Bagian: {html.escape(str(section))}</div>'
+                '</div></div>'
+                f'<div class="sapa-src-body">{html.escape(body).replace(chr(10), "<br>")}</div>'
+                '</div>'
+            )
+        st.markdown("".join(blocks), unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------------------------
+# Setup RAG
+# ---------------------------------------------------------------------------
+@st.cache_resource
+def setup():
+    retriever = load_retriever()
+    llm = load_llm()
+    return retriever, llm
+
+try:
+    retriever, llm = setup()
+except Exception as e:
+    st.error(f"Sistem tidak dapat dimuat: {e}")
+    st.stop()
+
+
+# ---------------------------------------------------------------------------
+# 1. Input user
+#    st.chat_input tetap di level root supaya Streamlit menempelkannya di bawah;
+#    posisi tengah (desktop, chat masih kosong) diatur lewat CSS di theme.py.
+#    Placeholder sengaja pendek: ::placeholder tidak bisa dipotong dengan CSS,
+#    jadi teks panjang akan membungkus jadi 2 baris di layar sempit.
+# ---------------------------------------------------------------------------
+pending_prompt = st.session_state.pop("pending_prompt", None)
+user_question = st.chat_input("Tanya apa saja soal magang...")
+if user_question:
+    user_question = user_question.strip()
+if pending_prompt and not user_question:
+    user_question = pending_prompt
+
+if user_question:
+    st.session_state.messages.append({"role": "user", "content": user_question})
+
+
+# ---------------------------------------------------------------------------
+# 2. State marker + CSS + script layout
+# ---------------------------------------------------------------------------
+is_empty = len(st.session_state.messages) == 0
+
+st.markdown(
+    '<div class="sapa-empty"></div>' if is_empty else '<div class="sapa-chat-active"></div>',
+    unsafe_allow_html=True,
+)
+st.markdown(get_custom_css(), unsafe_allow_html=True)
+
+# Menyesuaikan posisi input bar dengan keyboard virtual (tidak ada tampilan)
+components.html(get_layout_script(), height=0)
+
+
+# ---------------------------------------------------------------------------
+# 3. Hero (chat kosong) / top bar (chat berjalan)
+# ---------------------------------------------------------------------------
+if is_empty:
+    st.markdown(
+        f'''
+        <section class="sapa-hero">
+            <h1 class="sapa-title"><img class="sapa-wordmark" src="{_SAPA_WORDMARK}" alt="SAPA — Teman Magang"></h1>
+            <div class="sapa-tagline">Teman Magang, Siap Membantu.</div>
+            <p class="sapa-desc">
+                Sistem Asisten Pendamping Aktivitas untuk membantu edukasi,
+                akuisisi, pendaftaran, dan follow-up peserta BPU.
+            </p>
+        </section>
+        ''',
+        unsafe_allow_html=True,
+    )
+else:
+    with st.container(key="topbar"):
+        st.markdown(
+            f'''
+            <div class="sapa-chat-header">
+                <img class="sapa-chat-brand" src="{_SAPA_WORDMARK}" alt="SAPA">
+                <span class="sapa-chat-separator">•</span>
+                <span class="sapa-chat-tagline">Teman Magang, Siap Membantu.</span>
+            </div>
+            ''',
+            unsafe_allow_html=True,
+        )
+        st.button(
+            "+ Baru",
+            key="new_chat",
+            help="Mulai percakapan baru",
+            on_click=open_confirm_new_chat,
+        )
+
+
+# ---------------------------------------------------------------------------
+# 3b. Dialog konfirmasi "+ Baru" — mencegah misclick menghapus riwayat chat.
+#     Backdrop (klik di luar = batal) + panel mengambang di tengah layar,
+#     dengan animasi masuk yang halus (lihat theme.py: sapa-modal-in).
+# ---------------------------------------------------------------------------
+if st.session_state.confirm_new_chat:
+    with st.container(key="confirm_backdrop"):
+        st.button("Tutup", key="confirm_dismiss", on_click=close_confirm_new_chat)
+
+    with st.container(key="confirm_dialog"):
+        st.markdown(
+            '''
+            <div class="sapa-confirm-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/>
+                    <path d="M21 3v5h-5"/>
+                    <path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/>
+                    <path d="M3 21v-5h5"/>
+                </svg>
+            </div>
+            <div class="sapa-confirm-title">Mulai obrolan baru?</div>
+            <p class="sapa-confirm-desc">
+                Riwayat percakapan ini akan dihapus dan tidak bisa dikembalikan.
+            </p>
+            ''',
+            unsafe_allow_html=True,
+        )
+        col_cancel, col_ok = st.columns(2, gap="small")
+        with col_cancel:
+            st.button(
+                "Batal",
+                key="confirm_cancel",
+                use_container_width=True,
+                on_click=close_confirm_new_chat,
+            )
+        with col_ok:
+            st.button(
+                "Ya, mulai baru",
+                key="confirm_ok",
+                type="primary",
+                use_container_width=True,
+                on_click=confirm_new_chat_action,
+            )
+
+
+# ---------------------------------------------------------------------------
+# 4. Bantuan cepat (disable kalau sudah pernah diklik)
+#    Chat kosong    : daftar terbuka, rata kiri (desktop: di bawah input,
+#                     mobile: tepat di atas input)
+#    Chat berjalan  : hanya tombol "Bantuan cepat" di atas input; daftarnya
+#                     muncul sebagai popup saat tombol diklik. Popup menutup
+#                     kalau: tombol diklik lagi, klik di luar popup, atau
+#                     salah satu bantuan dipilih.
+#    Buka/tutup memakai callback (bukan st.rerun) supaya hanya satu rerun.
+# ---------------------------------------------------------------------------
+with st.container(key="qa_zone"):
+    if is_empty:
+        render_quick_action_buttons()
+    else:
+        st.button(
+            "Bantuan cepat",
+            icon=":material/bolt:",
+            key="qa_toggle",
+            on_click=toggle_quick_actions,
+        )
+        if st.session_state.qa_open:
+            st.button("Tutup", key="qa_backdrop", on_click=close_quick_actions)
+            render_quick_action_buttons()
+
+
+# ---------------------------------------------------------------------------
+# 5. Riwayat chat
+# ---------------------------------------------------------------------------
+for index, message in enumerate(st.session_state.messages):
+    with st.chat_message(message["role"]):
+        if message["role"] == "user":
+            render_user_message(message["content"])
+        else:
+            st.markdown(md_safe(message["content"]))
+            render_copy_button(str(message["content"]), f"history-{index}")
+            src = st.session_state.sources_map.get(index)
+            if src:
+                render_sources(src)
+
+
+# ---------------------------------------------------------------------------
+# 6. Jawaban baru — loading state: waveform + label bergeser warna cyan->hijau
+#    di area konten, sama persis di desktop maupun mobile (avatar diam, tidak
+#    ikut dianimasikan).
+# ---------------------------------------------------------------------------
+if user_question:
+    conversation_history = st.session_state.messages[:-1]
+
+    with st.chat_message("assistant"):
+        placeholder = st.empty()
+        placeholder.markdown(
+            '<div class="sapa-thinking" role="status" aria-label="SAPA sedang menyusun jawaban">'
+            '<span class="sapa-thinking-wave">'
+            '<span></span><span></span><span></span><span></span><span></span>'
+            '</span>'
+            '<span class="sapa-thinking-label">Menyusun jawaban</span>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        answer, sources = ask(
+            user_question,
+            retriever,
+            llm,
+            history=conversation_history,
+        )
+
+        placeholder.markdown(md_safe(answer))
+        render_copy_button(str(answer), "latest")
+        render_sources(sources)
+
+    st.session_state.messages.append({"role": "assistant", "content": str(answer)})
+    st.session_state.sources_map[len(st.session_state.messages) - 1] = sources

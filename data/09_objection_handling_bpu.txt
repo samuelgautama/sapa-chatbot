@@ -1,0 +1,122 @@
+# Objection Handling Akuisisi BPU
+
+> Tujuan: membantu mahasiswa magang merespons keberatan calon peserta dengan sopan, singkat, dan berbasis fakta.
+> Sumber utama: `info_bpu.txt`, `info_magang.txt`, dan `proses_pendaftaran_bpu.txt`.
+> Prinsip: tanggapi keberatan tanpa menekan calon peserta, tanpa menjanjikan hasil, dan tanpa menambahkan manfaat di luar knowledge base.
+
+## Struktur Respons yang Disarankan
+1. **Akui keberatan** — tunjukkan bahwa pertanyaan calon peserta dipahami.
+2. **Berikan fakta yang relevan** — pilih fakta yang benar-benar menjawab keberatan.
+3. **Berikan pilihan/langkah berikutnya** — misalnya melihat simulasi 2 atau 3 program atau menjelaskan alur pendaftaran.
+4. **Berikan ruang untuk memutuskan** — jangan memaksa atau membuat janji yang tidak didukung sumber.
+
+## OB-01 — "Iurannya mahal."
+**Respons contoh:**
+"Saya memahami pertimbangannya, Pak/Bu. Untuk BPU, iuran normal JKK adalah 1% dari dasar penghasilan, JKM Rp6.800 per bulan, dan JHT 2%. Kita bisa lihat dulu simulasi 2 program atau 3 program sesuai kebutuhan Bapak/Ibu."
+
+**Fakta pendukung:** tarif normal BPU dan pilihan 2/3 program.
+
+## OB-02 — "Saya cuma mau yang paling murah."
+**Respons contoh:**
+"Baik, kita bisa mulai dari pilihan yang memang tersedia. Dalam materi BPU, peserta dapat memilih JKK + JKM saja atau JKK + JKM + JHT. Saya bisa bantu menghitung masing-masing supaya perbandingannya jelas."
+
+## OB-03 — "Saya belum yakin manfaatnya."
+**Respons contoh:**
+"Wajar untuk memastikan manfaatnya dulu. Saya bisa jelaskan satu per satu, misalnya JKK untuk risiko kecelakaan kerja/penyakit akibat kerja, JKM untuk santunan ahli waris jika peserta meninggal bukan akibat kecelakaan kerja, dan JHT sebagai tabungan hari tua."
+
+## OB-04 — "Saya sehat, jadi buat apa ikut JKK?"
+**Respons contoh:**
+"Kita memang berharap perlindungan tersebut tidak perlu digunakan. Namun JKK dirancang untuk melindungi risiko kecelakaan kerja dan penyakit akibat kerja. Saya bisa jelaskan contoh perlindungan yang tercantum di materi bila Bapak/Ibu ingin melihat detailnya."
+
+## OB-05 — "Saya belum tentu memakai manfaatnya."
+**Respons contoh:**
+"Benar, manfaat perlindungan tidak berarti seseorang pasti akan menggunakannya. Tujuannya adalah memberikan perlindungan ketika risiko yang dijamin terjadi sesuai ketentuan."
+
+## OB-06 — "Saya sudah punya asuransi lain."
+**Respons:**
+"Baik. Saya tidak perlu membandingkan atau menilai produk lain tanpa informasi yang cukup. Saya bisa menjelaskan apa saja program BPU dan manfaat yang tercantum dalam materi BPJS Ketenagakerjaan, sehingga Bapak/Ibu dapat mempertimbangkannya secara terpisah."
+
+## OB-07 — "Saya belum mau daftar sekarang."
+**Respons contoh:**
+"Tidak masalah. Saya bisa bantu memberikan informasi yang Bapak/Ibu perlukan terlebih dahulu, misalnya syarat, program, atau simulasi iuran. Keputusan pendaftaran dapat dilakukan setelah informasinya sudah jelas."
+
+## OB-08 — "Nanti saja, saya pikir-pikir dulu."
+**Respons contoh:**
+"Silakan. Sebelum itu, saya bisa bantu merangkum pilihan 2 program dan 3 program beserta iurannya supaya Bapak/Ibu punya gambaran yang jelas untuk dipertimbangkan."
+
+## OB-09 — "Kenapa harus pakai data/NIK untuk daftar?"
+**Respons contoh:**
+"Materi pendaftaran mencantumkan NIK/KTP sebagai salah satu syarat pendaftaran. Untuk keamanan, data identitas sebaiknya diisikan melalui formulir atau kanal resmi, bukan dibagikan di chat ini."
+
+## OB-10 — "Bisa daftar lewat Gojek?"
+**Respons contoh:**
+"Menurut materi yang tersedia, Gojek tercantum sebagai kanal pembayaran setelah peserta terdaftar, bukan sebagai kanal pendaftaran pertama. Untuk pendaftaran, sumber mencantumkan JMO, website resmi, kantor BPJS, dan Agen Perisai serta kanal lain yang disebutkan."
+
+## OB-11 — "Kalau saya sudah daftar, bayarnya bagaimana?"
+**Respons contoh:**
+"Pembayaran dilakukan setelah pendaftaran diproses. Pada alur melalui mahasiswa magang, setelah proses petugas 1×24 jam, peserta membayar menggunakan NIK melalui kanal pembayaran yang tersedia."
+
+## OB-12 — "Saya takut sudah isi formulir tapi kartunya tidak langsung dapat."
+**Respons contoh:**
+"Dalam alur melalui mahasiswa magang, formulir terlebih dahulu diproses petugas dalam waktu 1×24 jam. Setelah pembayaran terkonfirmasi, barulah bukti/kartu kepesertaan diserahkan atau diterima peserta."
+
+## OB-13 — "Saya belum punya uang untuk 3 program."
+**Respons contoh:**
+"Tidak harus langsung 3 program. Materi BPU menyebut peserta dapat mendaftar JKK + JKM saja atau JKK + JKM + JHT. Kita bisa hitung pilihan yang sesuai dengan kondisi Bapak/Ibu."
+
+## OB-14 — "Kalau cuma ikut JKK dan JKM, apakah JHT wajib?"
+**Respons:**
+"Tidak. Materi BPU memang mencantumkan pilihan JKK + JKM saja atau JKK + JKM + JHT."
+
+## OB-15 — "Ada diskon tidak?"
+**Respons contoh:**
+"Ada ketentuan promo 50% untuk JKK dan JKM pada periode tertentu. Karena periodenya berbeda menurut sektor dan promo bisa berakhir, saya perlu memeriksa sektor pekerjaan dan tanggal yang berlaku sebelum menyebutkan nominal promo."
+
+## OB-16 — "Kalau saya pedagang, dapat diskon?"
+**Respons:**
+"Pedagang termasuk contoh BPU non-transportasi dalam materi, tetapi status promo harus dicek berdasarkan tanggal berlaku. Sumber mencantumkan periode non-transportasi April 2026–Desember 2026."
+
+## OB-17 — "Kenapa JHT tidak ikut diskon?"
+**Respons:**
+"Karena ketentuan promo pada materi secara khusus menyebut diskon 50% hanya untuk JKK dan JKM. JHT tetap 2% dari dasar penghasilan yang dilaporkan."
+
+## OB-18 — "Saya sudah punya JKK dan JKM, kenapa perlu JHT?"
+**Respons:**
+"JHT adalah program yang berbeda. Materi menjelaskan JHT sebagai tabungan bekal hari tua berupa akumulasi iuran dan hasil pengembangannya. Peserta BPU dapat menambah JHT dari pilihan JKK + JKM menjadi 3 program."
+
+## OB-19 — "Saya mau pikir-pikir karena belum tahu berapa bayar per bulan."
+**Respons:**
+"Boleh. Saya bisa bantu hitungkan dulu. Sebutkan dasar penghasilan yang dilaporkan dan pilih apakah 2 program atau 3 program."
+
+## OB-20 — "Saya penghasilannya tidak tetap."
+**Respons:**
+"Materi BPU menggunakan dasar penghasilan yang dilaporkan sebagai dasar perhitungan JKK dan JHT, dan mencantumkan minimal Rp1.000.000 per bulan untuk pendaftaran. Untuk kondisi khusus yang tidak tercakup dalam materi, sebaiknya dikonfirmasi melalui layanan resmi."
+
+## OB-21 — "Kalau nanti saya berubah pikiran dan mau tambah JHT?"
+**Respons:**
+"Materi BPU menyebut peserta dapat mendaftar bertahap dari JKK + JKM atau sekaligus JKK + JKM + JHT. Untuk prosedur perubahan setelah peserta aktif, gunakan kanal/prosedur resmi yang berlaku karena detail perubahan tidak dijelaskan dalam knowledge base ini."
+
+## OB-22 — "Saya tidak percaya kalau program ini resmi."
+**Respons contoh:**
+"Bapak/Ibu berhak memastikan sumbernya. Informasi yang saya sampaikan diambil dari materi BPJS Ketenagakerjaan dan program magang yang digunakan sebagai knowledge base. Untuk verifikasi langsung, gunakan kanal layanan resmi BPJS Ketenagakerjaan yang tercantum di materi."
+
+## OB-23 — "Saya mau daftar tapi takut prosesnya lama."
+**Respons contoh:**
+"Untuk jalur pendaftaran melalui mahasiswa magang, sumber mencantumkan bahwa petugas memproses formulir dalam waktu 1×24 jam setelah formulir diisi. Setelah itu peserta melakukan pembayaran dan mahasiswa melakukan konfirmasi pembayaran."
+
+## OB-24 — "Saya sudah bayar tapi belum menerima bukti kepesertaan."
+**Respons contoh:**
+"Dalam alur yang tersedia, setelah pembayaran terkonfirmasi, pastikan peserta menerima bukti/kartu kepesertaan fisik atau digital. Untuk kasus yang belum selesai atau detail yang tidak tercakup, mahasiswa sebaiknya melakukan follow-up dan menghubungi pihak resmi yang menangani pendaftaran."
+
+## OB-25 — "Saya tidak mau memberikan data ke mahasiswa."
+**Respons:**
+"Tidak masalah untuk berhati-hati. Chatbot ini tidak meminta NIK atau data identitas pribadi melalui percakapan. Pengisian identitas dilakukan melalui formulir atau kanal resmi sesuai proses pendaftaran."
+
+## Hal yang DILARANG dilakukan chatbot
+- Jangan mengatakan calon peserta **"pasti"** mendapat manfaat tertentu jika sumber hanya menjelaskan syarat.
+- Jangan menjanjikan kartu akan selesai lebih cepat dari waktu yang tercantum.
+- Jangan mengatakan promo berlaku untuk semua peserta tanpa memeriksa sektor dan tanggal.
+- Jangan menyatakan program lain wajib jika sumber tidak menyatakannya.
+- Jangan merendahkan, menekan, atau menakut-nakuti calon peserta agar mendaftar.
+- Jangan meminta NIK, nomor KK, nomor rekening, nomor telepon, atau data identitas lengkap melalui chat.
+- Jangan membuat jawaban khusus untuk kasus yang tidak didukung sumber; arahkan untuk verifikasi resmi.

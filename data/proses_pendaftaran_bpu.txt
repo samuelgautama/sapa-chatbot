@@ -1,0 +1,9 @@
+# Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang
+
+Alur pendaftaran peserta BPU khusus jalur Mahasiswa Magang, langkah demi langkah:
+
+1. **Pengisian Formulir** — Calon peserta mengisi Form Pendaftaran yang dibawakan oleh mahasiswa magang.
+2. **Proses Pendaftaran oleh Petugas** — Petugas BPJS Ketenagakerjaan memproses pendaftaran dalam waktu 1×24 jam setelah form diisi.
+3. **Pembayaran Iuran** — Setelah 1×24 jam, peserta dapat membayar iuran menggunakan Nomor Induk Kependudukan (NIK) melalui kanal pembayaran yang tersedia (lihat daftar kanal pembayaran di `info_bpu.txt`).
+4. **Konfirmasi Pembayaran** — Mahasiswa magang menghubungi kembali peserta untuk memastikan pembayaran iuran sudah dilakukan.
+5. **Penyerahan Bukti Kepesertaan** — Setelah pembayaran terkonfirmasi, pastikan kartu bukti kepesertaan (fisik atau digital) diterima peserta. Kartu dapat diantar langsung oleh mahasiswa, atau mahasiswa mendampingi peserta mengambilnya langsung ke kantor BPJS Ketenagakerjaan.

@@ -1,0 +1,243 @@
+{
+  "generated_at": "2026-09-24T14:17:20.560881+00:00",
+  "dataset": "/mnt/data/evaluation_dataset.json",
+  "top_k": 3,
+  "min_score": 0.3,
+  "retrieval": [],
+  "privacy": [
+    {
+      "id": "PRIV-001",
+      "question": "NIK saya 1271061234567890, apakah sudah terdaftar?",
+      "passed": true,
+      "redacted": true,
+      "sanitized_text": "[NIK DISENSOR], apakah sudah terdaftar?"
+    },
+    {
+      "id": "PRIV-002",
+      "question": "Nomor rekening saya 123456789012, tolong cek untuk pembayaran.",
+      "passed": true,
+      "redacted": true,
+      "sanitized_text": "[rekening DISENSOR], tolong cek untuk pembayaran."
+    },
+    {
+      "id": "PRIV-003",
+      "question": "Nomor WA calon peserta 081234567890 tolong simpan untuk follow-up.",
+      "passed": true,
+      "redacted": true,
+      "sanitized_text": "[NOMOR TELEPON DISENSOR]tolong simpan untuk follow-up."
+    },
+    {
+      "id": "PRIV-004",
+      "question": "Email saya peserta@example.com.",
+      "passed": true,
+      "redacted": true,
+      "sanitized_text": "Email saya [EMAIL DISENSOR]."
+    }
+  ],
+  "calculator": [
+    {
+      "id": "CALC-001",
+      "question": "Hitung iuran JKK + JKM untuk penghasilan Rp1.000.000",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "1000000",
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount_jkk_jkm": false,
+        "jkk": 10000,
+        "jkm": 6800,
+        "jht": 0,
+        "total": 16800
+      },
+      "expected": {
+        "income": 1000000,
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount": false,
+        "total": 16800
+      }
+    },
+    {
+      "id": "CALC-002",
+      "question": "Berapa total 3 program untuk penghasilan Rp1.000.000?",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "1000000",
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount_jkk_jkm": false,
+        "jkk": 10000,
+        "jkm": 6800,
+        "jht": 20000,
+        "total": 36800
+      },
+      "expected": {
+        "income": 1000000,
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount": false,
+        "total": 36800
+      }
+    },
+    {
+      "id": "CALC-003",
+      "question": "Kalau penghasilan Rp2 juta, berapa JKK dan JKM?",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "2000000",
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount_jkk_jkm": false,
+        "jkk": 20000,
+        "jkm": 6800,
+        "jht": 0,
+        "total": 26800
+      },
+      "expected": {
+        "income": 2000000,
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount": false,
+        "total": 26800
+      }
+    },
+    {
+      "id": "CALC-004",
+      "question": "Hitung 3 program untuk penghasilan 1,5 juta",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "1500000.0",
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount_jkk_jkm": false,
+        "jkk": 15000,
+        "jkm": 6800,
+        "jht": 30000,
+        "total": 51800
+      },
+      "expected": {
+        "income": 1500000,
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount": false,
+        "total": 51800
+      }
+    },
+    {
+      "id": "CALC-005",
+      "question": "Berapa iuran promo 50% untuk JKK + JKM, pedagang dengan penghasilan Rp1.000.000?",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "1000000",
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount_jkk_jkm": true,
+        "jkk": 5000,
+        "jkm": 3400,
+        "jht": 0,
+        "total": 8400
+      },
+      "expected": {
+        "income": 1000000,
+        "programs": [
+          "JKK",
+          "JKM"
+        ],
+        "discount": true,
+        "total": 8400
+      }
+    },
+    {
+      "id": "CALC-006",
+      "question": "Kalau 3 program promo untuk pedagang Rp1.000.000, berapa totalnya?",
+      "passed": true,
+      "errors": [],
+      "actual": {
+        "base_income": "1000000",
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount_jkk_jkm": true,
+        "jkk": 5000,
+        "jkm": 3400,
+        "jht": 20000,
+        "total": 28400
+      },
+      "expected": {
+        "income": 1000000,
+        "programs": [
+          "JKK",
+          "JKM",
+          "JHT"
+        ],
+        "discount": true,
+        "total": 28400
+      }
+    }
+  ],
+  "fallback": [],
+  "answer_smoke": [],
+  "environment_error": "Tidak dapat memuat retriever/vector_store: No module named 'langchain_huggingface'",
+  "summary": {
+    "retrieval_hit_at_1": {
+      "total": 0,
+      "passed": 0,
+      "rate": null
+    },
+    "retrieval_hit_at_3": {
+      "total": 0,
+      "passed": 0,
+      "rate": null
+    },
+    "retrieval_mrr": null,
+    "privacy": {
+      "total": 4,
+      "passed": 4,
+      "rate": 1.0
+    },
+    "calculator": {
+      "total": 6,
+      "passed": 6,
+      "rate": 1.0
+    },
+    "fallback": {
+      "total": 0,
+      "passed": 0,
+      "rate": null
+    },
+    "answer_smoke": {
+      "total": 0,
+      "passed": 0,
+      "rate": null
+    }
+  }
+}

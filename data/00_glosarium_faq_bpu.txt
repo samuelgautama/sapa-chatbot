@@ -1,0 +1,270 @@
+# 00 — Glosarium dan FAQ Kanonis BPU
+#
+# Tujuan:
+# - Menjadi sumber prioritas untuk istilah dasar dan pertanyaan umum BPU.
+# - Mengurangi ambiguitas retrieval pada pertanyaan pendek.
+# - Menyediakan variasi pertanyaan yang mungkin dipakai mahasiswa di lapangan.
+#
+# Sumber:
+# - info_bpu.txt
+# - info_umum_bpjs_tk.txt
+# - info_magang.txt
+# - proses_pendaftaran_bpu.txt
+#
+# Catatan:
+# - Dokumen ini hanya menyusun ulang informasi yang sudah ada pada sumber di atas.
+# - Jangan menambahkan definisi, tarif, prosedur, atau manfaat baru di luar sumber.
+# - Untuk informasi yang memiliki masa berlaku seperti promo, ikuti tanggal/periode
+#   pada dokumen sumber dan pemeriksaan tanggal sistem.
+
+## 1. ISTILAH KANONIS — WAJIB
+
+**Pertanyaan:** Apa itu BPU?
+
+**Jawaban kanonis:**
+**BPU adalah singkatan dari Bukan Penerima Upah.**
+
+Dalam konteks BPJS Ketenagakerjaan, BPU adalah orang perorangan yang melakukan kegiatan usaha ekonomi secara mandiri untuk memperoleh penghasilan dan bukan digaji oleh pemberi kerja.
+
+**Pertanyaan yang setara:**
+- BPU itu apa?
+- BPU singkatan dari apa?
+- Apa kepanjangan BPU?
+- Arti BPU?
+- Maksud BPU?
+- BPU adalah apa?
+- BPU pekerja apa?
+- Siapa yang termasuk BPU?
+
+**Aturan terminologi:**
+- BPU = **Bukan Penerima Upah**.
+- Jangan memperluas BPU menjadi istilah lain.
+- Jika pengguna hanya meminta kepanjangan/arti BPU, utamakan jawaban singkat terlebih dahulu.
+- Jika pengguna meminta penjelasan lebih lanjut, lanjutkan dengan definisi pekerja BPU.
+
+## 2. ISTILAH TERKAIT
+
+**PU** = **Penerima Upah**.
+
+Dalam sumber umum:
+- PU: bekerja dengan menerima gaji/upah dari pemberi kerja.
+- BPU: melakukan kegiatan usaha ekonomi secara mandiri.
+
+BPU pada sumber ini mencakup program:
+- JKK
+- JKM
+- JHT
+
+JP dan JKP pada sumber umum dinyatakan khusus untuk Penerima Upah (PU).
+
+## 3. SIAPA YANG TERMASUK BPU?
+
+Berdasarkan `info_bpu.txt`, contoh profesi BPU:
+- pemilik usaha
+- seniman
+- dokter
+- pengacara/advokat
+- freelancer
+- petani
+- sopir angkot
+- mitra ojek online
+- pedagang
+- nelayan
+- marbot masjid
+- dan sejenisnya
+
+Kategori peserta BPU meliputi:
+- pemberi kerja (perseorangan)
+- pekerja di luar hubungan kerja / pekerja mandiri
+- pekerja bukan penerima upah lainnya, termasuk peserta pelatihan kerja, instruktur lembaga pelatihan kerja, peserta magang, siswa/mahasiswa kerja praktik, tenaga honorer, atau narapidana yang dipekerjakan dalam proses asimilasi pada pemberi kerja selain penyelenggara negara.
+
+## 4. SYARAT PENDAFTARAN BPU
+
+Syarat yang tercantum:
+1. Memiliki NIK/KTP.
+2. Belum mencapai usia 65 tahun.
+3. Memiliki kegiatan usaha/pekerjaan; maksimal 2 jenis pekerjaan dapat didaftarkan sebagai peserta BPU.
+4. Dasar penghasilan yang didaftarkan minimal Rp1.000.000 per bulan.
+
+## 5. KANAL PENDAFTARAN VS KANAL PEMBAYARAN
+
+### Pendaftaran peserta baru
+Kanal yang tercantum:
+- website resmi BPJS Ketenagakerjaan
+- aplikasi JMO
+- kantor BPJS Ketenagakerjaan
+- Agen Perisai
+- wadah
+- Payment Point yang bekerja sama
+
+### Pembayaran iuran setelah terdaftar
+Kanal yang tercantum:
+- perbankan: BNI, Livin by Mandiri, BSI, BCA mobile, BTN, BRImo, Bank BJB, BRILink
+- dompet digital/QRIS: LinkAja!, ShopeePay, Dana, OVO, Gopay, QRIS
+- ritel/mitra: Alfamart, Dan-Dan, Grab, Gojek
+
+**Aturan penting:**
+Kanal pendaftaran dan pembayaran tidak selalu sama. Kanal seperti Gojek, Alfamart, dan dompet digital digunakan untuk pembayaran iuran setelah terdaftar, bukan untuk pendaftaran pertama kali.
+
+## 6. PROGRAM BPU
+
+Peserta BPU dapat mendaftar bertahap:
+- 2 program: **JKK + JKM**
+- 3 program: **JKK + JKM + JHT**
+
+### JKK
+Jaminan Kecelakaan Kerja memberikan perlindungan terhadap risiko kecelakaan kerja dan penyakit akibat kerja (PAK).
+
+Iuran BPU:
+- 1% dari dasar penghasilan yang dilaporkan.
+
+### JKM
+Jaminan Kematian memberikan santunan kepada ahli waris jika peserta meninggal dunia bukan akibat kecelakaan kerja/PAK.
+
+Iuran BPU:
+- Rp6.800 per bulan.
+
+### JHT
+Jaminan Hari Tua berupa akumulasi iuran dan hasil pengembangannya.
+
+Iuran BPU:
+- 2% dari dasar penghasilan yang dilaporkan.
+
+## 7. CONTOH IURAN BPU NORMAL
+
+Untuk dasar penghasilan Rp1.000.000 per bulan:
+- JKK = Rp10.000
+- JKM = Rp6.800
+- JHT = Rp20.000
+- JKK + JKM = Rp16.800/bulan
+- JKK + JKM + JHT = Rp36.800/bulan
+
+Untuk dasar penghasilan Rp2.000.000 per bulan:
+- JKK = Rp20.000
+- JKM = Rp6.800
+- JHT = Rp40.000
+
+## 8. PROMO IURAN BPU
+
+Promo yang tercantum dalam `info_bpu.txt`:
+- diskon 50% untuk JKK dan JKM
+- JHT tidak didiskon
+
+Periode yang tercantum:
+- sektor transportasi: Januari 2026 – Maret 2027
+- sektor non-transportasi: April 2026 – Desember 2026
+
+Contoh dasar penghasilan Rp1.000.000:
+- JKK normal Rp10.000 → Rp5.000 setelah diskon
+- JKM normal Rp6.800 → Rp3.400 setelah diskon
+- JHT tetap Rp20.000
+- total 2 program setelah diskon = Rp8.400
+- total 3 program setelah diskon ≈ Rp28.400
+
+Jangan menyampaikan promo sebagai masih berlaku tanpa memeriksa sektor dan tanggal sistem.
+
+## 9. MANFAAT JKK — RINGKASAN
+
+Sumber BPU mencantumkan antara lain:
+- biaya pengobatan dan perawatan
+- biaya pengangkutan sesuai maksimum yang tercantum
+- STMB
+- santunan cacat
+- santunan kematian akibat kecelakaan kerja
+- homecare
+- rehabilitasi
+- gigi tiruan
+- alat bantu dengar
+- kacamata
+- pemeriksaan diagnostik untuk PAK
+
+Untuk angka rinci, gunakan isi `info_bpu.txt` bagian JKK sebagai sumber utama.
+
+## 10. MANFAAT JKM — RINGKASAN
+
+Manfaat penuh yang tercantum:
+- Santunan Kematian Rp20.000.000
+- Santunan Berkala Rp12.000.000
+- Biaya Pemakaman Rp10.000.000
+- Total Rp42.000.000
+
+Catatan syarat:
+- manfaat penuh tersebut mensyaratkan iuran minimal 3 bulan berturut-turut sejak terdaftar
+- jika belum memenuhi 3 bulan, ahli waris hanya menerima biaya pemakaman Rp10.000.000
+- jika peserta terdaftar di lebih dari 1 segmen dan meninggal bukan karena JKK/PAK, biaya pemakaman hanya dibayarkan 1 kali
+
+## 11. MANFAAT JHT — RINGKASAN
+
+Pencairan penuh yang tercantum:
+- usia 56 tahun
+- cacat total tetap
+- meninggal dunia
+- berhenti bekerja/usaha dengan masa tunggu 1 bulan
+- WNA meninggalkan Indonesia untuk selama-lamanya
+
+Pencairan sebagian:
+- masa kepesertaan minimal 10 tahun
+- maksimal 30% untuk kepemilikan rumah
+- maksimal 10% untuk keperluan lain/persiapan masa pensiun
+
+## 12. PENDAFTARAN MELALUI MAHASISWA MAGANG
+
+Alur khusus pada dokumen `proses_pendaftaran_bpu.txt`:
+1. Calon peserta mengisi Form Pendaftaran yang dibawakan mahasiswa magang.
+2. Petugas BPJS Ketenagakerjaan memproses pendaftaran dalam 1×24 jam setelah form diisi.
+3. Setelah 1×24 jam, peserta membayar iuran menggunakan NIK melalui kanal pembayaran.
+4. Mahasiswa magang menghubungi kembali peserta untuk memastikan pembayaran sudah dilakukan.
+5. Setelah pembayaran terkonfirmasi, pastikan bukti kepesertaan fisik atau digital diterima peserta.
+
+## 13. ALUR AKUISISI MAHASISWA MAGANG
+
+Dalam `info_magang.txt`, tahapan akuisisi BPU:
+**Pembekalan → Identifikasi → Pendekatan → Edukasi → Akuisisi → Follow-up → Pelaporan.**
+
+Kemampuan yang dinilai secara khusus mencakup:
+- pemahaman program
+- presentasi dan komunikasi
+- menjawab pertanyaan dan menangani keberatan
+- akuisisi dan follow-up
+- kepatuhan terhadap SOP dan kewenangan sebagai peserta magang
+
+## 14. TARGET AKUISISI MAGANG
+
+Target yang tercantum untuk challenge per 30 September 2026:
+- minimal 5 peserta BPU
+- 3 peserta mengambil JKK + JKM
+- 2 peserta mengambil JKK + JKM + JHT
+
+## 15. JAWABAN YANG PERLU DIBEDAKAN
+
+Jika pertanyaan:
+**"Apa itu BPU?"**
+→ jawab definisi BPU terlebih dahulu.
+
+Jika pertanyaan:
+**"BPU ikut program apa?"**
+→ jelaskan JKK, JKM, JHT.
+
+Jika pertanyaan:
+**"Bagaimana daftar BPU?"**
+→ jawab kanal pendaftaran umum atau jalur mahasiswa magang sesuai konteks pertanyaan.
+
+Jika pertanyaan:
+**"Bagaimana bayar BPU?"**
+→ jawab kanal pembayaran setelah peserta terdaftar.
+
+Jika pertanyaan:
+**"Berapa iuran BPU?"**
+→ bedakan JKK, JKM, JHT dan minta/olah dasar penghasilan bila diperlukan.
+
+Jika pertanyaan:
+**"Saya mahasiswa magang, bagaimana mendaftarkan calon peserta?"**
+→ gunakan alur khusus mahasiswa magang.
+
+## 16. SUMBER LAYANAN
+
+Dalam `info_umum_bpjs_tk.txt`, untuk pertanyaan yang tidak tercakup:
+- Layanan Masyarakat BPJS Ketenagakerjaan: 175
+- Kantor cabang BPJS Ketenagakerjaan terdekat
+- JMO
+- website resmi BPJS Ketenagakerjaan

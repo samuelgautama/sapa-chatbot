@@ -1,0 +1,107 @@
+# Gambaran Umum BPJS Ketenagakerjaan (Semua Segmen Kepesertaan)
+
+> Catatan penyusunan: dokumen ini adalah versi perluasan dari materi "Info Publik" sebelumnya, ditambah data iuran resmi yang diverifikasi ke bpjsketenagakerjaan.go.id per September 2026. Dokumen ini melengkapi `info_bpu.txt` (yang fokus ke BPU) dengan gambaran menyeluruh semua segmen, termasuk dua program yang KHUSUS untuk Penerima Upah (JP dan JKP) yang tidak dibahas di dokumen BPU.
+
+## 1. Apa itu BPJS Ketenagakerjaan
+BPJS Ketenagakerjaan adalah badan hukum publik yang menyelenggarakan program jaminan sosial ketenagakerjaan untuk memberikan perlindungan bagi pekerja dari risiko sosial ekonomi, berdasarkan UU No. 24 Tahun 2011.
+
+## 2. Empat Kategori Kepesertaan
+| Kategori | Definisi Singkat | Program yang Diikuti |
+|---|---|---|
+| Penerima Upah (PU) | Bekerja dengan menerima gaji/upah dari pemberi kerja | JKK, JKM, JHT, JP (+ JKP jika memenuhi syarat) |
+| Bukan Penerima Upah (BPU) | Melakukan kegiatan usaha ekonomi secara mandiri | JKK, JKM, JHT |
+| Jasa Konstruksi | Jasa konsultasi perencanaan, pekerjaan konstruksi, konsultasi pengawasan konstruksi | JKK, JKM |
+| Pekerja Migran Indonesia (PMI) | WNI yang bekerja menerima upah di luar negeri | JKK, JKM, JHT |
+
+## 3. Lima Program Jaminan Sosial — Ringkasan
+1. **Jaminan Hari Tua (JHT)** — tabungan hari tua, cair sekaligus
+2. **Jaminan Kecelakaan Kerja (JKK)** — perlindungan risiko kecelakaan & penyakit akibat kerja
+3. **Jaminan Kematian (JKM)** — santunan untuk ahli waris jika meninggal bukan akibat kecelakaan kerja
+4. **Jaminan Pensiun (JP)** — khusus Penerima Upah, memberi penghasilan bulanan saat pensiun
+5. **Jaminan Kehilangan Pekerjaan (JKP)** — khusus Penerima Upah, bantuan bagi korban PHK
+
+## 4. Jaminan Hari Tua (JHT)
+Uang tunai yang diberikan saat peserta memasuki masa pensiun, cacat total tetap, atau meninggal dunia — berupa akumulasi iuran ditambah hasil pengembangannya.
+
+**Besaran iuran:**
+- Penerima Upah (PU): **5,7% dari upah bulanan** (2% dipotong dari pekerja + 3,7% dibayar pemberi kerja)
+- Bukan Penerima Upah (BPU): **2% dari penghasilan yang dilaporkan** (dasar penghasilan minimal Rp1.000.000)
+
+**Syarat klaim (salah satu kondisi berikut sudah cukup):**
+- Mencapai usia pensiun 56 tahun
+- Mengundurkan diri, PHK, atau kontrak kerja (PKWT) berakhir
+- Berhenti usaha (kategori BPU)
+- Cacat total tetap
+- WNA meninggalkan Indonesia untuk selama-lamanya
+- Meninggal dunia (klaim diajukan ahli waris)
+
+Klaim sebagian (masa kepesertaan minimal 10 tahun): 10% dari saldo untuk persiapan pensiun, atau 30% dari saldo untuk kepemilikan rumah.
+
+**Dokumen umum untuk klaim JHT:** Kartu peserta BPJAMSOSTEK (KPJ), E-KTP, Kartu Keluarga, buku tabungan atas nama peserta, NPWP (jika saldo di atas ketentuan berlaku), surat keterangan berhenti bekerja/paklaring.
+
+**Cara klaim:** Online lewat aplikasi JMO (Jamsostek Mobile) atau Lapak Asik di website resmi (tanpa ke kantor cabang), atau offline datang langsung ke kantor cabang terdekat membawa dokumen asli & fotokopi.
+
+## 5. Jaminan Kecelakaan Kerja (JKK)
+Santunan uang tunai dan/atau pelayanan medis untuk kecelakaan yang terjadi saat bekerja, dalam perjalanan wajar dari/ke tempat kerja, saat perjalanan dinas, atau penyakit akibat kerja (PAK).
+
+**Besaran iuran:**
+- Penerima Upah (PU): **0,24% – 1,74% dari upah**, ditanggung penuh perusahaan — besarannya bervariasi menurut tingkat risiko pekerjaan (makin berisiko, makin tinggi persentasenya)
+- Bukan Penerima Upah (BPU): **1% dari dasar penghasilan** (lihat `info_bpu.txt` untuk info diskon 50% yang sedang berlaku)
+
+Kecelakaan kerja wajib dilaporkan perusahaan/peserta ke BPJS Ketenagakerjaan dalam batas waktu yang ditentukan agar klaim dapat diproses. Manfaat detail (santunan cacat, santunan kematian, dll) untuk peserta BPU dijelaskan lengkap di `info_bpu.txt`.
+
+## 6. Jaminan Kematian (JKM)
+Santunan uang tunai untuk ahli waris jika peserta meninggal dunia BUKAN akibat kecelakaan kerja/PAK, selama masih peserta aktif.
+
+**Besaran iuran:**
+- Penerima Upah (PU): **0,3% dari upah**, ditanggung penuh perusahaan
+- Bukan Penerima Upah (BPU): **flat Rp6.800/bulan**
+
+Manfaat meliputi santunan kematian, santunan berkala, biaya pemakaman, dan beasiswa pendidikan anak (dengan syarat masa kepesertaan tertentu — detail lengkap di `info_bpu.txt`).
+
+**Dokumen umum untuk klaim JKM:** Kartu peserta BPJAMSOSTEK milik almarhum/almarhumah, surat keterangan kematian dari pihak berwenang, Kartu Keluarga & E-KTP ahli waris, buku tabungan ahli waris.
+
+## 7. Jaminan Pensiun (JP) — Khusus Penerima Upah
+Memberikan penghasilan bulanan (manfaat pasti) kepada peserta atau ahli warisnya saat memasuki usia pensiun, cacat total tetap, atau meninggal dunia.
+
+**Peserta program JP HANYA pekerja Penerima Upah (PU)** — tidak termasuk BPU maupun Pekerja Migran Indonesia.
+
+**Besaran iuran**: 3% dari upah (1% dipotong dari pekerja + 2% dibayar pemberi kerja). Batas atas upah yang jadi dasar perhitungan iuran (tahun 2026): Rp10.547.400 — upah di atas ini tetap dihitung memakai batas tersebut, bukan upah aktualnya.
+
+Manfaat pensiun bulanan penuh umumnya mensyaratkan masa iuran minimal 15 tahun; jika kurang dari itu, manfaat dapat diberikan sekaligus (lump sum) sesuai ketentuan berlaku.
+
+## 8. Jaminan Kehilangan Pekerjaan (JKP) — Khusus Penerima Upah
+Program bagi pekerja yang mengalami Pemutusan Hubungan Kerja (PHK), bertujuan menjaga penghasilan sementara sambil mencari pekerjaan baru.
+
+**Peserta program JKP HANYA pekerja Penerima Upah (PU) yang sudah terdaftar di 3-4 program BPJS Ketenagakerjaan lain** — BPU tidak termasuk peserta JKP.
+
+**Syarat penerima manfaat:**
+- Warga Negara Indonesia (WNI)
+- Belum berusia 54 tahun saat terdaftar
+- Bekerja di perusahaan skala menengah/besar dengan kepesertaan minimal 4 program (JKK, JKM, JHT, JP), atau di usaha kecil/mikro dengan minimal 3 program (JKK, JKM, JHT)
+- Terdaftar juga sebagai peserta aktif BPJS Kesehatan (JKN)
+- Mengalami PHK (bukan mengundurkan diri, pensiun, cacat total tetap, atau meninggal dunia — kasus tersebut masuk skema JHT/JKM/JP)
+
+**Iuran**: peserta dan perusahaan TIDAK dikenakan iuran tambahan khusus untuk JKP. Pendanaan berasal dari iuran pemerintah pusat (0,22% dari upah) dan sebagian direkomposisi dari iuran JKK yang sudah berjalan (0,14%) — jadi tidak ada potongan gaji tambahan yang dirasakan pekerja/perusahaan.
+
+**Manfaat:**
+- Uang tunai bulanan hingga 6 bulan pertama sejak PHK disetujui, dengan formula (45% × upah × 3 bulan) + (25% × upah × 3 bulan); upah dasar dibatasi maksimal Rp5.000.000
+- Akses informasi pasar kerja (asesmen diri & konseling karier)
+- Pelatihan kerja (online/offline) lewat lembaga pelatihan pemerintah, swasta, atau perusahaan
+
+Manfaat JKP dapat diklaim maksimal 3 kali seumur masa kerja, dengan jeda minimal 5 tahun antara klaim kedua dan klaim sebelumnya.
+
+Pengajuan klaim JKP dilakukan lewat portal Sistem Informasi Ketenagakerjaan (Sisnaker), dikoordinasikan dengan Kementerian Ketenagakerjaan.
+
+## 9. Pendaftaran Peserta Baru (Umum)
+- **Pemberi kerja/perusahaan**: wajib mendaftarkan seluruh pekerjanya sesuai undang-undang
+- **Individu/pekerja mandiri (BPU)**: dapat mendaftar mandiri lewat JMO, website resmi, kantor cabang, atau Agen Perisai (Penggerak Jaminan Sosial Indonesia) — lihat `info_bpu.txt` untuk detail lengkap khusus BPU
+
+Dokumen umum yang dibutuhkan: E-KTP, Kartu Keluarga, pas foto, nomor rekening bank aktif untuk pencairan manfaat di kemudian hari.
+
+## 10. Saluran Layanan dan Informasi Resmi
+Untuk pertanyaan yang tidak tercakup di dokumen ini, arahkan ke:
+- Layanan Masyarakat BPJS Ketenagakerjaan (care center): **175**
+- Kantor cabang BPJS Ketenagakerjaan terdekat
+- Aplikasi Jamsostek Mobile (JMO)
+- Website resmi: https://www.bpjsketenagakerjaan.go.id

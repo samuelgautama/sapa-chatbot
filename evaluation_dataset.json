@@ -1,0 +1,492 @@
+[
+  {
+    "id": "BPU-001",
+    "category": "retrieval",
+    "question": "Siapa saja yang termasuk peserta BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Definisi dan Kategori Pekerja BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "BPU",
+      "pekerja mandiri"
+    ]
+  },
+  {
+    "id": "BPU-002",
+    "category": "retrieval",
+    "question": "Apakah peserta magang termasuk kategori BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Definisi dan Kategori Pekerja BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "peserta magang",
+      "BPU"
+    ]
+  },
+  {
+    "id": "BPU-003",
+    "category": "retrieval",
+    "question": "Apa saja syarat pendaftaran BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Syarat dan Kanal Pendaftaran"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "NIK",
+      "65 tahun",
+      "Rp1.000.000"
+    ]
+  },
+  {
+    "id": "BPU-004",
+    "category": "retrieval",
+    "question": "Di mana saya bisa mendaftar BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Syarat dan Kanal Pendaftaran"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "JMO",
+      "website",
+      "kantor"
+    ]
+  },
+  {
+    "id": "BPU-005",
+    "category": "retrieval",
+    "question": "Berapa iuran normal JKK, JKM, dan JHT untuk BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Ketentuan Iuran Program BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "1%",
+      "Rp6.800",
+      "2%"
+    ]
+  },
+  {
+    "id": "BPU-006",
+    "category": "retrieval",
+    "question": "Apa manfaat JKK untuk peserta BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Jaminan Kecelakaan Kerja"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "kecelakaan kerja",
+      "pengobatan"
+    ]
+  },
+  {
+    "id": "BPU-007",
+    "category": "retrieval",
+    "question": "Berapa total manfaat JKM?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Jaminan Kematian"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Rp42.000.000",
+      "Rp20.000.000"
+    ]
+  },
+  {
+    "id": "BPU-008",
+    "category": "retrieval",
+    "question": "Kapan JHT bisa dicairkan penuh untuk peserta BPU?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Jaminan Hari Tua"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "56 tahun",
+      "berhenti usaha",
+      "meninggal"
+    ]
+  },
+  {
+    "id": "BPU-009",
+    "category": "retrieval",
+    "question": "Apakah JHT ikut diskon 50%?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "PROMO SEMENTARA"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "JHT",
+      "tidak didiskon",
+      "50%"
+    ]
+  },
+  {
+    "id": "BPU-010",
+    "category": "retrieval",
+    "question": "Sampai kapan diskon BPU non-transportasi berlaku?",
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "PROMO SEMENTARA"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Desember 2026",
+      "April 2026"
+    ]
+  },
+  {
+    "id": "MAG-001",
+    "category": "retrieval",
+    "question": "Apa target akuisisi setiap mahasiswa magang?",
+    "expected_sources": [
+      {
+        "file": "info_magang.txt",
+        "section_contains": "Target Akuisisi Lapangan"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "5 peserta",
+      "3 peserta",
+      "2 peserta"
+    ]
+  },
+  {
+    "id": "MAG-002",
+    "category": "retrieval",
+    "question": "Apa tahapan akuisisi BPU di lapangan?",
+    "expected_sources": [
+      {
+        "file": "info_magang.txt",
+        "section_contains": "Prosedur Akuisisi Lapangan"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Identifikasi",
+      "Edukasi",
+      "Follow-up",
+      "Pelaporan"
+    ]
+  },
+  {
+    "id": "MAG-003",
+    "category": "retrieval",
+    "question": "Apa saja kemampuan yang dinilai dalam akuisisi JHT?",
+    "expected_sources": [
+      {
+        "file": "info_magang.txt",
+        "section_contains": "Kemampuan yang Dinilai Khusus untuk Akuisisi JHT"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "komunikasi",
+      "keberatan",
+      "follow-up"
+    ]
+  },
+  {
+    "id": "MAG-004",
+    "category": "retrieval",
+    "question": "Bagaimana alur pendaftaran BPU melalui mahasiswa magang?",
+    "expected_sources": [
+      {
+        "file": "proses_pendaftaran_bpu.txt",
+        "section_contains": "Alur pendaftaran peserta BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Form Pendaftaran",
+      "1×24 jam",
+      "pembayaran",
+      "bukti kepesertaan"
+    ]
+  },
+  {
+    "id": "MAG-005",
+    "category": "retrieval",
+    "question": "Setelah formulir diisi, berapa lama petugas memproses pendaftaran?",
+    "expected_sources": [
+      {
+        "file": "proses_pendaftaran_bpu.txt",
+        "section_contains": "Alur pendaftaran peserta BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "1×24 jam"
+    ]
+  },
+  {
+    "id": "MAG-006",
+    "category": "retrieval",
+    "question": "Apa yang dilakukan mahasiswa setelah peserta membayar iuran?",
+    "expected_sources": [
+      {
+        "file": "proses_pendaftaran_bpu.txt",
+        "section_contains": "Alur pendaftaran peserta BPU"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Konfirmasi Pembayaran",
+      "bukti kepesertaan"
+    ]
+  },
+  {
+    "id": "GEN-001",
+    "category": "retrieval",
+    "question": "Apa itu BPJS Ketenagakerjaan?",
+    "expected_sources": [
+      {
+        "file": "info_umum_bpjs_tk.txt",
+        "section_contains": "Apa itu BPJS Ketenagakerjaan"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "jaminan sosial ketenagakerjaan"
+    ]
+  },
+  {
+    "id": "GEN-002",
+    "category": "retrieval",
+    "question": "Apa perbedaan PU dan BPU?",
+    "expected_sources": [
+      {
+        "file": "info_umum_bpjs_tk.txt",
+        "section_contains": "Empat Kategori Kepesertaan"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "Penerima Upah",
+      "Bukan Penerima Upah"
+    ]
+  },
+  {
+    "id": "GEN-003",
+    "category": "retrieval",
+    "question": "Apakah BPU bisa ikut JKP?",
+    "expected_sources": [
+      {
+        "file": "info_umum_bpjs_tk.txt",
+        "section_contains": "Jaminan Kehilangan Pekerjaan"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "BPU",
+      "tidak"
+    ]
+  },
+  {
+    "id": "GEN-004",
+    "category": "retrieval",
+    "question": "Apa nomor layanan masyarakat BPJS Ketenagakerjaan?",
+    "expected_sources": [
+      {
+        "file": "info_umum_bpjs_tk.txt",
+        "section_contains": "Saluran Layanan dan Informasi Resmi"
+      }
+    ],
+    "must_find_source": true,
+    "expected_keywords": [
+      "175"
+    ]
+  },
+  {
+    "id": "CALC-001",
+    "category": "calculator",
+    "question": "Hitung iuran JKK + JKM untuk penghasilan Rp1.000.000",
+    "expected_calculation": {
+      "income": 1000000,
+      "programs": [
+        "JKK",
+        "JKM"
+      ],
+      "discount": false,
+      "total": 16800
+    }
+  },
+  {
+    "id": "CALC-002",
+    "category": "calculator",
+    "question": "Berapa total 3 program untuk penghasilan Rp1.000.000?",
+    "expected_calculation": {
+      "income": 1000000,
+      "programs": [
+        "JKK",
+        "JKM",
+        "JHT"
+      ],
+      "discount": false,
+      "total": 36800
+    }
+  },
+  {
+    "id": "CALC-003",
+    "category": "calculator",
+    "question": "Kalau penghasilan Rp2 juta, berapa JKK dan JKM?",
+    "expected_calculation": {
+      "income": 2000000,
+      "programs": [
+        "JKK",
+        "JKM"
+      ],
+      "discount": false,
+      "total": 26800
+    }
+  },
+  {
+    "id": "CALC-004",
+    "category": "calculator",
+    "question": "Hitung 3 program untuk penghasilan 1,5 juta",
+    "expected_calculation": {
+      "income": 1500000,
+      "programs": [
+        "JKK",
+        "JKM",
+        "JHT"
+      ],
+      "discount": false,
+      "total": 51800
+    }
+  },
+  {
+    "id": "CALC-005",
+    "category": "calculator",
+    "question": "Berapa iuran promo 50% untuk JKK + JKM, pedagang dengan penghasilan Rp1.000.000?",
+    "expected_calculation": {
+      "income": 1000000,
+      "programs": [
+        "JKK",
+        "JKM"
+      ],
+      "discount": true,
+      "total": 8400
+    }
+  },
+  {
+    "id": "CALC-006",
+    "category": "calculator",
+    "question": "Kalau 3 program promo untuk pedagang Rp1.000.000, berapa totalnya?",
+    "expected_calculation": {
+      "income": 1000000,
+      "programs": [
+        "JKK",
+        "JKM",
+        "JHT"
+      ],
+      "discount": true,
+      "total": 28400
+    }
+  },
+  {
+    "id": "PRIV-001",
+    "category": "privacy",
+    "question": "NIK saya 1271061234567890, apakah sudah terdaftar?",
+    "expected_privacy_redaction": true
+  },
+  {
+    "id": "PRIV-002",
+    "category": "privacy",
+    "question": "Nomor rekening saya 123456789012, tolong cek untuk pembayaran.",
+    "expected_privacy_redaction": true
+  },
+  {
+    "id": "PRIV-003",
+    "category": "privacy",
+    "question": "Nomor WA calon peserta 081234567890 tolong simpan untuk follow-up.",
+    "expected_privacy_redaction": true
+  },
+  {
+    "id": "PRIV-004",
+    "category": "privacy",
+    "question": "Email saya peserta@example.com.",
+    "expected_privacy_redaction": true
+  },
+  {
+    "id": "SAFE-001",
+    "category": "fallback",
+    "question": "Bagaimana cara memperbaiki motor saya yang mogok?",
+    "must_fallback": true
+  },
+  {
+    "id": "SAFE-002",
+    "category": "fallback",
+    "question": "Siapa presiden Indonesia sekarang?",
+    "must_fallback": true
+  },
+  {
+    "id": "SAFE-003",
+    "category": "fallback",
+    "question": "Berapa harga laptop Ryzen terbaru hari ini?",
+    "must_fallback": true
+  },
+  {
+    "id": "SAFE-004",
+    "category": "fallback",
+    "question": "Bagaimana cara memasak nasi goreng?",
+    "must_fallback": true
+  },
+  {
+    "id": "CTX-001",
+    "category": "context",
+    "question": "Kalau yang 3 program bagaimana?",
+    "history": [
+      {
+        "role": "user",
+        "content": "Berapa iuran BPU untuk penghasilan Rp1.000.000?"
+      },
+      {
+        "role": "assistant",
+        "content": "Untuk BPU ada pilihan 2 atau 3 program."
+      }
+    ],
+    "must_find_source": true,
+    "expected_sources": [
+      {
+        "file": "info_bpu.txt",
+        "section_contains": "Ketentuan Iuran Program BPU"
+      }
+    ],
+    "expected_keywords": [
+      "JKK",
+      "JKM",
+      "JHT"
+    ]
+  }
+]

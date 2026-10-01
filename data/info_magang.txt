@@ -1,0 +1,84 @@
+# Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)
+
+> Catatan penyusunan: dokumen ini disusun dari `Silabus Program Magang Mahasiswa USU`. Dokumen `Rubrik Penilaian Mahasiswa Magang` SENGAJA TIDAK digabung ke sini karena persentase bobot penilaiannya berbeda dari Silabus (mis. Akuisisi BPU Kepling: 15 poin di Rubrik vs 20% di Silabus), dan dokumen Rubrik itu sendiri punya kejanggalan hitung internal (bagian "Akuisisi Peserta BPU" bobot dasarnya 15 poin tapi skala penilaiannya menembus 30 poin). Sebelum kedua dokumen ini disatukan, mohon konfirmasi ke pembina/DPL mana yang jadi acuan resmi.
+
+## 1. Tujuan dan Fokus Program
+Memberikan pengalaman kerja nyata dan pemahaman menyeluruh tentang BPJS Ketenagakerjaan, khususnya segmen Bukan Penerima Upah (BPU). Fokus topik pembelajaran: sistem jaminan sosial, karakteristik segmen BPU, akuisisi & komunikasi, program Jaminan Hari Tua (JHT), serta SOP, etika, dan pelaporan.
+
+## 2. Komponen dan Bobot Penilaian (Total 100%)
+| Komponen | Bobot |
+|---|---|
+| Akuisisi BPU Kepling (Kepala Lingkungan) | 20% |
+| Akuisisi BPU Program JHT | 20% |
+| Pendampingan & Sosialisasi | 20% |
+| Kuliah Umum & Company Visit | 10% |
+| Laporan Magang | 10% |
+| Kehadiran | 10% |
+| Attitude (Sikap) | 10% |
+
+**Skala predikat akhir:** A (80–100, kinerja unggul), B+ (75–79), B (70–74), C+ (65–69), C (60–64), D (51–59).
+
+## 3. Aturan Disiplin dan Kehadiran
+- Target kehadiran minimum: 90–100%
+- Tepat waktu saat datang dan pulang
+- Konsisten mematuhi jadwal yang ditetapkan
+- Aktif selama penugasan berlangsung
+- Wajib memberi kabar apabila berhalangan hadir
+
+## 4. Target Akuisisi Lapangan (Challenge, per 30 September 2026)
+- Setiap peserta magang wajib mengakuisisi minimal **5 peserta BPU**, dengan rincian:
+  - 3 peserta mendaftar 2 program (JKK & JKM)
+  - 2 peserta mendaftar 3 program (JKK, JKM, & JHT)
+- Setiap kelompok wajib membuat video edukasi jaminan sosial ketenagakerjaan
+
+> Info tambahan yang relevan untuk mengejar target ini: saat ini (per September 2026) sedang berlaku diskon iuran JKK & JKM 50% untuk peserta BPU non-transportasi (berlaku sampai Desember 2026) — lihat `info_bpu.txt` Bagian 4. Ini bisa jadi nilai jual tambahan saat sosialisasi ke calon peserta.
+
+## 5. Prosedur Akuisisi Lapangan (Segmen BPU)
+**Tahapan:** Pembekalan → Identifikasi → Pendekatan → Edukasi → Akuisisi → Follow-up → Pelaporan.
+
+**Indikator penilaian akuisisi:** pemahaman program, kemampuan komunikasi, aktivitas akuisisi, administrasi, disiplin, dan laporan.
+
+**Output yang diharapkan:** data calon peserta, rekap hasil akuisisi & follow-up, dokumentasi, serta laporan akhir.
+
+### Kemampuan yang Dinilai Khusus untuk Akuisisi JHT
+Materi inti: pemahaman tentang BPU, konsep & manfaat JHT, serta ketentuan kepesertaan dan iuran. Simulasi target audiens: pedagang, pengemudi, pekerja harian, dan UMKM.
+
+Yang dinilai (scorecard):
+1. Pemahaman tentang program JHT
+2. Kemampuan presentasi & komunikasi dalam membuka percakapan
+3. Kemampuan menjawab pertanyaan & menangani keberatan dari audiens
+4. Jumlah akuisisi & kualitas follow-up/mengarahkan pendaftaran
+5. Kepatuhan terhadap SOP & kewenangan sebagai peserta magang
+
+## 6. Prosedur Pendampingan dan Sosialisasi
+**Target audiens:** kepala lingkungan, kelurahan, komunitas, kelompok pekerja, UMKM, masyarakat umum, dan perusahaan.
+
+**Tahapan:** Persiapan → Pemetaan → Pendampingan → Sosialisasi → Tanya Jawab → Tindak Lanjut → Laporan.
+
+**Materi sosialisasi:** pentingnya jaminan sosial, pengenalan BPJS Ketenagakerjaan, program BPU & JHT, rincian manfaat, layanan, prosedur pendaftaran, dan kanal resmi.
+
+**Indikator kompetensi:**
+- Adaptif: komunikasi disesuaikan karakter audiens
+- Sistematis: informasi disampaikan runtut
+- Akuntabel: dokumentasi & pelaporan jelas
+- Kolaboratif: aktif bekerja dalam tim
+
+## 7. Kuliah Umum dan Company Visit
+- **Kuliah Umum:** belajar langsung dari institusi mengenai profil, peran, dan tantangan BPJS Ketenagakerjaan
+- **Company Visit:** observasi langsung praktik lapangan, lingkungan kerja, keselamatan kerja, dan hubungan perusahaan dengan BPJS
+- **Output:** resume kuliah umum, catatan hasil kunjungan lapangan, dokumentasi & refleksi keterkaitan pengalaman dengan bidang studi mahasiswa
+
+## 8. Standar Profesionalisme dan Attitude
+Predikat penilaian attitude: Sangat Baik, Baik, Cukup, Kurang — dinilai dari:
+- **Patuh:** mengikuti arahan pembina & tata tertib magang
+- **Santun:** menjaga komunikasi baik ke semua pihak
+- **Profesional:** menjaga kerapian pakaian, kerahasiaan data, & etika
+- **Kolaboratif:** menunjukkan kerja sama dan sikap tim yang baik
+
+## 9. Sistematika Laporan Magang
+- **Bab I Pendahuluan:** latar belakang, tujuan, manfaat, waktu/tempat pelaksanaan
+- **Bab II Profil Instansi:** BPJS secara umum, BPJS Cabang Medan Kota, struktur organisasi, fungsi, pelayanan
+- **Bab III Pelaksanaan Magang:** kehadiran, kegiatan akuisisi, sosialisasi, kuliah umum, company visit
+- **Bab IV Hasil & Pembahasan:** hasil akuisisi, analisis potensi, kendala di lapangan, solusi, pembelajaran
+- **Bab V Penutup:** kesimpulan dan saran
+- **Lampiran:** logbook harian, dokumentasi foto, surat-menyurat terkait, rekap hasil akuisisi
