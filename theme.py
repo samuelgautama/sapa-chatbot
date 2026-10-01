@@ -1294,6 +1294,33 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
         scroll-behavior: auto !important;
     }
 }
+
+/* ================================================================
+   STREAMLIT CLOUD — SEMBUNYIKAN CHROME BAWAAN (best-effort)
+   Dua lapis beda sumber:
+   1) Toolbar/menu/footer bawaan library streamlit sendiri — PUNYA
+      data-testid stabil, selalu aman disembunyikan di versi mana pun.
+   2) "Viewer badge" ("Hosted with Streamlit") — disuntik oleh INFRA
+      Community Cloud (bukan oleh library streamlit yang kita jalankan),
+      pakai class CSS ter-hash yang BISA BERUBAH di tiap rilis Community
+      Cloud. Makanya ditarget via [class*="..."] (substring, bukan exact
+      match) biar tetap kena walau suffix hash-nya beda. Tetap bukan
+      jaminan permanen — satu-satunya cara yang pasti & resmi adalah
+      hosting sendiri (badge ini memang tidak ada di luar Community Cloud).
+   ================================================================ */
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"],
+[data-testid="manage-app-button"],
+footer[data-testid="stFooter"],
+#MainMenu {
+    display: none !important; visibility: hidden !important;
+}
+a[class*="viewerBadge"],
+div[class*="viewerBadge"],
+div[class*="ViewerBadge"] {
+    display: none !important; visibility: hidden !important;
+}
 </style>'''
 
 
