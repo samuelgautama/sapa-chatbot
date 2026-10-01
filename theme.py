@@ -1040,15 +1040,15 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     padding-bottom: calc(var(--bar-pt) + 4px) !important;
 }
 
+/* Buat background input solid agar tidak tembus pandang */
 [data-testid="stChatInput"] {
     width: 100% !important;
-    background: rgba(28,30,36,.96) !important;
+    background: #1C1E24 !important; /* Diubah dari rgba semi-transparan ke solid */
     border: 1px solid rgba(255,255,255,.11) !important;
     border-radius: 26px !important;
     box-shadow: 0 3px 12px rgba(0,0,0,.22), var(--inset) !important;
     outline: none !important;
-    transition: border-color .25s var(--ease), background-color .25s var(--ease),
-                box-shadow .25s var(--ease);
+    transition: border-color .25s var(--ease), background-color .25s var(--ease), box-shadow .25s var(--ease);
     overflow: hidden !important; isolation: isolate !important;
     display: flex !important; flex-direction: row !important;
     align-items: flex-end !important; justify-content: stretch !important;
@@ -1077,6 +1077,7 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
    tombol kirim, teks jadi patah lebih awal dari seharusnya. flex-basis:0% + grow:1
    TIDAK bergantung pada lebar konten/pembungkus sama sekali, jadi bebas dari masalah
    itu di kedalaman nesting berapa pun. */
+/* Ganti flex: 1 1 0% menjadi width: 100% & flex: 1 1 auto agar lebar tidak menciut */
 [data-testid="stChatInput"] div:has(textarea) {
     display: flex !important; flex-direction: row !important;
     align-items: flex-end !important; justify-content: stretch !important;
@@ -1084,21 +1085,21 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     border: 0 !important; box-shadow: none !important; outline: none !important;
     min-height: 0 !important; max-height: none !important;
     padding: 0 !important; margin: 0 !important;
-    flex: 1 1 0% !important; min-width: 0 !important;
+    width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
 }
-/* Cadangan untuk browser tanpa dukungan :has() (mis. Firefox < 121) */
-[data-testid="stChatInput"] > div,
-[data-testid="stChatInput"] > div > div,
-[data-testid="stChatInput"] [data-baseweb="base-input"],
-[data-testid="stChatInput"] [data-baseweb="textarea"] {
-    display: flex !important; flex-direction: row !important;
-    align-items: flex-end !important; justify-content: stretch !important;
-    background: transparent !important; background-color: transparent !important;
-    border: 0 !important; box-shadow: none !important; outline: none !important;
-    min-height: 0 !important; max-height: none !important;
-    padding: 0 !important; margin: 0 !important;
-    flex: 1 1 0% !important; min-width: 0 !important;
-}
+/* CATATAN: dulu ada aturan "cadangan" di sini untuk browser tanpa dukungan
+   :has() (mis. Firefox lama), pakai selector "[data-testid="stChatInput"] > div"
+   dkk. Itu JUSTRU jadi sumber bug: selector itu tidak cuma kena pembungkus
+   textarea, tapi JUGA kena pembungkus TOMBOL KIRIM (keduanya sama-sama <div>
+   anak langsung stChatInput) -> keduanya dipaksa flex:1 1 0% dan berebut lebar
+   50/50, membuat kotak ketik terlihat sempit dengan celah kosong lebar di
+   sebelah kanan tombol (persis bug yang dilaporkan, nongol di desktop MAUPUN
+   mobile, bukan cuma browser lama). Lagipula seluruh halaman ini sudah
+   bergantung total pada :has() di mana-mana (sapa-empty/sapa-chat-active dkk),
+   jadi browser yang tidak mendukungnya sudah pasti rusak total di bagian lain
+   juga — fallback parsial di sini tidak ada gunanya, cuma bikin rusak di
+   browser modern. Jadi sengaja TIDAK diberi aturan cadangan apa pun; cukup
+   andalkan ":has(textarea)" di atas. */
 
 /* Textarea: satu baris = --ta-h, membesar otomatis sampai batas maksimal.
    flex-basis:0% juga dipakai di sini dengan alasan yang sama seperti di atas —
@@ -1107,7 +1108,7 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     background: transparent !important;
     color: var(--text) !important;
     border: 0 !important; box-shadow: none !important; outline: none !important;
-    font-size: 16px !important;               /* 16px = iOS tidak auto-zoom saat fokus */
+    font-size: 16px !important;
     line-height: var(--ta-lh) !important;
     padding: calc((var(--ta-h) - var(--ta-lh)) / 2) 8px calc((var(--ta-h) - var(--ta-lh)) / 2) 18px !important;
     border-radius: 26px !important;
@@ -1117,7 +1118,7 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     max-height: min(200px, 32dvh) !important;
     box-sizing: border-box !important;
     display: block !important; overflow-y: auto !important;
-    flex: 1 1 0% !important; min-width: 0 !important;
+    width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
 }
 [data-testid="stChatInputTextArea"]:focus { outline: none !important; box-shadow: none !important; }
 [data-testid="stChatInputTextArea"]::placeholder {
@@ -1225,24 +1226,26 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
    ================================================================ */
 @media (min-width: 768px) and (min-height: 600px) {
     .stApp:has(.sapa-empty) {
-        --cy: calc(50vh + 28px);   /* garis tengah kolom input, dari atas layar */
+        --cy: calc(50vh - 20px);
         --lift: calc(100vh - var(--cy) - var(--bar-pb) - var(--ta-h) / 2 - 1px);
     }
 
-    /* Input diangkat ke tengah */
+    /* Input diangkat ke tengah dengan z-index di atas hero */
     .stApp:has(.sapa-empty) [data-testid="stBottom"] {
         transform: translateY(calc(-1 * var(--lift))) !important;
+        z-index: 100 !important;
     }
     .stApp:has(.sapa-empty) [data-testid="stBottom"]::before { display: none; }
 
-    /* Sapaan: menempel tepat di atas input */
+    /* Posisikan Hero lebih tinggi di atas input bar */
     .stApp:has(.sapa-empty) [data-testid="stElementContainer"]:has(.sapa-hero) {
         position: fixed !important;
         left: var(--main-l, 0px); right: var(--main-r, 0px);
-        bottom: calc(100vh - var(--cy) + 55px);
+        bottom: calc(100vh - var(--cy) + 70px);
         display: flex; justify-content: center;
         padding: 0 var(--gutter); box-sizing: border-box;
         margin: 0 !important;
+        z-index: 10 !important;
     }
 
     /* Bantuan cepat: tepat di bawah input.
