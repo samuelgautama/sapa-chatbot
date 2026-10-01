@@ -1180,6 +1180,24 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
         bottom: calc(var(--kb, 0px) + 56px) !important;
     }
 
+    /* Input sudah dinaikkan agar tidak tertutup badge Streamlit.
+       Tutup area kosong di bawahnya dengan lapisan glass hitam yang sama,
+       sehingga perpindahan posisi input tidak meninggalkan "lubang" visual. */
+    [data-testid="stBottom"]::before {
+        top: calc(-1 * (var(--pills-zone) + 28px)) !important;
+        bottom: -56px !important;
+        background: linear-gradient(
+            180deg,
+            rgba(var(--bg-rgb), 0) 0%,
+            rgba(var(--bg-rgb), .82) 28%,
+            rgba(var(--bg-rgb), .96) 48%,
+            rgba(var(--bg-rgb), .99) 68%,
+            rgba(var(--bg-rgb), 1) 100%
+        ) !important;
+        backdrop-filter: blur(18px) saturate(135%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(135%) !important;
+    }
+
     /* Semua elemen yang menempel pada chatbar ikut naik agar jaraknya tetap konsisten. */
     .stApp:has(.sapa-chat-active) {
         --above-bar: calc(var(--kb, 0px) + var(--bar-h) + 56px);
