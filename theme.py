@@ -1080,50 +1080,41 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     box-shadow: 0 0 0 3px rgba(165,180,252,.13), 0 4px 20px rgba(0,0,0,.30), var(--inset) !important;
 }
 
-/* Setiap pembungkus antara [data-testid="stChatInput"] dan <textarea> dipaksa
-   melebar penuh & berbaris (flex row), APAPUN kedalaman nesting-nya.
-   ":has(textarea)" mencocokkan turunan di semua level (bukan cuma anak langsung),
-   jadi ini tahan terhadap perbedaan struktur DOM antar versi Streamlit.
+/* ====== RIWAYAT BUG "kotak input menyempit" (3 percobaan sebelumnya) ======
+   Percobaan 1: fallback selector "[data-testid=stChatInput] > div" ternyata
+   JUGA mengenai pembungkus TOMBOL KIRIM (sama-sama <div> anak langsung),
+   membuat keduanya berebut lebar 50/50 -> fallback dihapus total.
+   Percobaan 2: flex-basis sempat diganti ke "width:100%+flex:1 1 auto",
+   yang justru tidak konsisten dibulatkan di sejumlah WebView mobile saat ada
+   nesting -> dikembalikan ke flex-basis:0%.
+   Percobaan 3 (flex-basis:0% + selector "div:has(textarea)"): masih tetap
+   bisa gagal total kalau Streamlit ternyata TIDAK membungkus textarea-nya
+   pakai tag <div> (melainkan <label>, <span>, atau tag lain) — selector itu
+   HANYA mencocokkan tag <div> secara eksplisit, jadi kalau tag pembungkusnya
+   beda, aturan ini tidak pernah kena sama sekali, dan textarea jatuh balik ke
+   lebar bawaan browser (~20 karakter) -> persis gejala "satu huruf per baris".
 
-   flex-basis DIPAKSA 0% (BUKAN "auto" + width:100%): kombinasi "auto"+width bisa
-   dihitung tidak konsisten di sejumlah WebView mobile ketika ada beberapa lapis
-   pembungkus bersarang (tiap lapis membulatkan angkanya sendiri, errornya menumpuk),
-   hasilnya textarea terlihat lebih sempit dari kotaknya — ada celah kosong sebelum
-   tombol kirim, teks jadi patah lebih awal dari seharusnya (persis bug yang pernah
-   dilaporkan dari tangkapan layar hosting Streamlit Cloud). flex-basis:0% + grow:1
-   TIDAK bergantung pada lebar konten/pembungkus sama sekali, jadi bebas dari masalah
-   itu di kedalaman nesting berapa pun — JANGAN diubah balik ke width:100%+flex:auto. */
-[data-testid="stChatInput"] div:has(textarea) {
-    display: flex !important; flex-direction: row !important;
-    align-items: flex-end !important; justify-content: stretch !important;
-    background: transparent !important; background-color: transparent !important;
-    border: 0 !important; box-shadow: none !important; outline: none !important;
-    min-height: 0 !important; max-height: none !important;
-    padding: 0 !important; margin: 0 !important;
-    flex: 1 1 0% !important; min-width: 0 !important;
-}
-/* CATATAN PENTING — dulu ada DUA bug berbeda di sini, jangan sampai salah satu
-   perbaikannya mengundang yang lain balik lagi:
-   Bug A (selector fallback terlalu luas): sempat ada aturan "cadangan" untuk
-   browser tanpa dukungan :has() memakai selector "[data-testid="stChatInput"] > div".
-   Selector itu TIDAK CUMA kena pembungkus textarea, tapi JUGA kena pembungkus
-   TOMBOL KIRIM (keduanya sama-sama <div> anak langsung stChatInput) -> keduanya
-   dipaksa flex:1 1 0% dan berebut lebar 50/50, kotak ketik jadi sempit dengan
-   celah kosong lebar di sebelah kanan. Solusinya: fallback itu DIHAPUS total
-   (bukan diperbaiki) — seluruh halaman ini sudah bergantung total pada :has() di
-   mana-mana (sapa-empty/sapa-chat-active dkk), jadi browser yang tidak
-   mendukungnya sudah pasti rusak total di bagian lain juga; fallback parsial di
-   sini tidak ada gunanya, cuma bikin rusak di browser modern.
-   Bug B (flex-basis:auto+width:100%): setelah Bug A diperbaiki, flex-basis di
-   atas sempat ikut diganti ke "width:100%+flex:1 1 auto" — ini JUSTRU membawa
-   balik gejala yang MIRIP (textarea sempit, celah kosong sebelum tombol) lewat
-   jalur berbeda: pembulatan yang tidak konsisten di WebView mobile saat ada
-   nesting. Sudah dikembalikan ke flex-basis:0% (blok CSS di atas) karena itu
-   SATU-SATUNYA pola yang imun dari KEDUA bug sekaligus. */
+   SOLUSI SEKARANG — display:contents, bukan lagi flex per level:
+   Setiap pembungkus di antara [data-testid="stChatInput"] dan isi sesungguhnya
+   (textarea, tombol kirim) dibuat "transparan" total dari sisi layout lewat
+   display:contents — pembungkusnya tetap ada di DOM tapi SAMA SEKALI tidak lagi
+   ikut menentukan ukuran/posisi, seolah tidak pernah ada. Efeknya, textarea &
+   tombol kirim otomatis jadi "anak flex LANGSUNG" dari stChatInput itu sendiri
+   — TIDAK PEDULI berapa lapis pembungkusnya atau tag apa yang dipakai (div,
+   label, span, dll), karena selector di bawah pakai "*" (elemen apa saja),
+   bukan "div" secara spesifik. Ini jauh lebih tahan banting daripada percobaan
+   manapun sebelumnya karena tidak lagi bergantung sama sekali pada dugaan
+   struktur/tag DOM Streamlit.
+
+   display:contents SENGAJA TIDAK dipasang pada textarea/tombolnya SENDIRI,
+   cuma pada pembungkus di SEKITARNYA — display:contents pada elemen form
+   interaktif (<button>, <textarea>) punya riwayat bug aksesibilitas/fungsional
+   di sejumlah browser, jadi elemen fungsionalnya wajib tetap apa adanya. */
+[data-testid="stChatInput"] *:has(textarea) { display: contents !important; }
+[data-testid="stChatInput"] *:has([data-testid="stChatInputSubmitButton"]) { display: contents !important; }
 
 /* Textarea: satu baris = --ta-h, membesar otomatis sampai batas maksimal.
-   flex-basis:0% juga dipakai di sini dengan alasan yang sama seperti di atas —
-   textarea tidak lagi diberi width eksplisit, murni mengisi sisa ruang lewat flex-grow. */
+   flex-basis:0% (bukan width:100%) — lihat riwayat bug Percobaan 2 di atas. */
 [data-testid="stChatInputTextArea"] {
     background: transparent !important;
     color: var(--text) !important;
