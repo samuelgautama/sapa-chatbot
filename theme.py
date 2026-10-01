@@ -185,21 +185,6 @@ html, body {
 section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"],
 [data-testid="stExpandSidebarButton"] { display: none !important; }
 
-/* Badge "Manage app" Streamlit Community Cloud (ikon merah pojok kanan bawah,
-   dengan link status "running"/jumlah viewer) — ini elemen yang disuntikkan
-   Streamlit SENDIRI ke halaman utama, bukan bagian dari script app.py kita,
-   jadi tidak bisa dihapus lewat Python — hanya bisa disembunyikan via CSS
-   seperti ini. Class CSS-nya pakai hash acak yang berubah tiap rilis Streamlit
-   (mis. "viewerBadge_container__xxxxx"), jadi dicocokkan via "berawalan" supaya
-   tidak putus saat Streamlit update versi, plus cadangan lewat href-nya yang
-   selalu mengarah ke streamlit.io. Badge ini hanya muncul di app yang di-host
-   di Community Cloud (streamlit.app) — tidak akan kelihatan efeknya saat
-   dijalankan lokal, baru terlihat setelah di-deploy ulang. */
-[class*="viewerBadge_container"],
-[class*="viewerBadge_link"],
-a[href*="streamlit.io/cloud"],
-a[href^="https://share.streamlit.io"] { display: none !important; }
-
 .stApp [data-stale="true"] { opacity: 1 !important; transition: none !important; }
 
 * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.12) transparent; }
@@ -1189,6 +1174,17 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     .sapa-tagline { margin-top: 10px; }
     .sapa-desc { max-width: 340px; line-height: 1.5; margin-top: 8px; }
 
+    /* Community Cloud menempatkan badge di pojok kanan bawah.
+       Desktop aman, jadi input hanya dinaikkan pada mode mobile. */
+    [data-testid="stBottom"] {
+        bottom: calc(var(--kb, 0px) + 56px) !important;
+    }
+
+    /* Semua elemen yang menempel pada chatbar ikut naik agar jaraknya tetap konsisten. */
+    .stApp:has(.sapa-chat-active) {
+        --above-bar: calc(var(--kb, 0px) + var(--bar-h) + 56px);
+    }
+
     /* Top bar ringkas: hanya merek + tombol Baru */
     .sapa-chat-separator, .sapa-chat-tagline { display: none; }
     .sapa-chat-brand { height: 16px; }
@@ -1201,7 +1197,7 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     .stApp:has(.sapa-empty) .st-key-qa_zone {
         position: fixed !important;
         left: var(--main-l, 0px) !important; right: var(--main-r, 0px) !important;
-        bottom: calc(var(--bar-h) + var(--kb, 0px) + 10px) !important;
+        bottom: calc(var(--bar-h) + var(--kb, 0px) + 56px + 10px) !important;
         top: auto !important;
         padding: 0 max(var(--gutter), var(--safe-left)) !important;
         box-sizing: border-box !important;
@@ -1295,32 +1291,6 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     }
 }
 
-/* ================================================================
-   STREAMLIT CLOUD — SEMBUNYIKAN CHROME BAWAAN (best-effort)
-   Dua lapis beda sumber:
-   1) Toolbar/menu/footer bawaan library streamlit sendiri — PUNYA
-      data-testid stabil, selalu aman disembunyikan di versi mana pun.
-   2) "Viewer badge" ("Hosted with Streamlit") — disuntik oleh INFRA
-      Community Cloud (bukan oleh library streamlit yang kita jalankan),
-      pakai class CSS ter-hash yang BISA BERUBAH di tiap rilis Community
-      Cloud. Makanya ditarget via [class*="..."] (substring, bukan exact
-      match) biar tetap kena walau suffix hash-nya beda. Tetap bukan
-      jaminan permanen — satu-satunya cara yang pasti & resmi adalah
-      hosting sendiri (badge ini memang tidak ada di luar Community Cloud).
-   ================================================================ */
-[data-testid="stToolbar"],
-[data-testid="stDecoration"],
-[data-testid="stStatusWidget"],
-[data-testid="manage-app-button"],
-footer[data-testid="stFooter"],
-#MainMenu {
-    display: none !important; visibility: hidden !important;
-}
-a[class*="viewerBadge"],
-div[class*="viewerBadge"],
-div[class*="ViewerBadge"] {
-    display: none !important; visibility: hidden !important;
-}
 </style>'''
 
 
