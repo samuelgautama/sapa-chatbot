@@ -185,6 +185,21 @@ html, body {
 section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"],
 [data-testid="stExpandSidebarButton"] { display: none !important; }
 
+/* Badge "Manage app" Streamlit Community Cloud (ikon merah pojok kanan bawah,
+   dengan link status "running"/jumlah viewer) — ini elemen yang disuntikkan
+   Streamlit SENDIRI ke halaman utama, bukan bagian dari script app.py kita,
+   jadi tidak bisa dihapus lewat Python — hanya bisa disembunyikan via CSS
+   seperti ini. Class CSS-nya pakai hash acak yang berubah tiap rilis Streamlit
+   (mis. "viewerBadge_container__xxxxx"), jadi dicocokkan via "berawalan" supaya
+   tidak putus saat Streamlit update versi, plus cadangan lewat href-nya yang
+   selalu mengarah ke streamlit.io. Badge ini hanya muncul di app yang di-host
+   di Community Cloud (streamlit.app) — tidak akan kelihatan efeknya saat
+   dijalankan lokal, baru terlihat setelah di-deploy ulang. */
+[class*="viewerBadge_container"],
+[class*="viewerBadge_link"],
+a[href*="streamlit.io/cloud"],
+a[href^="https://share.streamlit.io"] { display: none !important; }
+
 .stApp [data-stale="true"] { opacity: 1 !important; transition: none !important; }
 
 * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.12) transparent; }
@@ -1070,14 +1085,14 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
    ":has(textarea)" mencocokkan turunan di semua level (bukan cuma anak langsung),
    jadi ini tahan terhadap perbedaan struktur DOM antar versi Streamlit.
 
-   flex-basis DIPAKSA 0% (bukan "auto" + width:100%): kombinasi "auto"+width bisa
+   flex-basis DIPAKSA 0% (BUKAN "auto" + width:100%): kombinasi "auto"+width bisa
    dihitung tidak konsisten di sejumlah WebView mobile ketika ada beberapa lapis
    pembungkus bersarang (tiap lapis membulatkan angkanya sendiri, errornya menumpuk),
    hasilnya textarea terlihat lebih sempit dari kotaknya — ada celah kosong sebelum
-   tombol kirim, teks jadi patah lebih awal dari seharusnya. flex-basis:0% + grow:1
+   tombol kirim, teks jadi patah lebih awal dari seharusnya (persis bug yang pernah
+   dilaporkan dari tangkapan layar hosting Streamlit Cloud). flex-basis:0% + grow:1
    TIDAK bergantung pada lebar konten/pembungkus sama sekali, jadi bebas dari masalah
-   itu di kedalaman nesting berapa pun. */
-/* Ganti flex: 1 1 0% menjadi width: 100% & flex: 1 1 auto agar lebar tidak menciut */
+   itu di kedalaman nesting berapa pun — JANGAN diubah balik ke width:100%+flex:auto. */
 [data-testid="stChatInput"] div:has(textarea) {
     display: flex !important; flex-direction: row !important;
     align-items: flex-end !important; justify-content: stretch !important;
@@ -1085,21 +1100,26 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     border: 0 !important; box-shadow: none !important; outline: none !important;
     min-height: 0 !important; max-height: none !important;
     padding: 0 !important; margin: 0 !important;
-    width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
+    flex: 1 1 0% !important; min-width: 0 !important;
 }
-/* CATATAN: dulu ada aturan "cadangan" di sini untuk browser tanpa dukungan
-   :has() (mis. Firefox lama), pakai selector "[data-testid="stChatInput"] > div"
-   dkk. Itu JUSTRU jadi sumber bug: selector itu tidak cuma kena pembungkus
-   textarea, tapi JUGA kena pembungkus TOMBOL KIRIM (keduanya sama-sama <div>
-   anak langsung stChatInput) -> keduanya dipaksa flex:1 1 0% dan berebut lebar
-   50/50, membuat kotak ketik terlihat sempit dengan celah kosong lebar di
-   sebelah kanan tombol (persis bug yang dilaporkan, nongol di desktop MAUPUN
-   mobile, bukan cuma browser lama). Lagipula seluruh halaman ini sudah
-   bergantung total pada :has() di mana-mana (sapa-empty/sapa-chat-active dkk),
-   jadi browser yang tidak mendukungnya sudah pasti rusak total di bagian lain
-   juga — fallback parsial di sini tidak ada gunanya, cuma bikin rusak di
-   browser modern. Jadi sengaja TIDAK diberi aturan cadangan apa pun; cukup
-   andalkan ":has(textarea)" di atas. */
+/* CATATAN PENTING — dulu ada DUA bug berbeda di sini, jangan sampai salah satu
+   perbaikannya mengundang yang lain balik lagi:
+   Bug A (selector fallback terlalu luas): sempat ada aturan "cadangan" untuk
+   browser tanpa dukungan :has() memakai selector "[data-testid="stChatInput"] > div".
+   Selector itu TIDAK CUMA kena pembungkus textarea, tapi JUGA kena pembungkus
+   TOMBOL KIRIM (keduanya sama-sama <div> anak langsung stChatInput) -> keduanya
+   dipaksa flex:1 1 0% dan berebut lebar 50/50, kotak ketik jadi sempit dengan
+   celah kosong lebar di sebelah kanan. Solusinya: fallback itu DIHAPUS total
+   (bukan diperbaiki) — seluruh halaman ini sudah bergantung total pada :has() di
+   mana-mana (sapa-empty/sapa-chat-active dkk), jadi browser yang tidak
+   mendukungnya sudah pasti rusak total di bagian lain juga; fallback parsial di
+   sini tidak ada gunanya, cuma bikin rusak di browser modern.
+   Bug B (flex-basis:auto+width:100%): setelah Bug A diperbaiki, flex-basis di
+   atas sempat ikut diganti ke "width:100%+flex:1 1 auto" — ini JUSTRU membawa
+   balik gejala yang MIRIP (textarea sempit, celah kosong sebelum tombol) lewat
+   jalur berbeda: pembulatan yang tidak konsisten di WebView mobile saat ada
+   nesting. Sudah dikembalikan ke flex-basis:0% (blok CSS di atas) karena itu
+   SATU-SATUNYA pola yang imun dari KEDUA bug sekaligus. */
 
 /* Textarea: satu baris = --ta-h, membesar otomatis sampai batas maksimal.
    flex-basis:0% juga dipakai di sini dengan alasan yang sama seperti di atas —
@@ -1118,7 +1138,7 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     max-height: min(200px, 32dvh) !important;
     box-sizing: border-box !important;
     display: block !important; overflow-y: auto !important;
-    width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important;
+    flex: 1 1 0% !important; min-width: 0 !important;
 }
 [data-testid="stChatInputTextArea"]:focus { outline: none !important; box-shadow: none !important; }
 [data-testid="stChatInputTextArea"]::placeholder {
