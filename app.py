@@ -193,7 +193,7 @@ _COPY_BUTTON_HTML = """<!doctype html>
     all: unset; box-sizing: border-box;
     display: inline-flex; align-items: center; gap: 7px;
     height: 32px; padding: 0 13px 0 11px; border-radius: 9px;
-    color: #8B93A3; font-size: 13px; font-weight: 600; line-height: 1;
+    color: #A9B0BD; font-size: 13px; font-weight: 600; line-height: 1;
     cursor: pointer; user-select: none; -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color .18s ease, color .18s ease, transform .12s ease;

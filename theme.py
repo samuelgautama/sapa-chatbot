@@ -61,8 +61,8 @@ _CSS = r'''<style>
     --bg: #07080C;
     --bg-rgb: 7,8,12;
     --text: #F1F3F7;
-    --text-2: #A9B0BD;
-    --text-3: #838B99;
+    --text-2: #C3C9D4;
+    --text-3: #A3ABB9;
     --line: rgba(255,255,255,.08);
     --line-2: rgba(255,255,255,.14);
     --surface-hover: rgba(255,255,255,.09);
@@ -91,6 +91,21 @@ _CSS = r'''<style>
     --btn: 38px;
     --bar-pt: 8px;
     --bar-pb: 20px;
+
+    /* Jarak aman dari badge "Hosted with Streamlit" (Streamlit Community
+       Cloud menyuntikkan badge ini sendiri di pojok kanan bawah viewport,
+       di LUAR kendali CSS/HTML kita — mencoba menyembunyikannya lewat CSS
+       classname tidak reliable karena nama class-nya di-hash & bisa berubah
+       tiap rilis). Daripada mengejar cara menyembunyikannya, kolom input
+       cukup diangkat sedikit dari tepi bawah layar supaya tombol kirim
+       tidak ketiban badge.
+       Default di sini 0px (desktop tidak butuh — badge ada di pojok kanan
+       BAWAH yang jauh dari kolom input yang sudah dibatasi --content-w &
+       ada jarak dari tepi layar). Nilai sungguhan di-set di breakpoint
+       mobile saja (lihat @media max-width:767px), karena di layar sempit
+       kolom input melebar penuh sampai dekat pojok kanan bawah tempat
+       badge nongkrong. */
+    --badge-clearance: 0px;
 
     /* Strip quick action (mode chat aktif) */
     --pills-h: 36px;
@@ -213,7 +228,7 @@ section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"],
     /* ruang untuk kolom input (+ strip quick action) yang fixed di bawah.
        + --kb: saat keyboard terbuka container scroll tetap setinggi layar penuh,
        jadi tanpa ini pesan terakhir terhalang keyboard */
-    padding-bottom: calc(var(--bar-h) + var(--pills-zone) + 28px + var(--kb, 0px)) !important;
+    padding-bottom: calc(var(--bar-h) + var(--badge-clearance) + var(--pills-zone) + 28px + var(--kb, 0px)) !important;
 }
 [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] { gap: 0 !important; }
 [data-testid="stElementContainer"]:has(.sapa-empty),
@@ -425,9 +440,9 @@ __QA_ROW__ {
     background: transparent !important; transform: none !important;
 }
 .st-key-quick_actions button:disabled p,
-.st-key-quick_actions button[disabled] p { color: rgba(226,229,235,.38) !important; }
+.st-key-quick_actions button[disabled] p { color: rgba(226,229,235,.58) !important; }
 .st-key-quick_actions button:disabled [data-testid="stIconMaterial"],
-.st-key-quick_actions button[disabled] [data-testid="stIconMaterial"] { opacity: .5 !important; }
+.st-key-quick_actions button[disabled] [data-testid="stIconMaterial"] { opacity: .65 !important; }
 
 /* ---------- Chat kosong: daftar selebar kolom input, rata dengan tepi kirinya ---------- */
 .stApp:has(.sapa-empty) .st-key-quick_actions {
@@ -465,7 +480,9 @@ __QA_ROW__ {
     --col-l: calc(var(--main-l, 0px)
                   + max(var(--gutter), var(--safe-left))
                   + max(0px, (100vw - var(--main-l, 0px) - var(--main-r, 0px) - var(--content-w)) / 2));
-    --above-bar: calc(var(--kb, 0px) + var(--bar-h));
+    /* + --badge-clearance (0px di desktop, 40px di mobile): stBottom diangkat sebesar itu,
+       jadi tombol & popup bantuan cepat harus ikut naik agar tidak menimpa input */
+    --above-bar: calc(var(--kb, 0px) + var(--bar-h) + var(--badge-clearance));
 }
 /* Wadah hanya penampung: tidak punya kotak sendiri, semua anaknya fixed */
 .stApp:has(.sapa-chat-active) .st-key-qa_zone {
@@ -786,6 +803,29 @@ __CONFIRM_ROW__ { gap: 0 !important; }
     margin: .25em 0 .6em !important; color: #fff !important;
     font-size: 1.04rem !important; line-height: 1.3 !important; font-weight: 700 !important;
 }
+/* ---------- Keterbacaan: warna teks dipaksa terang ----------
+   Elemen markdown yang tidak kita style satu per satu (li, em, tabel, blockquote,
+   tautan, kode inline, alert, caption, dll.) memakai warna dari tema Streamlit.
+   Kalau perangkat memakai mode terang, warna itu GELAP dan nyaris menyatu dengan
+   background gelap kita. :where() membuat spesifisitas = 0, jadi aturan ini hanya
+   mengisi "celah"; semua aturan khusus di file ini tetap menang. */
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"], [data-testid="stExpanderDetails"])
+  :where(p, li, ul, ol, span, em, i, b, td, th, h1, h2, h3, h4, h5, h6, small, label, dd, dt):not([class*="sapa-"]) {
+    color: var(--text) !important;
+}
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(strong, h1, h2, h3, h4, h5, h6) { color: #fff !important; }
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(a) {
+    color: var(--accent) !important; text-decoration-color: rgba(165,180,252,.5);
+}
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(blockquote, blockquote *) { color: var(--text-2) !important; }
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(code) {
+    color: #E8EBF2 !important; background: rgba(255,255,255,.09) !important;
+}
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(pre, pre *) { color: #E8EBF2 !important; }
+:where([data-testid="stChatMessageContent"]) :where(th, td) { border-color: var(--line-2) !important; }
+:where([data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *) { color: var(--text-2) !important; }
+:where([data-testid="stAlert"], [data-testid="stAlert"] *) { color: var(--text) !important; }
+
 /* Tabel & kode lebar tidak boleh mendorong halaman melebar */
 [data-testid="stChatMessageContent"] pre,
 [data-testid="stChatMessageContent"] table {
@@ -1004,8 +1044,9 @@ iframe {
 [data-testid="stBottom"] {
     position: fixed !important;
     top: auto !important;
-    /* naik mengikuti keyboard virtual (--kb diisi JS; 0 di desktop) */
-    bottom: var(--kb, 0px) !important;
+    /* naik mengikuti keyboard virtual (--kb diisi JS; 0 di desktop/tanpa
+       keyboard) + jarak aman tetap dari badge Streamlit Cloud */
+    bottom: calc(var(--kb, 0px) + var(--badge-clearance)) !important;
     left: var(--main-l, 0px) !important;
     right: var(--main-r, 0px) !important;
     width: auto !important;
@@ -1166,6 +1207,9 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
         --bar-pb: 12px;
         --pills-h: 34px;
         --topbar-h: 48px;
+        /* Lihat penjelasan --badge-clearance di :root — baru relevan di
+           mobile, sengaja 0px di desktop. */
+        --badge-clearance: 40px;
         /* Perkiraan tinggi list bantuan cepat (6 baris x 48px + 5 jarak 4px + 10px
            jarak ke input). Kalau jumlah bantuan cepat berubah, nilai ini perlu
            disesuaikan supaya sapaan tidak tertutup/terlalu naik. */
@@ -1174,17 +1218,6 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     .sapa-tagline { margin-top: 10px; }
     .sapa-desc { max-width: 340px; line-height: 1.5; margin-top: 8px; }
 
-    /* Community Cloud menempatkan badge di pojok kanan bawah.
-       Desktop aman, jadi input hanya dinaikkan pada mode mobile. */
-    [data-testid="stBottom"] {
-        bottom: calc(var(--kb, 0px) + 56px) !important;
-    }
-
-    /* Semua elemen yang menempel pada chatbar ikut naik agar jaraknya tetap konsisten. */
-    .stApp:has(.sapa-chat-active) {
-        --above-bar: calc(var(--kb, 0px) + var(--bar-h) + 56px);
-    }
-
     /* Top bar ringkas: hanya merek + tombol Baru */
     .sapa-chat-separator, .sapa-chat-tagline { display: none; }
     .sapa-chat-brand { height: 16px; }
@@ -1192,17 +1225,25 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     /* Bantuan cepat dilepas dari alur (tidak lagi ikut center bersama sapaan),
        lalu ditempel fixed tepat di atas kolom input — seperti referensi. */
     .stApp:has(.sapa-empty) [data-testid="stMainBlockContainer"] {
-        padding-bottom: calc(var(--bar-h) + var(--qa-h) + 24px + var(--kb, 0px)) !important;
+        padding-bottom: calc(var(--bar-h) + var(--badge-clearance) + var(--qa-h) + 24px + var(--kb, 0px)) !important;
     }
     .stApp:has(.sapa-empty) .st-key-qa_zone {
         position: fixed !important;
         left: var(--main-l, 0px) !important; right: var(--main-r, 0px) !important;
-        bottom: calc(var(--bar-h) + var(--kb, 0px) + 56px + 10px) !important;
+        /* + --badge-clearance: kolom input (stBottom) sendiri sudah diangkat sebesar itu,
+           jadi daftar harus ikut naik agar tidak tertutup input */
+        bottom: calc(var(--bar-h) + var(--badge-clearance) + var(--kb, 0px) + 10px) !important;
         top: auto !important;
         padding: 0 max(var(--gutter), var(--safe-left)) !important;
         box-sizing: border-box !important;
         z-index: 80 !important;
     }
+    /* Efek blur/fade hitam disebarkan sampai tepi bawah layar (menutup celah
+       --badge-clearance di bawah kolom input), termasuk area aman home-indicator. */
+    [data-testid="stBottom"]::before {
+        bottom: calc(-1 * (var(--badge-clearance) + var(--safe-bottom))) !important;
+    }
+
     /* Keyboard terbuka: sembunyikan supaya area ketik lega (konsisten dengan strip mode chat aktif) */
     html.sapa-kb-open .stApp:has(.sapa-empty) .st-key-qa_zone { display: none !important; }
 
@@ -1234,7 +1275,11 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 @media (min-width: 768px) and (min-height: 600px) {
     .stApp:has(.sapa-empty) {
         --cy: calc(50vh - 20px);
-        --lift: calc(100vh - var(--cy) - var(--bar-pb) - var(--ta-h) / 2 - 1px);
+        /* -var(--badge-clearance) di sini menetralkan tambahan "bottom" di
+           atas, supaya posisi tengah saat chat kosong tidak ikut bergeser
+           naik oleh jarak aman badge (itu cuma relevan saat bar menempel
+           di tepi bawah layar, yaitu mode chat berjalan). */
+        --lift: calc(100vh - var(--cy) - var(--bar-pb) - var(--ta-h) / 2 - 1px - var(--badge-clearance));
     }
 
     /* Input diangkat ke tengah dengan z-index di atas hero */
@@ -1290,7 +1335,6 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
         scroll-behavior: auto !important;
     }
 }
-
 </style>'''
 
 
@@ -1299,8 +1343,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV2) return;
-  window.__sapaLayoutV2 = true;
+  if (window.__sapaLayoutV3) return;
+  window.__sapaLayoutV3 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -1414,6 +1458,47 @@ _LAYOUT_JS = r'''
   });
   
   // Gunakan MutationObserver agar auto-scroll berjalan secepat kilat setiap DOM berubah
+
+  // ---- Mobile: keyboard otomatis tertutup setelah kirim (Enter / tombol kirim) ----
+  // Hanya perangkat layar sentuh / layar sempit. Shift+Enter tetap baris baru.
+  // blur() ditunda supaya handler Streamlit (yang mengirim pesan) jalan lebih dulu.
+  var lastTouch = 0, noRefocusUntil = 0;
+  function isMobileUI() {
+    return window.matchMedia('(max-width: 767px)').matches ||
+           window.matchMedia('(pointer: coarse)').matches;
+  }
+  function chatTa() { return q('[data-testid="stChatInputTextArea"]'); }
+  function dismissKeyboard(ta) {
+    noRefocusUntil = Date.now() + 1500;
+    setTimeout(function () {
+      var t = ta || chatTa();
+      if (t && document.activeElement === t) t.blur();
+    }, 60);
+  }
+  document.addEventListener('pointerdown', function () { lastTouch = Date.now(); }, true);
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (!t || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    if (!isMobileUI()) return;
+    if (!t.value || !t.value.trim()) return;      // tidak ada yang dikirim
+    dismissKeyboard(t);
+  }, false);
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('[data-testid="stChatInputSubmitButton"]');
+    if (!b || !isMobileUI()) return;
+    dismissKeyboard();
+  }, true);
+  // Streamlit bisa memfokuskan ulang input setelah rerun -> tahan sebentar,
+  // kecuali pengguna memang baru saja mengetuk input.
+  document.addEventListener('focusin', function (e) {
+    var t = e.target;
+    if (!t || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (Date.now() < noRefocusUntil && Date.now() - lastTouch > 450 && isMobileUI()) {
+      setTimeout(function () { if (document.activeElement === t) t.blur(); }, 0);
+    }
+  }, true);
+
   new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   schedule();
 })();
@@ -1442,9 +1527,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v2")) return;
+    if (doc.getElementById("sapa-layout-js-v3")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v2";
+    s.id = "sapa-layout-js-v3";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{
