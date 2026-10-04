@@ -13,6 +13,8 @@ Modul ini tidak dijalankan langsung, melainkan dipanggil oleh app.py (antarmuka 
 
 import os
 import re
+from dataclasses import dataclass
+from typing import Optional
 # modul bawaan Python untuk membaca environment variable (misalnya API key)
 
 from dotenv import load_dotenv
@@ -743,11 +745,26 @@ def _temporal_context(question: str) -> str:
     return "\n".join(status_lines)
 
 
-def ask(question, retriever, llm, history=None):
+@dataclass
+class _AskPlan:
     """
-    Fungsi utama RAG. Memahami percakapan sebelumnya, mencari dokumen relevan,
-    lalu menghasilkan jawaban berdasarkan konteks dokumen + riwayat percakapan.
-    Mengembalikan (jawaban, dokumen_sumber).
+    Hasil tahap RETRIEVAL + AUGMENTATION (semua yang terjadi SEBELUM LLM dipanggil).
+
+    - static_answer terisi  -> jawaban sudah final tanpa LLM (small talk, fallback,
+                               hasil kalkulator deterministik). messages = None.
+    - static_answer = None  -> messages siap dikirim ke LLM (invoke ataupun stream).
+    """
+    sources: list
+    static_answer: Optional[str] = None
+    messages: Optional[list] = None
+
+
+def _prepare_ask(question, retriever, history=None) -> _AskPlan:
+    """
+    Logika RAG bersama untuk ask() dan ask_stream(): sanitasi input, small talk,
+    deteksi intent, retrieval + confidence gate, fallback, kalkulator deterministik,
+    dan penyusunan prompt. Urutan & isinya sama persis dengan ask() versi sebelumnya,
+    supaya perilaku (dan hasil evaluation) tidak berubah.
     """
     sanitized_question = sanitize_user_input(question)
     question = sanitized_question.text
@@ -760,7 +777,7 @@ def ask(question, retriever, llm, history=None):
     # gagal melewati confidence gate dan mendapatkan fallback yang kaku.
     small_talk = detect_small_talk(question)
     if small_talk is not None:
-        return SMALL_TALK_RESPONSES[small_talk], []
+        return _AskPlan(sources=[], static_answer=SMALL_TALK_RESPONSES[small_talk])
 
     intent_name = detect_intent(question)
     intent_instruction = get_intent_instruction(intent_name)
@@ -781,13 +798,21 @@ def ask(question, retriever, llm, history=None):
             "kartu", "klaim", "ketenagakerjaan", "calon peserta", "follow up", "follow-up"
         )
         is_domain_relevant = any(keyword in question.lower() for keyword in domain_keywords)
-        return sanitize_assistant_output(_fallback_response(intent_name, domain_relevant=is_domain_relevant)), []
+        return _AskPlan(
+            sources=[],
+            static_answer=sanitize_assistant_output(
+                _fallback_response(intent_name, domain_relevant=is_domain_relevant)
+            ),
+        )
 
     # Tahap 5: pertanyaan aritmetika iuran tidak dikirim ke LLM untuk dihitung.
     # Python menghitung angka secara deterministik; RAG tetap memasok sumber yang tampil di UI.
     deterministic_calculation = _try_deterministic_calculation(question)
     if deterministic_calculation is not None:
-        return sanitize_assistant_output(deterministic_calculation), relevant_docs
+        return _AskPlan(
+            sources=relevant_docs,
+            static_answer=sanitize_assistant_output(deterministic_calculation),
+        )
 
     context = format_context(relevant_docs)
     # AUGMENTATION: gabungkan potongan dokumen hasil retrieval
@@ -821,9 +846,122 @@ def ask(question, retriever, llm, history=None):
             messages.append(AIMessage(content=message["content"]))
 
     messages.append(HumanMessage(content=human_content))
+    return _AskPlan(sources=relevant_docs, messages=messages)
 
-    response = llm.invoke(messages)
+
+def ask(question, retriever, llm, history=None):
+    """
+    Fungsi RAG non-streaming (tetap dipertahankan untuk evaluation/benchmark & kode lama).
+    Mengembalikan (jawaban, dokumen_sumber).
+    Untuk UI dengan efek mesin tik, pakai ask_stream().
+    """
+    plan = _prepare_ask(question, retriever, history)
+    if plan.static_answer is not None:
+        return plan.static_answer, plan.sources
+
+    response = llm.invoke(plan.messages)
     # GENERATION: LLM menerima aturan sistem + riwayat + konteks sumber + pertanyaan terbaru
 
-    return sanitize_assistant_output(response.content), relevant_docs
+    return sanitize_assistant_output(response.content), plan.sources
     # kembalikan teks jawaban LLM beserta dokumen sumber untuk ditampilkan transparan
+
+
+def _chunk_text(chunk) -> str:
+    """Ambil teks dari satu chunk hasil llm.stream() (content bisa str atau list blok)."""
+    content = getattr(chunk, "content", chunk)
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, str):
+                parts.append(block)
+            elif isinstance(block, dict) and block.get("type", "text") == "text":
+                parts.append(str(block.get("text", "")))
+        return "".join(parts)
+    return ""
+
+
+class AnswerStream:
+    """
+    Jawaban yang bisa di-iterasi (generator) untuk st.write_stream.
+
+    - .sources : dokumen sumber, sudah tersedia SEBELUM iterasi dimulai.
+    - iterasi  : menghasilkan potongan teks (delta) yang SUDAH disanitasi.
+    - .emitted : gabungan semua delta yang sudah dikirim ke UI.
+    - .text    : jawaban final (sanitasi penuh); valid setelah iterasi selesai.
+
+    Sanitasi tetap aman saat streaming: teks mentah dari LLM hanya "dilepas" ke UI
+    per BARIS LENGKAP, lalu disanitasi dengan sanitize_assistant_output() yang sama.
+    Semua aturan sanitasi bekerja di dalam satu baris, jadi referensi internal
+    (FAQ-xx, nama file .txt, [SUMBER n], catatan meta) tidak sempat tampil sebagian.
+    Di akhir stream, sanitasi penuh dijalankan sekali lagi sebagai versi otoritatif.
+
+    Objek ini sekali pakai (satu kali iterasi).
+    """
+
+    def __init__(self, sources, static_answer=None, llm=None, messages=None):
+        self.sources = sources
+        self._static_answer = static_answer
+        self._llm = llm
+        self._messages = messages
+        self.emitted = ""
+        self.text = static_answer if static_answer is not None else ""
+
+    def _delta(self, candidate_raw: str) -> str:
+        """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten)."""
+        cleaned = sanitize_assistant_output(candidate_raw)
+        if cleaned.startswith(self.emitted):
+            delta = cleaned[len(self.emitted):]
+            self.emitted = cleaned
+            return delta
+        # Sanitasi mengubah teks yang sudah terlanjur tampil (sangat jarang):
+        # tahan dulu, koreksi dilakukan di akhir lewat .text.
+        return ""
+
+    def __iter__(self):
+        # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik)
+        if self._static_answer is not None:
+            self.emitted = self._static_answer
+            self.text = self._static_answer
+            yield self._static_answer
+            return
+
+        raw = ""
+        committed = 0   # panjang raw yang sudah berupa baris-baris lengkap
+        for chunk in self._llm.stream(self._messages):
+            # GENERATION (streaming): token datang bertahap dari LLM
+            piece = _chunk_text(chunk)
+            if not piece:
+                continue
+            raw += piece
+            cut = raw.rfind("\n") + 1
+            if cut > committed:
+                committed = cut
+                delta = self._delta(raw[:cut])
+                if delta:
+                    yield delta
+
+        # Akhir stream: sanitasi penuh = versi final yang disimpan ke riwayat
+        self.text = sanitize_assistant_output(raw)
+        tail = self._delta(raw)
+        if tail:
+            yield tail
+
+
+def ask_stream(question, retriever, llm, history=None) -> AnswerStream:
+    """
+    Versi streaming dari ask(): retrieval, confidence gate, kalkulator deterministik,
+    dan prompt sama persis (lewat _prepare_ask). Bedanya, jawaban LLM diambil lewat
+    llm.stream() dan dikembalikan sebagai AnswerStream.
+
+    Retrieval berjalan di dalam pemanggilan ini (sebelum iterasi), jadi indikator
+    loading di UI tetap tampil selama retrieval dan menunggu token pertama.
+    """
+    plan = _prepare_ask(question, retriever, history)
+    return AnswerStream(
+        sources=plan.sources,
+        static_answer=plan.static_answer,
+        llm=llm,
+        messages=plan.messages,
+    )

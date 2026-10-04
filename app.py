@@ -1,12 +1,14 @@
 import html
+import itertools
 import json
 import re
+import time
 from pathlib import Path
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-from chatbot import load_retriever, load_llm, ask
+from chatbot import load_retriever, load_llm, ask_stream
 from theme import get_custom_css, get_layout_script
 
 
@@ -164,6 +166,34 @@ def md_safe(text) -> str:
     oleh Streamlit, jadi dua '$' dalam satu jawaban bisa merusak tampilan teks.
     """
     return str(text).replace("$", r"\$")
+
+
+# Kecepatan efek mesin tik (detik per kata). Dimulai agak pelan lalu mempercepat
+# seiring jawaban memanjang, supaya jawaban panjang tidak terasa lama.
+_TYPE_DELAY_START = 0.016
+_TYPE_DELAY_MIN = 0.004
+_TYPE_RAMP_WORDS = 250
+
+
+def typewriter(deltas):
+    """
+    Generator untuk st.write_stream: memecah potongan teks dari LLM menjadi
+    kata-per-kata dan memberi jeda singkat -> efek mesin tik yang halus walau
+    LLM mengirim token sangat cepat. Baris tabel markdown (diawali '|') dikirim
+    utuh agar tabel tidak tampil setengah jadi.
+    """
+    shown = 0
+    for delta in deltas:
+        for line in delta.splitlines(keepends=True):
+            if line.lstrip().startswith("|"):
+                pieces = [line]
+            else:
+                pieces = re.findall(r"\S+\s*|\s+", line)
+            for piece in pieces:
+                yield md_safe(piece)
+                shown += 1
+                ramp = max(0.0, 1.0 - shown / _TYPE_RAMP_WORDS)
+                time.sleep(_TYPE_DELAY_MIN + (_TYPE_DELAY_START - _TYPE_DELAY_MIN) * ramp)
 
 
 def render_user_message(text) -> None:
@@ -544,14 +574,28 @@ if user_question:
             unsafe_allow_html=True,
         )
 
-        answer, sources = ask(
+        # Retrieval + prompt dijalankan di sini; waveform tetap tampil.
+        stream = ask_stream(
             user_question,
             retriever,
             llm,
             history=conversation_history,
         )
+        sources = stream.sources
 
-        placeholder.markdown(md_safe(answer))
+        # Tunggu token pertama dulu (waveform tetap terlihat selama LLM "berpikir"),
+        # baru ganti dengan teks yang mengalir ala mesin tik.
+        deltas = iter(stream)
+        first = next(deltas, None)
+        if first is not None:
+            with placeholder.container():
+                st.write_stream(typewriter(itertools.chain([first], deltas)))
+
+        # Jawaban final (sanitasi penuh) yang disimpan ke riwayat. Layar hanya
+        # dirender ulang bila berbeda dari yang sudah tampil (sangat jarang) atau kosong.
+        answer = stream.text
+        if first is None or stream.emitted != answer:
+            placeholder.markdown(md_safe(answer))
         render_copy_button(str(answer), "latest")
         render_sources(sources)
 
