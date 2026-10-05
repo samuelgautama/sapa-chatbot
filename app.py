@@ -487,8 +487,10 @@ if user_question:
         user_question = None
     else:
         st.session_state.last_message_ts = now
-        st.session_state.qa_open = False   # popup bantuan cepat tidak boleh ikut terbawa ke proses menjawab
         st.session_state.messages.append({"role": "user", "content": user_question})
+        # Popup bantuan cepat yang masih terbuka ditutup begitu pesan diterima, supaya
+        # tidak ada tombol yang bisa diklik (dan memutus jawaban) selama jawaban dibuat.
+        st.session_state.qa_open = False
 
 
 # ---------------------------------------------------------------------------
@@ -643,42 +645,52 @@ if rate_limit_wait > 0:
 if user_question:
     conversation_history = st.session_state.messages[:-1]
 
-    with st.chat_message("assistant"):
-        placeholder = st.empty()
-        placeholder.markdown(
-            '<div class="sapa-thinking" role="status" aria-label="SAPA sedang menyusun jawaban">'
-            '<span class="sapa-thinking-wave">'
-            '<span></span><span></span><span></span><span></span><span></span>'
-            '</span>'
-            '<span class="sapa-thinking-label">Menyusun jawaban</span>'
-            '</div>',
-            unsafe_allow_html=True,
-        )
+    # Penanda tak terlihat "sedang membuat jawaban" untuk theme.py: selama ada, tombol
+    # Bantuan cepat dikunci (CSS + JS). Alasannya: setiap klik widget Streamlit memicu
+    # rerun, dan rerun MEMUTUS skrip yang sedang men-stream jawaban (jawaban batal).
+    # Dihapus lagi di finally supaya tombol aktif kembali tanpa rerun tambahan.
+    generating_flag = st.empty()
+    generating_flag.markdown('<div class="sapa-generating"></div>', unsafe_allow_html=True)
 
-        # Retrieval + prompt dijalankan di sini; waveform tetap tampil.
-        stream = ask_stream(
-            user_question,
-            retriever,
-            llm,
-            history=conversation_history,
-        )
-        sources = stream.sources
+    try:
+        with st.chat_message("assistant"):
+            placeholder = st.empty()
+            placeholder.markdown(
+                '<div class="sapa-thinking" role="status" aria-label="SAPA sedang menyusun jawaban">'
+                '<span class="sapa-thinking-wave">'
+                '<span></span><span></span><span></span><span></span><span></span>'
+                '</span>'
+                '<span class="sapa-thinking-label">Menyusun jawaban</span>'
+                '</div>',
+                unsafe_allow_html=True,
+            )
 
-        # Tunggu token pertama dulu (waveform tetap terlihat selama LLM "berpikir"),
-        # baru ganti dengan teks yang mengalir ala mesin tik.
-        deltas = iter(stream)
-        first = next(deltas, None)
-        if first is not None:
-            with placeholder.container():
-                st.write_stream(typewriter(itertools.chain([first], deltas)))
+            # Retrieval + prompt dijalankan di sini; waveform tetap tampil.
+            stream = ask_stream(
+                user_question,
+                retriever,
+                llm,
+                history=conversation_history,
+            )
+            sources = stream.sources
 
-        # Jawaban final (sanitasi penuh) yang disimpan ke riwayat. Layar hanya
-        # dirender ulang bila berbeda dari yang sudah tampil (sangat jarang) atau kosong.
-        answer = stream.text
-        if first is None or stream.emitted != answer:
-            placeholder.markdown(md_safe(answer))
-        render_copy_button(str(answer), "latest")
-        render_sources(sources)
+            # Tunggu token pertama dulu (waveform tetap terlihat selama LLM "berpikir"),
+            # baru ganti dengan teks yang mengalir ala mesin tik.
+            deltas = iter(stream)
+            first = next(deltas, None)
+            if first is not None:
+                with placeholder.container():
+                    st.write_stream(typewriter(itertools.chain([first], deltas)))
+
+            # Jawaban final (sanitasi penuh) yang disimpan ke riwayat. Layar hanya
+            # dirender ulang bila berbeda dari yang sudah tampil (sangat jarang) atau kosong.
+            answer = stream.text
+            if first is None or stream.emitted != answer:
+                placeholder.markdown(md_safe(answer))
+            render_copy_button(str(answer), "latest")
+            render_sources(sources)
+    finally:
+        generating_flag.empty()
 
     st.session_state.messages.append({"role": "assistant", "content": str(answer)})
     st.session_state.sources_map[len(st.session_state.messages) - 1] = sources
