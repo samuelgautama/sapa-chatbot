@@ -873,27 +873,54 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 @media (prefers-reduced-motion: reduce) { .st-key-rate_limit { animation: none; } }
 
 /* ---------- Cooldown kirim (kelas html.sapa-cooldown dipasang JS, sinkron dengan server) ----------
-   Tombol kirim nonaktif + cincin progres + angka hitung mundur. Ukuran mengikuti --btn,
-   jadi otomatis pas di desktop (38px) maupun mobile (36px). Bantuan cepat ikut meredup. */
+   Tombol kirim nonaktif + cincin progres yang mengalir halus (diupdate per frame, bukan per
+   detik) + angka hitung mundur. Cakram & cincin selalu ada di tombol dan hanya dipudarkan
+   lewat opacity, jadi masuk/keluarnya mulus. Ukuran mengikuti --btn (desktop 38px, mobile 36px).
+   Saat cooldown habis tombol "berdenyut" sekali (.sapa-cd-ready). */
 [data-testid="stElementContainer"]:has(.sapa-cooldown-sync) { display: none !important; }
-html.sapa-cooldown [data-testid="stChatInputSubmitButton"] {
-    position: relative !important; cursor: not-allowed !important;
-    background: rgba(255,255,255,.08) !important; color: transparent !important;
-    box-shadow: none !important; transform: none !important;
-}
-html.sapa-cooldown [data-testid="stChatInputSubmitButton"] svg { opacity: 0 !important; }
-html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::before {
+[data-testid="stChatInputSubmitButton"] { position: relative !important; }
+[data-testid="stChatInputSubmitButton"] svg { transition: opacity .3s var(--ease); }
+[data-testid="stChatInputSubmitButton"]::before,
+[data-testid="stChatInputSubmitButton"]::after {
     content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: conic-gradient(var(--accent) calc(var(--cd-p, 0) * 360deg), rgba(255,255,255,.14) 0);
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
-            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    opacity: 0; transition: opacity .45s var(--ease);
 }
-html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::after {
-    content: var(--cd-n, ""); position: absolute; inset: 0; pointer-events: none;
+[data-testid="stChatInputSubmitButton"]::before {
+    background:
+        radial-gradient(circle closest-side, #12141C calc(100% - 3px), transparent calc(100% - 2.5px)),
+        conic-gradient(from 0deg, var(--accent) calc(var(--cd-p, 0) * 360deg), rgba(255,255,255,.12) 0);
+}
+[data-testid="stChatInputSubmitButton"]::after {
+    content: var(--cd-n, "");
     display: flex; align-items: center; justify-content: center;
     font: 700 13px/1 var(--font); color: var(--text); font-variant-numeric: tabular-nums;
 }
-html.sapa-cooldown .st-key-quick_actions button { opacity: .5 !important; cursor: not-allowed !important; }
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::before,
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::after { opacity: 1; }
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"] { cursor: not-allowed !important; transform: none !important; }
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"] svg { opacity: 0; }
+@keyframes sapa-cd-ready {
+    0%   { transform: scale(.88); box-shadow: 0 0 0 0 rgba(165,180,252,.55), 0 2px 8px rgba(0,0,0,.26); }
+    55%  { transform: scale(1.1); }
+    100% { transform: scale(1);   box-shadow: 0 0 0 10px rgba(165,180,252,0), 0 2px 8px rgba(0,0,0,.26); }
+}
+[data-testid="stChatInputSubmitButton"].sapa-cd-ready { animation: sapa-cd-ready .65s var(--ease) both; }
+
+/* Bantuan cepat: redup halus saat cooldown, dan TERKUNCI saat chatbot sedang menjawab
+   (script state "running"): membuka/menutup/memilihnya akan menimpa proses Streamlit dan
+   membatalkan jawaban yang sedang diketik. Peredupan saat "running" ditunda 0,3 dtk supaya
+   proses singkat (mis. membuka popup) tidak berkedip. */
+.st-key-quick_actions button, .st-key-qa_toggle button {
+    transition: opacity .35s var(--ease), background .2s var(--ease), transform .2s var(--ease) !important;
+}
+html.sapa-cooldown .st-key-quick_actions button { opacity: .45 !important; cursor: not-allowed !important; }
+[data-test-script-state="running"] .st-key-qa_toggle button,
+[data-test-script-state="rerunRequested"] .st-key-qa_toggle button,
+[data-test-script-state="running"] .st-key-quick_actions button,
+[data-test-script-state="rerunRequested"] .st-key-quick_actions button {
+    opacity: .45 !important; cursor: not-allowed !important; pointer-events: none !important;
+    transition-delay: .3s !important;
+}
 @keyframes sapa-shake {
     0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); }
     40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); }
@@ -1295,10 +1322,14 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
         /* Perkiraan tinggi list bantuan cepat (6 baris x 48px + 5 jarak 4px + 10px
            jarak ke input). Kalau jumlah bantuan cepat berubah, nilai ini perlu
            disesuaikan supaya sapaan tidak tertutup/terlalu naik. */
-        --qa-h: 318px;
+        --qa-item-h: 48px;
+        --qa-gap: 4px;
+        --qa-h: calc(6 * var(--qa-item-h) + 5 * var(--qa-gap) + 10px);   /* 6 bantuan cepat */
+        --hero-gap: clamp(28px, 5vh, 44px);   /* jarak aman minimum sapaan -> daftar bantuan cepat */
     }
     .sapa-tagline { margin-top: 10px; }
     .sapa-desc { max-width: 340px; line-height: 1.5; margin-top: 8px; }
+    .sapa-hero { margin-bottom: 8px; }
 
     /* Top bar ringkas: hanya merek + tombol Baru */
     .sapa-chat-separator, .sapa-chat-tagline { display: none; }
@@ -1306,9 +1337,16 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 
     /* Bantuan cepat dilepas dari alur (tidak lagi ikut center bersama sapaan),
        lalu ditempel fixed tepat di atas kolom input — seperti referensi. */
+    /* Logo diberi napas dari tepi atas (bukan lagi mepet), dan sapaan selalu berjarak
+       --hero-gap dari daftar bantuan cepat di bawahnya. */
     .stApp:has(.sapa-empty) [data-testid="stMainBlockContainer"] {
-        padding-bottom: calc(var(--bar-h) + var(--badge-clearance) + var(--qa-h) + 24px + var(--kb, 0px)) !important;
+        padding-top: calc(var(--safe-top) + clamp(36px, 7vh, 64px)) !important;
+        padding-bottom: calc(var(--bar-h) + var(--badge-clearance) + var(--qa-h) + var(--hero-gap) + var(--kb, 0px)) !important;
     }
+    .stApp:has(.sapa-empty) .st-key-quick_actions button {
+        height: var(--qa-item-h) !important; min-height: var(--qa-item-h) !important;
+    }
+    .stApp:has(.sapa-empty) __QA_ROW__ { gap: var(--qa-gap) !important; }
     .stApp:has(.sapa-empty) .st-key-qa_zone {
         position: fixed !important;
         left: var(--main-l, 0px) !important; right: var(--main-r, 0px) !important;
@@ -1334,6 +1372,20 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) > [data-testid="stChatMessageContent"] {
         max-width: 88% !important;
     }
+}
+
+/* HP berlayar pendek (mis. 667px ke bawah): padatkan daftar & sapaan agar logo tidak
+   terdorong ke tepi atas dan jarak ke bantuan cepat tetap lega. */
+@media (max-width: 767px) and (max-height: 720px) {
+    :root { --qa-item-h: 44px; --qa-gap: 2px; }
+    .sapa-wordmark { height: clamp(2rem, 8vw, 2.6rem); }
+    .sapa-desc { font-size: .78rem; line-height: 1.45; }
+    .stApp:has(.sapa-empty) [data-testid="stMainBlockContainer"] {
+        padding-top: calc(var(--safe-top) + clamp(28px, 5vh, 40px)) !important;
+    }
+}
+@media (max-width: 767px) and (max-height: 620px) {
+    .sapa-desc { display: none; }
 }
 
 /* Layar sempit: list penuh lebar (dulu grid 2 kolom) */
@@ -1425,8 +1477,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV4) return;
-  window.__sapaLayoutV4 = true;
+  if (window.__sapaLayoutV5) return;
+  window.__sapaLayoutV5 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -1585,35 +1637,56 @@ _LAYOUT_JS = r'''
   // Server (app.py) menaruh penanda .sapa-cooldown-sync berisi sisa waktu resmi; JS hanya
   // menampilkan & menegakkannya: tombol kirim nonaktif, Enter diblok, bantuan cepat terkunci.
   // Teks yang sedang diketik TIDAK hilang karena pesan memang tidak pernah dikirim.
-  var CD_DEFAULT = 7000;
-  var cd = { end: 0, total: CD_DEFAULT, timer: null, key: '' };
+  var CD_DEFAULT = 9000;
+  var cd = { end: 0, total: CD_DEFAULT, raf: 0, key: '' };
   function cdLeft() { return Math.max(0, cd.end - performance.now()); }
   function submitBtn() { return q('[data-testid="stChatInputSubmitButton"]'); }
+  // Streamlit sedang menjalankan skrip (mis. chatbot sedang menjawab)
+  function isBusy() {
+    return !!q('[data-test-script-state="running"], [data-test-script-state="rerunRequested"]');
+  }
   function releaseSubmit() {
     var b = submitBtn(), ta = chatTa();
-    if (b) b.disabled = !(ta && ta.value && ta.value.trim().length);   // sama dengan aturan bawaan Streamlit
-  }
-  function cdTick() {
-    var left = cdLeft();
-    if (left <= 0) {
-      if (cd.timer) { clearInterval(cd.timer); cd.timer = null; }
-      root.classList.remove('sapa-cooldown');
-      root.style.removeProperty('--cd-n');
-      root.style.removeProperty('--cd-p');
-      releaseSubmit();
-      return;
+    var canSend = !!(ta && ta.value && ta.value.trim().length);   // sama dengan aturan bawaan Streamlit
+    if (!b) return;
+    b.disabled = !canSend;
+    if (canSend) {                                  // siap kirim: denyut lembut sekali
+      b.classList.remove('sapa-cd-ready'); void b.offsetWidth;
+      b.classList.add('sapa-cd-ready');
+      setTimeout(function () { b.classList.remove('sapa-cd-ready'); }, 700);
     }
-    root.style.setProperty('--cd-n', '"' + Math.ceil(left / 1000) + '"');
-    root.style.setProperty('--cd-p', Math.min(1, Math.max(0, 1 - left / cd.total)).toFixed(3));
+  }
+  // Variabel progres dipasang di tombolnya sendiri (bukan <html>) supaya tiap frame
+  // hanya menggambar ulang satu elemen kecil, bukan seluruh halaman.
+  function cdFrame() {
+    cd.raf = 0;
+    var left = cdLeft();
+    if (left <= 0) { cdFinish(); return; }
     var b = submitBtn();
-    if (b && !b.disabled) b.disabled = true;
+    if (b) {
+      b.style.setProperty('--cd-p', Math.min(1, Math.max(0, 1 - left / cd.total)).toFixed(4));
+      var n = '"' + Math.ceil(left / 1000) + '"';
+      if (b.style.getPropertyValue('--cd-n') !== n) b.style.setProperty('--cd-n', n);
+      if (!b.disabled) b.disabled = true;
+    }
+    cd.raf = requestAnimationFrame(cdFrame);
+  }
+  function cdFinish() {
+    var b = submitBtn();
+    if (b) b.style.setProperty('--cd-p', '1');
+    root.classList.remove('sapa-cooldown');          // cakram & cincin memudar lewat transisi opacity
+    releaseSubmit();
+    setTimeout(function () {                          // bersihkan setelah selesai memudar
+      if (cdLeft() > 0) return;
+      var bb = submitBtn();
+      if (bb) { bb.style.removeProperty('--cd-n'); bb.style.removeProperty('--cd-p'); }
+    }, 600);
   }
   function startCooldown(ms, total) {
     cd.end = performance.now() + ms;
     cd.total = total > 0 ? total : CD_DEFAULT;
     root.classList.add('sapa-cooldown');
-    if (!cd.timer) cd.timer = setInterval(cdTick, 100);
-    cdTick();
+    if (!cd.raf) cd.raf = requestAnimationFrame(cdFrame);
   }
   function syncCooldown() {
     var all = document.querySelectorAll('.sapa-cooldown-sync');
@@ -1664,9 +1737,35 @@ _LAYOUT_JS = r'''
     e.stopImmediatePropagation();
     nudge(submitBtn());
   }, true);
+  // Pesan benar-benar akan terkirim (Enter / tombol kirim, bukan saat cooldown): sembunyikan
+  // popup / daftar bantuan cepat seketika, jangan menunggu jawaban selesai.
+  function closePopupOnSend() { if (q('.st-key-quick_actions')) root.classList.add('sapa-qa-closing'); }
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (cdLeft() || !t || !t.getAttribute || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing || !t.value || !t.value.trim()) return;
+    closePopupOnSend();
+  }, true);
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
+
+    if (t.closest('[data-testid="stChatInputSubmitButton"]')) {
+      var ta = chatTa();
+      if (!cdLeft() && ta && ta.value && ta.value.trim()) closePopupOnSend();
+      return;
+    }
+
+    var ctl = t.closest('.st-key-quick_actions button, .st-key-qa_toggle button, .st-key-qa_backdrop button');
+    if (!ctl) return;
+    // Chatbot sedang menjawab: membuka/menutup/memilih bantuan cepat akan menimpa proses
+    // Streamlit dan MEMBATALKAN jawaban -> kunci sampai jawaban selesai.
+    if (isBusy()) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      nudge(ctl);
+      return;
+    }
     var item = t.closest('.st-key-quick_actions button');
     if (item) {
       if (cdLeft()) {                       // bantuan cepat terkunci selama cooldown
@@ -1714,9 +1813,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v4")) return;
+    if (doc.getElementById("sapa-layout-js-v5")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v4";
+    s.id = "sapa-layout-js-v5";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{

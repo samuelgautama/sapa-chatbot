@@ -67,7 +67,7 @@ if "last_message_ts" not in st.session_state:
 
 # Rate limit per sesi: maksimal 1 pesan setiap RATE_LIMIT_SECONDS detik.
 # Sengaja TIDAK di-reset oleh "+ Baru", supaya tombol itu tidak bisa dipakai menghindari batas.
-RATE_LIMIT_SECONDS = 7
+RATE_LIMIT_SECONDS = 9
 
 
 quick_action_defs = [
@@ -487,6 +487,7 @@ if user_question:
         user_question = None
     else:
         st.session_state.last_message_ts = now
+        st.session_state.qa_open = False   # popup bantuan cepat tidak boleh ikut terbawa ke proses menjawab
         st.session_state.messages.append({"role": "user", "content": user_question})
 
 
