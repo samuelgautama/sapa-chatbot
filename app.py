@@ -67,7 +67,7 @@ if "last_message_ts" not in st.session_state:
 
 # Rate limit per sesi: maksimal 1 pesan setiap RATE_LIMIT_SECONDS detik.
 # Sengaja TIDAK di-reset oleh "+ Baru", supaya tombol itu tidak bisa dipakai menghindari batas.
-RATE_LIMIT_SECONDS = 10
+RATE_LIMIT_SECONDS = 7
 
 
 quick_action_defs = [
@@ -203,6 +203,30 @@ def typewriter(deltas):
                 time.sleep(_TYPE_DELAY_MIN + (_TYPE_DELAY_START - _TYPE_DELAY_MIN) * ramp)
 
 
+def cooldown_remaining() -> float:
+    """Sisa detik sebelum pesan berikutnya boleh dikirim (0 bila sudah boleh)."""
+    last = st.session_state.last_message_ts
+    if last is None:
+        return 0.0
+    return max(0.0, RATE_LIMIT_SECONDS - (time.monotonic() - last))
+
+
+def render_cooldown_sync() -> None:
+    """
+    Penanda tak terlihat untuk JS (theme.py): sisa cooldown RESMI dari server. JS memakainya
+    untuk menonaktifkan tombol kirim + bantuan cepat dengan hitung mundur, jadi pengguna
+    tidak perlu mengirim dulu lalu ditolak (dan teks yang diketik tidak hilang).
+    """
+    remaining = cooldown_remaining()
+    if remaining <= 0:
+        return
+    st.markdown(
+        f'<div class="sapa-cooldown-sync" data-key="{st.session_state.last_message_ts:.3f}" '
+        f'data-remaining="{int(remaining * 1000)}" data-total="{RATE_LIMIT_SECONDS * 1000}"></div>',
+        unsafe_allow_html=True,
+    )
+
+
 def render_rate_limit_warning(wait_seconds: float) -> None:
     """
     Peringatan ramah + hitung mundur. Hilang sendiri begitu jeda selesai, jadi tidak
@@ -220,8 +244,8 @@ def render_rate_limit_warning(wait_seconds: float) -> None:
             seconds = max(1, math.ceil(remaining))
             if seconds != shown:   # render ulang hanya saat angkanya berganti
                 box.warning(
-                    f"Pelan-pelan ya, SAPA lagi menyiapkan jawaban. "
-                    f"Pesanmu belum terkirim, coba lagi dalam **{seconds} detik**.",
+                    f"Pelan-pelan ya, pesanmu belum terkirim. "
+                    f"Coba lagi dalam **{seconds} detik**.",
                     icon="⏳",
                 )
                 shown = seconds
@@ -476,6 +500,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.markdown(get_custom_css(), unsafe_allow_html=True)
+render_cooldown_sync()
 
 # Menyesuaikan posisi input bar dengan keyboard virtual (tidak ada tampilan)
 components.html(get_layout_script(), height=0)

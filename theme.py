@@ -826,23 +826,87 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 :where([data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *) { color: var(--text-2) !important; }
 :where([data-testid="stAlert"], [data-testid="stAlert"] *) { color: var(--text) !important; }
 
-/* ---------- Peringatan rate limit: kartu amber lembut, selaras dengan bubble chat ---------- */
-.st-key-rate_limit { margin-top: 4px; animation: sapa-rl-in .28s ease-out both; }
+/* ---------- Peringatan rate limit (responsif) ----------
+   Mode chat berjalan : kartu mengambang tepat di atas strip "Bantuan cepat" / kolom input,
+                        selebar kolom chat (maks. isi kolom desktop, tepi-ke-tepi dalam gutter di mobile),
+                        ikut naik bersama keyboard virtual (--above-bar sudah memuat --kb & --badge-clearance).
+   Mode chat kosong   : mengalir biasa di bawah sapaan, rata tengah. */
+.st-key-rate_limit { animation: sapa-rl-in .28s ease-out both; }
+.stApp:has(.sapa-chat-active) .st-key-rate_limit {
+    position: fixed !important; z-index: 97 !important;
+    left: var(--col-l) !important; right: auto !important; top: auto !important;
+    bottom: calc(var(--above-bar) + var(--pills-zone) + 6px) !important;
+    width: min(calc(var(--content-w) - 2 * var(--gutter)),
+               calc(100vw - var(--col-l) - var(--main-r, 0px) - max(var(--gutter), var(--safe-right)))) !important;
+    box-sizing: border-box !important; margin: 0 !important; padding: 0 !important;
+}
+.stApp:has(.sapa-empty) .st-key-rate_limit {
+    width: 100% !important; max-width: min(520px, 100%) !important; margin: 10px auto 0 !important;
+}
+.st-key-rate_limit [data-testid="stAlert"] { width: 100% !important; }
 .st-key-rate_limit [data-testid="stAlert"] > div,
 .st-key-rate_limit [data-testid="stAlert"] [data-baseweb="notification"] {
-    background: rgba(251,191,36,.08) !important;
-    border: 1px solid rgba(251,191,36,.28) !important;
+    background: rgba(32,24,10,.82) !important;
+    backdrop-filter: blur(16px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+    border: 1px solid rgba(251,191,36,.30) !important;
     border-radius: 14px !important;
-    box-shadow: var(--inset) !important;
-    padding: 12px 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,.40), var(--inset) !important;
+    padding: 11px 14px !important;
     font-family: var(--font) !important;
+    align-items: center !important; gap: 10px !important;
 }
+.st-key-rate_limit [data-testid="stAlert"] [data-testid="stAlertContainer"] { width: 100% !important; min-width: 0 !important; }
 .st-key-rate_limit [data-testid="stAlert"] p {
-    color: var(--text) !important; font-size: 14px !important; line-height: 1.55 !important; margin: 0 !important;
+    color: var(--text) !important; font-size: 14px !important; line-height: 1.5 !important;
+    margin: 0 !important; overflow-wrap: anywhere !important;
 }
-.st-key-rate_limit [data-testid="stAlert"] strong { color: #FCD34D !important; }
-@keyframes sapa-rl-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.st-key-rate_limit [data-testid="stAlert"] strong { color: #FCD34D !important; white-space: nowrap; }
+@media (max-width: 767px) {
+    .st-key-rate_limit [data-testid="stAlert"] > div,
+    .st-key-rate_limit [data-testid="stAlert"] [data-baseweb="notification"] {
+        padding: 10px 12px !important; border-radius: 13px !important; gap: 8px !important;
+    }
+    .st-key-rate_limit [data-testid="stAlert"] p { font-size: 13px !important; line-height: 1.45 !important; }
+}
+@keyframes sapa-rl-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .st-key-rate_limit { animation: none; } }
+
+/* ---------- Cooldown kirim (kelas html.sapa-cooldown dipasang JS, sinkron dengan server) ----------
+   Tombol kirim nonaktif + cincin progres + angka hitung mundur. Ukuran mengikuti --btn,
+   jadi otomatis pas di desktop (38px) maupun mobile (36px). Bantuan cepat ikut meredup. */
+[data-testid="stElementContainer"]:has(.sapa-cooldown-sync) { display: none !important; }
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"] {
+    position: relative !important; cursor: not-allowed !important;
+    background: rgba(255,255,255,.08) !important; color: transparent !important;
+    box-shadow: none !important; transform: none !important;
+}
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"] svg { opacity: 0 !important; }
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::before {
+    content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: conic-gradient(var(--accent) calc(var(--cd-p, 0) * 360deg), rgba(255,255,255,.14) 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+}
+html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::after {
+    content: var(--cd-n, ""); position: absolute; inset: 0; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    font: 700 13px/1 var(--font); color: var(--text); font-variant-numeric: tabular-nums;
+}
+html.sapa-cooldown .st-key-quick_actions button { opacity: .5 !important; cursor: not-allowed !important; }
+@keyframes sapa-shake {
+    0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); }
+}
+.sapa-shake { animation: sapa-shake .42s ease-in-out !important; }
+
+/* ---------- Popup bantuan cepat langsung menutup saat dipilih ----------
+   Streamlit baru membuang elemen lama setelah SELURUH jalannya skrip selesai (termasuk
+   jawaban yang sedang diketik), jadi popup (atau daftar bantuan cepat dari layar kosong,
+   yang mendadak berpenampilan popup begitu mode chat aktif) tertinggal sampai jawaban
+   rampung. JS memasang html.sapa-qa-closing saat bantuan cepat dipilih / popup ditutup. */
+html.sapa-qa-closing .stApp:has(.sapa-chat-active) .st-key-quick_actions,
+html.sapa-qa-closing .st-key-qa_backdrop { display: none !important; }
 
 /* Tabel & kode lebar tidak boleh mendorong halaman melebar */
 [data-testid="stChatMessageContent"] pre,
@@ -1361,8 +1425,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV3) return;
-  window.__sapaLayoutV3 = true;
+  if (window.__sapaLayoutV4) return;
+  window.__sapaLayoutV4 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -1517,8 +1581,113 @@ _LAYOUT_JS = r'''
     }
   }, true);
 
+  // ---- Cooldown kirim (rate limit) + bantuan cepat ----
+  // Server (app.py) menaruh penanda .sapa-cooldown-sync berisi sisa waktu resmi; JS hanya
+  // menampilkan & menegakkannya: tombol kirim nonaktif, Enter diblok, bantuan cepat terkunci.
+  // Teks yang sedang diketik TIDAK hilang karena pesan memang tidak pernah dikirim.
+  var CD_DEFAULT = 7000;
+  var cd = { end: 0, total: CD_DEFAULT, timer: null, key: '' };
+  function cdLeft() { return Math.max(0, cd.end - performance.now()); }
+  function submitBtn() { return q('[data-testid="stChatInputSubmitButton"]'); }
+  function releaseSubmit() {
+    var b = submitBtn(), ta = chatTa();
+    if (b) b.disabled = !(ta && ta.value && ta.value.trim().length);   // sama dengan aturan bawaan Streamlit
+  }
+  function cdTick() {
+    var left = cdLeft();
+    if (left <= 0) {
+      if (cd.timer) { clearInterval(cd.timer); cd.timer = null; }
+      root.classList.remove('sapa-cooldown');
+      root.style.removeProperty('--cd-n');
+      root.style.removeProperty('--cd-p');
+      releaseSubmit();
+      return;
+    }
+    root.style.setProperty('--cd-n', '"' + Math.ceil(left / 1000) + '"');
+    root.style.setProperty('--cd-p', Math.min(1, Math.max(0, 1 - left / cd.total)).toFixed(3));
+    var b = submitBtn();
+    if (b && !b.disabled) b.disabled = true;
+  }
+  function startCooldown(ms, total) {
+    cd.end = performance.now() + ms;
+    cd.total = total > 0 ? total : CD_DEFAULT;
+    root.classList.add('sapa-cooldown');
+    if (!cd.timer) cd.timer = setInterval(cdTick, 100);
+    cdTick();
+  }
+  function syncCooldown() {
+    var all = document.querySelectorAll('.sapa-cooldown-sync');
+    var el = all.length ? all[all.length - 1] : null;
+    if (el) {
+      var key = el.getAttribute('data-key') + '|' + el.getAttribute('data-remaining');
+      if (key !== cd.key) {
+        cd.key = key;
+        var rem = parseFloat(el.getAttribute('data-remaining'));
+        if (rem > 0) startCooldown(rem, parseFloat(el.getAttribute('data-total')));
+      }
+    }
+    // Popup sudah benar-benar hilang dari DOM -> lepas kelas "sedang menutup"
+    if (root.classList.contains('sapa-qa-closing') && !q('.st-key-quick_actions')) {
+      root.classList.remove('sapa-qa-closing');
+    }
+  }
+  var syncQueued = false;
+  function queueSync() {
+    if (syncQueued) return;
+    syncQueued = true;
+    requestAnimationFrame(function () { syncQueued = false; syncCooldown(); });
+  }
+  // React menyalakan lagi tombol kirim saat pengguna mengetik -> paksa mati selama cooldown
+  new MutationObserver(function (muts) {
+    if (!cdLeft()) return;
+    for (var i = 0; i < muts.length; i++) {
+      var t = muts[i].target;
+      if (t && t.getAttribute && t.getAttribute('data-testid') === 'stChatInputSubmitButton' && !t.disabled) t.disabled = true;
+    }
+  }).observe(document.body, { attributes: true, attributeFilter: ['disabled'], subtree: true });
+  new MutationObserver(queueSync).observe(document.body, { childList: true, subtree: true });
+
+  function nudge(el) {
+    if (!el) return;
+    el.classList.remove('sapa-shake');
+    void el.offsetWidth;
+    el.classList.add('sapa-shake');
+    setTimeout(function () { el.classList.remove('sapa-shake'); }, 480);
+  }
+  // Enter saat cooldown: blok SEBELUM handler Streamlit (fase capture), teks tetap utuh
+  document.addEventListener('keydown', function (e) {
+    if (!cdLeft()) return;
+    var t = e.target;
+    if (!t || !t.getAttribute || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    nudge(submitBtn());
+  }, true);
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var item = t.closest('.st-key-quick_actions button');
+    if (item) {
+      if (cdLeft()) {                       // bantuan cepat terkunci selama cooldown
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        nudge(item);
+        return;
+      }
+      root.classList.add('sapa-qa-closing');   // popup menutup seketika, tidak menunggu jawaban selesai
+      return;
+    }
+    if (t.closest('.st-key-qa_backdrop button')) { root.classList.add('sapa-qa-closing'); return; }
+    if (t.closest('.st-key-qa_toggle button')) {
+      if (q('.st-key-qa_backdrop')) root.classList.add('sapa-qa-closing');   // sedang terbuka -> menutup
+      else root.classList.remove('sapa-qa-closing');                          // tertutup -> membuka
+    }
+  }, true);
+
   new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   schedule();
+  queueSync();
 })();
 '''
 
@@ -1545,9 +1714,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v3")) return;
+    if (doc.getElementById("sapa-layout-js-v4")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v3";
+    s.id = "sapa-layout-js-v4";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{
