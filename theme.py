@@ -826,6 +826,24 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 :where([data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *) { color: var(--text-2) !important; }
 :where([data-testid="stAlert"], [data-testid="stAlert"] *) { color: var(--text) !important; }
 
+/* ---------- Peringatan rate limit: kartu amber lembut, selaras dengan bubble chat ---------- */
+.st-key-rate_limit { margin-top: 4px; animation: sapa-rl-in .28s ease-out both; }
+.st-key-rate_limit [data-testid="stAlert"] > div,
+.st-key-rate_limit [data-testid="stAlert"] [data-baseweb="notification"] {
+    background: rgba(251,191,36,.08) !important;
+    border: 1px solid rgba(251,191,36,.28) !important;
+    border-radius: 14px !important;
+    box-shadow: var(--inset) !important;
+    padding: 12px 16px !important;
+    font-family: var(--font) !important;
+}
+.st-key-rate_limit [data-testid="stAlert"] p {
+    color: var(--text) !important; font-size: 14px !important; line-height: 1.55 !important; margin: 0 !important;
+}
+.st-key-rate_limit [data-testid="stAlert"] strong { color: #FCD34D !important; }
+@keyframes sapa-rl-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .st-key-rate_limit { animation: none; } }
+
 /* Tabel & kode lebar tidak boleh mendorong halaman melebar */
 [data-testid="stChatMessageContent"] pre,
 [data-testid="stChatMessageContent"] table {

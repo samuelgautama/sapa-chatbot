@@ -1,6 +1,7 @@
 import html
 import itertools
 import json
+import math
 import re
 import time
 from pathlib import Path
@@ -61,6 +62,12 @@ if "qa_open" not in st.session_state:
     st.session_state.qa_open = False   # popup bantuan cepat (hanya dipakai saat chat berjalan)
 if "confirm_new_chat" not in st.session_state:
     st.session_state.confirm_new_chat = False   # dialog konfirmasi tombol "+ Baru"
+if "last_message_ts" not in st.session_state:
+    st.session_state.last_message_ts = None     # waktu (monotonic) pesan terakhir yang DITERIMA; untuk rate limit
+
+# Rate limit per sesi: maksimal 1 pesan setiap RATE_LIMIT_SECONDS detik.
+# Sengaja TIDAK di-reset oleh "+ Baru", supaya tombol itu tidak bisa dipakai menghindari batas.
+RATE_LIMIT_SECONDS = 10
 
 
 quick_action_defs = [
@@ -194,6 +201,32 @@ def typewriter(deltas):
                 shown += 1
                 ramp = max(0.0, 1.0 - shown / _TYPE_RAMP_WORDS)
                 time.sleep(_TYPE_DELAY_MIN + (_TYPE_DELAY_START - _TYPE_DELAY_MIN) * ramp)
+
+
+def render_rate_limit_warning(wait_seconds: float) -> None:
+    """
+    Peringatan ramah + hitung mundur. Hilang sendiri begitu jeda selesai, jadi tidak
+    ada peringatan basi yang tertinggal di layar. Kalau pengguna berinteraksi lagi
+    saat hitung mundur berjalan, Streamlit mererun skrip dan loop ini berhenti sendiri.
+    """
+    with st.container(key="rate_limit"):
+        box = st.empty()
+        deadline = time.monotonic() + wait_seconds
+        shown = None
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            seconds = max(1, math.ceil(remaining))
+            if seconds != shown:   # render ulang hanya saat angkanya berganti
+                box.warning(
+                    f"Pelan-pelan ya, SAPA lagi menyiapkan jawaban. "
+                    f"Pesanmu belum terkirim, coba lagi dalam **{seconds} detik**.",
+                    icon="⏳",
+                )
+                shown = seconds
+            time.sleep(min(0.2, remaining))
+        box.empty()
 
 
 def render_user_message(text) -> None:
@@ -412,8 +445,25 @@ if user_question:
 if pending_prompt and not user_question:
     user_question = pending_prompt
 
+# Rate limit: pesan hanya diterima bila sudah >= RATE_LIMIT_SECONDS sejak pesan
+# terakhir yang diterima. Percobaan yang ditolak TIDAK memperpanjang hitungan.
+# Pesan yang ditolak tidak masuk riwayat dan tidak menyentuh pipeline RAG sama sekali.
+rate_limit_wait = 0.0
 if user_question:
-    st.session_state.messages.append({"role": "user", "content": user_question})
+    now = time.monotonic()
+    last_ts = st.session_state.last_message_ts
+    elapsed = (now - last_ts) if last_ts is not None else RATE_LIMIT_SECONDS
+    if elapsed < RATE_LIMIT_SECONDS:
+        rate_limit_wait = RATE_LIMIT_SECONDS - elapsed
+        if pending_prompt and pending_prompt == user_question:
+            # Bantuan cepat yang ditolak: aktifkan lagi tombolnya (tadi sudah ditandai terpakai)
+            for action in quick_action_defs:
+                if action["prompt"] == pending_prompt:
+                    st.session_state.used_actions.discard(action["key"])
+        user_question = None
+    else:
+        st.session_state.last_message_ts = now
+        st.session_state.messages.append({"role": "user", "content": user_question})
 
 
 # ---------------------------------------------------------------------------
@@ -552,6 +602,11 @@ for index, message in enumerate(st.session_state.messages):
             src = st.session_state.sources_map.get(index)
             if src:
                 render_sources(src)
+
+
+# Peringatan rate limit tampil tepat di bawah pesan terakhir (posisi tempat jawaban akan muncul).
+if rate_limit_wait > 0:
+    render_rate_limit_warning(rate_limit_wait)
 
 
 # ---------------------------------------------------------------------------
