@@ -167,9 +167,8 @@ _LIGHT_VARS = '''    --scheme: light;
         radial-gradient(800px 560px at 92% 0%, rgba(56,189,248,.10), transparent 70%),
         radial-gradient(1200px 1000px at 50% 100%, rgba(165,180,252,.24), transparent 62%),
         linear-gradient(180deg, #FBFBFE 0%, #F5F6FA 55%, #EDEFF5 100%);
-    --vignette:
-        radial-gradient(120% 90% at 50% 38%, transparent 60%, rgba(15,23,42,.06) 100%),
-        repeating-linear-gradient(0deg, rgba(15,23,42,.012) 0px, transparent 1px, transparent 3px);
+    /* Tanpa vinyet di Light: tepi abu-abu + garis grain tipis terlihat kotor/bergaris di atas putih */
+    --vignette: none;
     --vignette-blend: normal;
     /* Logo: varian terang (app.py) dengan ujung gradient teks hijau tua, bukan kuning-hijau
        #C4D600 yang pucat di atas putih. Dua <img> dirender; hanya satu yang tampil. */
@@ -196,7 +195,8 @@ _LIGHT_VARS = '''    --scheme: light;
     --toggle-open-icon: #4F46E5;
     --pop-bg: rgba(255,255,255,.99);
     --modal-bg: #FFFFFF;
-    --scrim-pop: rgba(15,23,42,.30);
+    /* kabut putih (bukan abu): menyatu mulus dengan fade bg di belakang kolom input */
+    --scrim-pop: rgba(245,246,250,.78);
     --scrim-modal: rgba(15,23,42,.42);
     --primary-bg: linear-gradient(180deg, #6366F1 0%, #4F46E5 100%);
     --primary-fg: #FFFFFF;
@@ -570,16 +570,22 @@ __THEME_VIS__
     background: var(--surface-hover) !important; border-color: var(--line-2) !important;
 }
 .st-key-theme_to_light button:active, .st-key-theme_to_dark button:active { transform: scale(.94); }
-.st-key-theme_to_light button > div, .st-key-theme_to_dark button > div,
-.st-key-theme_to_light button [data-testid="stMarkdownContainer"], .st-key-theme_to_dark button [data-testid="stMarkdownContainer"] {
-    display: flex !important; align-items: center !important; justify-content: center !important;
-    gap: 0 !important; margin: 0 !important; padding: 0 !important; width: auto !important; height: auto !important;
+/* Ikon digambar sendiri (SVG via CSS mask), bukan font Material: glyph font punya
+   bearing/ascent sendiri sehingga bulan/matahari selalu bergeser dari tengah. SVG ini
+   ber-viewBox simetris (bbox tepat di 12,12), dipusatkan oleh flex pada <button>. Warna
+   mengikuti currentColor (= aksen). */
+.st-key-theme_to_light button::before, .st-key-theme_to_dark button::before {
+    content: ""; display: block; flex: none;
+    width: 18px; height: 18px; background-color: currentColor;
+    -webkit-mask: var(--theme-ico) center / 18px 18px no-repeat;
+            mask: var(--theme-ico) center / 18px 18px no-repeat;
 }
-.st-key-theme_to_light button [data-testid="stIconMaterial"],
-.st-key-theme_to_dark button [data-testid="stIconMaterial"] {
-    color: var(--accent) !important; font-size: 18px !important; line-height: 1 !important;
-    width: 18px !important; height: 18px !important; margin: 0 !important; padding: 0 !important;
-    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+.st-key-theme_to_light button {
+    --theme-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41'/%3E%3C/svg%3E");
+}
+.st-key-theme_to_dark button {
+    /* bulan sabit: massa visualnya condong ke kiri-bawah, jadi digeser 0.5px ke kanan-atas (koreksi optik) */
+    --theme-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-0.5 0.5 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E");
 }
 /* Label tetap ada untuk pembaca layar, tapi tidak terlihat (tombol hanya ikon) */
 .st-key-theme_to_light button p, .st-key-theme_to_dark button p {

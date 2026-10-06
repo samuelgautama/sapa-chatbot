@@ -152,14 +152,13 @@ def set_theme(mode: str) -> None:
 
 def render_theme_toggle() -> None:
     """
-    Tombol ikon matahari/bulan. Dua tombol dirender (-> terang, -> gelap); theme.py hanya
+    Tombol ikon matahari/bulan (ikon digambar CSS di theme.py). Dua tombol dirender (-> terang, -> gelap); theme.py hanya
     menampilkan yang sesuai dengan tema EFEKTIF (juga saat tema = "system"). Dalam keadaan
     Dark yang terlihat matahari (klik = terang), dalam Light yang terlihat bulan (klik = gelap).
     """
     st.button(
         "Ganti ke mode terang",
         key="theme_to_light",
-        icon=":material/light_mode:",
         help="Ganti ke mode terang",
         on_click=set_theme,
         args=("light",),
@@ -167,7 +166,6 @@ def render_theme_toggle() -> None:
     st.button(
         "Ganti ke mode gelap",
         key="theme_to_dark",
-        icon=":material/dark_mode:",
         help="Ganti ke mode gelap",
         on_click=set_theme,
         args=("dark",),
