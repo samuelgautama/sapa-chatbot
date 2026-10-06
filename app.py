@@ -60,8 +60,6 @@ if "used_actions" not in st.session_state:
     st.session_state.used_actions = set()
 if "qa_open" not in st.session_state:
     st.session_state.qa_open = False   # popup bantuan cepat (hanya dipakai saat chat berjalan)
-if "confirm_new_chat" not in st.session_state:
-    st.session_state.confirm_new_chat = False   # dialog konfirmasi tombol "+ Baru"
 if "last_message_ts" not in st.session_state:
     st.session_state.last_message_ts = None     # waktu (monotonic) pesan terakhir yang DITERIMA; untuk rate limit
 
@@ -127,25 +125,11 @@ def start_new_conversation():
     st.session_state.qa_open = False
 
 
-def toggle_quick_actions():
-    st.session_state.qa_open = not st.session_state.qa_open
-
-
-def close_quick_actions():
-    st.session_state.qa_open = False
-
-
-def open_confirm_new_chat():
-    st.session_state.confirm_new_chat = True
-
-
-def close_confirm_new_chat():
-    st.session_state.confirm_new_chat = False
-
-
+# Popup Bantuan cepat dan dialog "+ Baru" dibuka/ditutup di sisi KLIEN (theme.py, JS), bukan
+# lewat session_state: setiap buka/tutup via Streamlit = 1x rerun penuh (terasa berat).
+# Dari Python hanya tersisa aksi yang memang perlu server: memilih bantuan cepat & reset chat.
 def confirm_new_chat_action():
     start_new_conversation()
-    st.session_state.confirm_new_chat = False
 
 
 def render_quick_action_buttons():
@@ -542,8 +526,7 @@ else:
             "+ Baru",
             key="new_chat",
             help="Mulai percakapan baru",
-            on_click=open_confirm_new_chat,
-        )
+        )   # dibuka oleh JS (tanpa rerun): lihat dialog di bawah
 
 
 # ---------------------------------------------------------------------------
@@ -551,9 +534,11 @@ else:
 #     Backdrop (klik di luar = batal) + panel mengambang di tengah layar,
 #     dengan animasi masuk yang halus (lihat theme.py: sapa-modal-in).
 # ---------------------------------------------------------------------------
-if st.session_state.confirm_new_chat:
+# Dialog SELALU dirender saat chat berjalan, tetapi tersembunyi lewat CSS; JS yang menampilkannya
+# (html.sapa-confirm-open) -> muncul seketika. "Batal" & backdrop ditutup oleh JS tanpa rerun.
+if not is_empty:
     with st.container(key="confirm_backdrop"):
-        st.button("Tutup", key="confirm_dismiss", on_click=close_confirm_new_chat)
+        st.button("Tutup", key="confirm_dismiss")
 
     with st.container(key="confirm_dialog"):
         st.markdown(
@@ -580,7 +565,6 @@ if st.session_state.confirm_new_chat:
                 "Batal",
                 key="confirm_cancel",
                 use_container_width=True,
-                on_click=close_confirm_new_chat,
             )
         with col_ok:
             st.button(
@@ -598,9 +582,10 @@ if st.session_state.confirm_new_chat:
 #                     mobile: tepat di atas input)
 #    Chat berjalan  : hanya tombol "Bantuan cepat" di atas input; daftarnya
 #                     muncul sebagai popup saat tombol diklik. Popup menutup
-#                     kalau: tombol diklik lagi, klik di luar popup, atau
+#                     kalau: tombol diklik lagi, klik di luar popup, Esc, atau
 #                     salah satu bantuan dipilih.
-#    Buka/tutup memakai callback (bukan st.rerun) supaya hanya satu rerun.
+#    Popup SELALU dirender (tersembunyi lewat CSS) dan dibuka/ditutup oleh JS di
+#    sisi klien (theme.py) -> instan, tanpa rerun Streamlit.
 # ---------------------------------------------------------------------------
 with st.container(key="qa_zone"):
     if is_empty:
@@ -610,11 +595,9 @@ with st.container(key="qa_zone"):
             "Bantuan cepat",
             icon=":material/bolt:",
             key="qa_toggle",
-            on_click=toggle_quick_actions,
         )
-        if st.session_state.qa_open:
-            st.button("Tutup", key="qa_backdrop", on_click=close_quick_actions)
-            render_quick_action_buttons()
+        st.button("Tutup", key="qa_backdrop")   # area tap-untuk-menutup, ditangani JS
+        render_quick_action_buttons()
 
 
 # ---------------------------------------------------------------------------

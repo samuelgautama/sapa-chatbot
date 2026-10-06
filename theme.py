@@ -490,14 +490,11 @@ __QA_ROW__ {
    mengembang lembut + setiap baris bantuan muncul bertahap/cascade), sama persis di
    desktop maupun mobile karena tidak ada media query di sini. */
 @keyframes sapa-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+/* Hanya opacity + transform (jalan di compositor GPU). Dulu ada animasi filter: blur() yang
+   memaksa repaint tiap frame. */
 @keyframes sapa-pop-in {
-    from { opacity: 0; transform: translateY(16px) scale(.93); filter: blur(4px); }
-    55%  { filter: blur(0); }
-    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-@keyframes sapa-row-in {
-    from { opacity: 0; transform: translateY(7px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px) scale(.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .stApp:has(.sapa-chat-active) {
     --col-l: calc(var(--main-l, 0px)
@@ -553,12 +550,12 @@ __QA_ROW__ {
    kiri-bawah panel di atasnya (radius sama-sama diperkecil), dan ikon petir berputar
    halus — detail kecil yang membuat tombol & panel terasa satu potongan, bukan dua
    elemen lepas yang kebetulan bertumpuk. */
-.stApp:has(.st-key-qa_backdrop) .st-key-qa_toggle button {
+html.sapa-qa-open .st-key-qa_toggle button {
     background: rgba(165,180,252,.16) !important;
     border-color: rgba(165,180,252,.5) !important;
     border-bottom-left-radius: 7px !important;
 }
-.stApp:has(.st-key-qa_backdrop) .st-key-qa_toggle button [data-testid="stIconMaterial"] {
+html.sapa-qa-open .st-key-qa_toggle button [data-testid="stIconMaterial"] {
     transform: rotate(18deg); color: #fff !important;
 }
 
@@ -570,10 +567,8 @@ __QA_ROW__ {
     position: fixed !important; inset: 0 !important; z-index: 89 !important;
     width: 100vw !important; height: 100vh !important; height: 100dvh !important;
     margin: 0 !important; padding: 0 !important;
-    background: rgba(4,5,9,.50) !important;
-    backdrop-filter: blur(3px) saturate(115%) !important;
-    -webkit-backdrop-filter: blur(3px) saturate(115%) !important;
-    animation: sapa-backdrop-in .3s var(--ease) both;
+    background: rgba(4,5,9,.58) !important;
+    animation: sapa-backdrop-in .18s ease-out both;
 }
 .st-key-qa_backdrop [data-testid="stButton"],
 .st-key-qa_backdrop button {
@@ -605,11 +600,9 @@ __QA_ROW__ {
     max-height: min(420px, calc(100vh - var(--top-zone) - var(--above-bar) - var(--pills-h) - 32px)) !important;
     overflow-y: auto !important; overflow-x: hidden !important; scrollbar-width: none;
     box-sizing: border-box !important; padding: 6px !important; margin: 0 !important;
-    /* Kaca buram: latar tidak 100% opak + backdrop-filter, supaya sedikit warna di
-       belakangnya tetap terasa (frosted glass), konsisten dengan nuansa aurora aplikasi */
-    background: rgba(22,24,32,.86) !important;
-    backdrop-filter: blur(22px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+    /* Hampir opak, TANPA backdrop-filter: blur 22px di atas aurora yang bergerak harus
+       disampel ulang GPU tiap frame, dan itulah yang membuat popup terasa berat di HP. */
+    background: rgba(24,26,34,.97) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 18px 18px 18px 7px !important;   /* sudut kiri-bawah menyatu dgn tombol toggle */
     box-shadow:
@@ -618,25 +611,11 @@ __QA_ROW__ {
         0 -1px 0 rgba(165,180,252,.10) inset,
         var(--inset) !important;
     transform-origin: 0 100%;
-    animation: sapa-pop-in .32s var(--ease) both;
+    animation: sapa-pop-in .2s var(--ease) both;
 }
 .stApp:has(.sapa-chat-active) .st-key-quick_actions::-webkit-scrollbar { display: none; }
 .stApp:has(.sapa-chat-active) .st-key-quick_actions button { height: 44px !important; min-height: 44px !important; }
 .stApp:has(.sapa-chat-active) .st-key-quick_actions button p { font-size: 14px !important; }
-/* Tiap baris bantuan muncul bertahap (cascade), bukan serentak — kesan lebih halus
-   & "hidup" dibanding satu blok yang langsung nongol utuh. Jeda antar baris singkat
-   (28ms) supaya total tetap terasa cepat walau daftarnya sampai 6-8 item. */
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"] {
-    animation: sapa-row-in .3s var(--ease) both;
-}
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(1) { animation-delay: .04s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(2) { animation-delay: .07s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(3) { animation-delay: .10s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(4) { animation-delay: .13s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(5) { animation-delay: .16s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(6) { animation-delay: .19s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(7) { animation-delay: .22s; }
-.stApp:has(.sapa-chat-active) .st-key-quick_actions [data-testid="stElementContainer"]:nth-child(8) { animation-delay: .25s; }
 /* prefers-reduced-motion mematikan durasi animasi secara global di akhir file ini,
    jadi orang yang sensitif terhadap gerak tetap mendapat popup yang langsung utuh. */
 
@@ -652,9 +631,8 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
    (tertinggi sebelumnya 96) supaya selalu di paling atas, di skenario apa pun.
    ================================================================ */
 @keyframes sapa-modal-in {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(.92) translateY(10px); filter: blur(6px); }
-    60%  { filter: blur(0); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); filter: blur(0); }
+    from { opacity: 0; transform: translate(-50%, -50%) scale(.95) translateY(8px); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); }
 }
 @keyframes sapa-modal-icon-in {
     from { opacity: 0; transform: scale(.6) rotate(-25deg); }
@@ -667,10 +645,8 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
     position: fixed !important; inset: 0 !important; z-index: 200 !important;
     width: 100vw !important; height: 100vh !important; height: 100dvh !important;
     margin: 0 !important; padding: 0 !important;
-    background: rgba(4,5,9,.62) !important;
-    backdrop-filter: blur(6px) saturate(115%) !important;
-    -webkit-backdrop-filter: blur(6px) saturate(115%) !important;
-    animation: sapa-backdrop-in .25s var(--ease) both;
+    background: rgba(4,5,9,.68) !important;
+    animation: sapa-backdrop-in .18s ease-out both;
 }
 .st-key-confirm_backdrop [data-testid="stButton"],
 .st-key-confirm_backdrop button {
@@ -706,9 +682,7 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
     left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
     width: min(360px, calc(100vw - 32px)) !important;
     box-sizing: border-box !important; margin: 0 !important; padding: 22px 22px 18px !important;
-    background: rgba(22,24,32,.92) !important;
-    backdrop-filter: blur(26px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+    background: rgba(24,26,34,.98) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 20px !important;
     box-shadow:
@@ -717,7 +691,7 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
         0 -1px 0 rgba(165,180,252,.10) inset,
         var(--inset) !important;
     transform-origin: center center;
-    animation: sapa-modal-in .34s var(--ease) both;
+    animation: sapa-modal-in .22s var(--ease) both;
 }
 __CONFIRM_ROW__ { gap: 0 !important; }
 .sapa-confirm-icon {
@@ -922,8 +896,8 @@ html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::after {
 html.sapa-cooldown .st-key-quick_actions button { opacity: .5 !important; cursor: not-allowed !important; }
 @keyframes sapa-cd-settle { from { transform: scale(.88); } to { transform: scale(1); } }
 @keyframes sapa-cd-ring-in { from { opacity: 0; transform: rotate(-90deg) scale(.9); } to { opacity: 1; transform: none; } }
-@keyframes sapa-cd-tick-a { from { opacity: .15; transform: translateY(4px) scale(.82); } to { opacity: 1; transform: none; } }
-@keyframes sapa-cd-tick-b { from { opacity: .15; transform: translateY(4px) scale(.82); } to { opacity: 1; transform: none; } }
+@keyframes sapa-cd-tick-a { from { opacity: .15; } to { opacity: 1; } }
+@keyframes sapa-cd-tick-b { from { opacity: .15; } to { opacity: 1; } }
 /* Cooldown selesai: cincin tipis memancar sekali dari tombol kirim (kelas dipasang JS ~0,7 dtk) */
 html.sapa-cd-ready [data-testid="stChatInputSubmitButton"] { position: relative !important; }
 html.sapa-cd-ready [data-testid="stChatInputSubmitButton"]::after {
@@ -949,13 +923,20 @@ html.sapa-cd-ready [data-testid="stChatInputSubmitButton"]::after {
 }
 .sapa-shake { animation: sapa-shake .42s ease-in-out !important; }
 
-/* ---------- Popup bantuan cepat langsung menutup saat dipilih ----------
-   Streamlit baru membuang elemen lama setelah SELURUH jalannya skrip selesai (termasuk
-   jawaban yang sedang diketik), jadi popup (atau daftar bantuan cepat dari layar kosong,
-   yang mendadak berpenampilan popup begitu mode chat aktif) tertinggal sampai jawaban
-   rampung. JS memasang html.sapa-qa-closing saat bantuan cepat dipilih / popup ditutup. */
-html.sapa-qa-closing .stApp:has(.sapa-chat-active) .st-key-quick_actions,
-html.sapa-qa-closing .st-key-qa_backdrop { display: none !important; }
+/* ---------- Popup Bantuan cepat & dialog "+ Baru": buka/tutup 100% di sisi klien ----------
+   Dulu membuka/menutup = 1x rerun Streamlit (tunggu server, kirim ulang seluruh halaman,
+   render ulang riwayat chat) -> terasa berat. Sekarang elemen popup SELALU ada di DOM tetapi
+   disembunyikan; JS cukup memasang/melepas html.sapa-qa-open / html.sapa-confirm-open, jadi
+   muncul seketika tanpa menyentuh server. Ini juga menutup popup langsung saat bantuan
+   dipilih (tidak lagi tertinggal sampai jawaban selesai). Spesifisitas sengaja tinggi agar
+   mengalahkan aturan display lain di file ini. */
+html:not(.sapa-qa-open) .stApp:has(.sapa-chat-active) .st-key-quick_actions,
+html:not(.sapa-qa-open) .st-key-qa_backdrop,
+html:not(.sapa-confirm-open) .st-key-confirm_backdrop,
+html:not(.sapa-confirm-open) .st-key-confirm_dialog { display: none !important; }
+/* Aurora (blur 90px, bergerak terus) dijeda selagi popup terbuka: GPU fokus ke popup. */
+html.sapa-qa-open .stApp::before,
+html.sapa-confirm-open .stApp::before { animation-play-state: paused !important; }
 
 /* Tabel & kode lebar tidak boleh mendorong halaman melebar */
 [data-testid="stChatMessageContent"] pre,
@@ -1493,8 +1474,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV4) return;
-  window.__sapaLayoutV4 = true;
+  if (window.__sapaLayoutV6) return;
+  window.__sapaLayoutV6 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -1628,7 +1609,7 @@ _LAYOUT_JS = r'''
   document.addEventListener('pointerdown', function () { lastTouch = Date.now(); }, true);
   document.addEventListener('keydown', function (e) {
     var t = e.target;
-    if (!t || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (!t || !t.getAttribute || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
     if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
     if (!isMobileUI()) return;
     if (!t.value || !t.value.trim()) return;      // tidak ada yang dikirim
@@ -1643,7 +1624,7 @@ _LAYOUT_JS = r'''
   // kecuali pengguna memang baru saja mengetuk input.
   document.addEventListener('focusin', function (e) {
     var t = e.target;
-    if (!t || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
+    if (!t || !t.getAttribute || t.getAttribute('data-testid') !== 'stChatInputTextArea') return;
     if (Date.now() < noRefocusUntil && Date.now() - lastTouch > 450 && isMobileUI()) {
       setTimeout(function () { if (document.activeElement === t) t.blur(); }, 0);
     }
@@ -1709,10 +1690,8 @@ _LAYOUT_JS = r'''
         if (rem > 0) startCooldown(rem, parseFloat(el.getAttribute('data-total')));
       }
     }
-    // Popup sudah benar-benar hilang dari DOM -> lepas kelas "sedang menutup"
-    if (root.classList.contains('sapa-qa-closing') && !q('.st-key-quick_actions')) {
-      root.classList.remove('sapa-qa-closing');
-    }
+    // Kembali ke layar kosong (mis. setelah "+ Baru") -> pastikan popup tidak tertinggal "terbuka"
+    if (!q('.sapa-chat-active')) root.classList.remove('sapa-qa-open', 'sapa-confirm-open');
   }
   var syncQueued = false;
   function queueSync() {
@@ -1747,31 +1726,53 @@ _LAYOUT_JS = r'''
     e.stopImmediatePropagation();
     nudge(submitBtn());
   }, true);
+  // ---- Popup Bantuan cepat & dialog "+ Baru": buka/tutup di sisi klien (tanpa rerun) ----
+  // Klik tombol pembuka/penutup DITELAN di fase capture sehingga tidak pernah sampai ke
+  // Streamlit (tidak ada rerun = instan). Hanya aksi yang memang butuh server yang diteruskan:
+  // memilih bantuan cepat dan "Ya, mulai baru".
+  function closePopups() { root.classList.remove('sapa-qa-open', 'sapa-confirm-open'); }
+  function swallow(e) { e.preventDefault(); e.stopImmediatePropagation(); }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closePopups(); return; }
+    // Pesan akan terkirim (Enter, bukan saat cooldown): tutup popup seketika
+    var t = e.target;
+    if (cdLeft() || e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    if (t && t.getAttribute && t.getAttribute('data-testid') === 'stChatInputTextArea' && t.value && t.value.trim()) {
+      root.classList.remove('sapa-qa-open');
+    }
+  }, true);
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
-    // Jawaban sedang dibuat: klik bantuan cepat (termasuk lewat keyboard) ditelan, karena
-    // rerun yang dipicunya akan memutus jawaban. Mouse/sentuh sudah diblok CSS; ini jaring pengaman.
-    if (q('.sapa-generating') && t.closest('.st-key-qa_toggle button, .st-key-quick_actions button')) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
+
+    if (t.closest('[data-testid="stChatInputSubmitButton"]')) {   // kirim -> tutup popup seketika
+      if (!cdLeft()) root.classList.remove('sapa-qa-open');
+      return;
+    }
+
+    // "+ Baru" dan dialog konfirmasinya
+    if (t.closest('.st-key-new_chat button')) { swallow(e); root.classList.add('sapa-confirm-open'); return; }
+    if (t.closest('.st-key-confirm_backdrop button, .st-key-confirm_cancel button')) {
+      swallow(e); root.classList.remove('sapa-confirm-open'); return;
+    }
+    if (t.closest('.st-key-confirm_ok button')) { closePopups(); return; }   // diteruskan: server mereset chat
+
+    // Bantuan cepat
+    if (t.closest('.st-key-qa_backdrop button')) { swallow(e); root.classList.remove('sapa-qa-open'); return; }
+    var toggle = t.closest('.st-key-qa_toggle button');
+    if (toggle) {
+      swallow(e);
+      if (q('.sapa-generating')) return;   // dikunci selama jawaban dibuat (selaras dengan CSS)
+      var open = root.classList.toggle('sapa-qa-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       return;
     }
     var item = t.closest('.st-key-quick_actions button');
     if (item) {
-      if (cdLeft()) {                       // bantuan cepat terkunci selama cooldown
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        nudge(item);
-        return;
-      }
-      root.classList.add('sapa-qa-closing');   // popup menutup seketika, tidak menunggu jawaban selesai
-      return;
-    }
-    if (t.closest('.st-key-qa_backdrop button')) { root.classList.add('sapa-qa-closing'); return; }
-    if (t.closest('.st-key-qa_toggle button')) {
-      if (q('.st-key-qa_backdrop')) root.classList.add('sapa-qa-closing');   // sedang terbuka -> menutup
-      else root.classList.remove('sapa-qa-closing');                          // tertutup -> membuka
+      // Jawaban sedang dibuat / cooldown: tidak boleh memicu rerun
+      if (q('.sapa-generating')) { swallow(e); return; }
+      if (cdLeft()) { swallow(e); nudge(item); return; }
+      root.classList.remove('sapa-qa-open');   // diteruskan ke Streamlit; popup menutup seketika
     }
   }, true);
 
@@ -1804,9 +1805,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v4")) return;
+    if (doc.getElementById("sapa-layout-js-v6")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v4";
+    s.id = "sapa-layout-js-v6";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{
