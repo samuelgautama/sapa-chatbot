@@ -62,6 +62,8 @@ if "qa_open" not in st.session_state:
     st.session_state.qa_open = False   # popup bantuan cepat (hanya dipakai saat chat berjalan)
 if "last_message_ts" not in st.session_state:
     st.session_state.last_message_ts = None     # waktu (monotonic) pesan terakhir yang DITERIMA; untuk rate limit
+if "theme" not in st.session_state:
+    st.session_state.theme = "system"           # "system" (ikut tema perangkat) | "light" | "dark"
 
 # Rate limit per sesi: maksimal 1 pesan setiap RATE_LIMIT_SECONDS detik.
 # Sengaja TIDAK di-reset oleh "+ Baru", supaya tombol itu tidak bisa dipakai menghindari batas.
@@ -123,6 +125,36 @@ def start_new_conversation():
     st.session_state.sources_map = {}
     st.session_state.used_actions = set()
     st.session_state.qa_open = False
+
+
+def set_theme(mode: str) -> None:
+    """Simpan pilihan tema. Tombol tema selalu memilih nilai eksplisit ("light"/"dark"), jadi
+    tidak perlu tahu tema perangkat di sisi server — CSS yang menentukan tombol mana yang tampil."""
+    st.session_state.theme = mode if mode in ("light", "dark") else "system"
+
+
+def render_theme_toggle() -> None:
+    """
+    Tombol ikon matahari/bulan. Dua tombol dirender (-> terang, -> gelap); theme.py hanya
+    menampilkan yang sesuai dengan tema EFEKTIF (juga saat tema = "system"). Dalam keadaan
+    Dark yang terlihat matahari (klik = terang), dalam Light yang terlihat bulan (klik = gelap).
+    """
+    st.button(
+        "Ganti ke mode terang",
+        key="theme_to_light",
+        icon=":material/light_mode:",
+        help="Ganti ke mode terang",
+        on_click=set_theme,
+        args=("light",),
+    )
+    st.button(
+        "Ganti ke mode gelap",
+        key="theme_to_dark",
+        icon=":material/dark_mode:",
+        help="Ganti ke mode gelap",
+        on_click=set_theme,
+        args=("dark",),
+    )
 
 
 # Popup Bantuan cepat dan dialog "+ Baru" dibuka/ditutup di sisi KLIEN (theme.py, JS), bukan
@@ -247,13 +279,38 @@ def render_user_message(text) -> None:
 
 
 _COPY_BUTTON_HTML = """<!doctype html>
-<html>
+<html data-theme="__THEME__">
 <head>
 <meta charset="utf-8">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="__SCHEME__">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&display=swap">
 <style>
-  :root { color-scheme: dark; }
+  /* Palet tombol salin. Dark = default; Light dipilih lewat data-theme="light", atau
+     data-theme="system" + perangkat terang. Iframe tidak bisa membaca tema aplikasi, jadi
+     app.py meneruskannya lewat atribut ini. */
+  :root {
+    color-scheme: dark;
+    --fg: #A9B0BD; --fg-hover: #ECEEF2; --hover-bg: rgba(255,255,255,.07);
+    --done: #86EFAC; --done-bg: rgba(134,239,172,.10);
+    --err: #FCA5A5; --err-bg: rgba(252,165,165,.10);
+    --focus: rgba(165,180,252,.65);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --fg: #596171; --fg-hover: #0A0C11; --hover-bg: rgba(15,23,42,.07);
+    --done: #15803D; --done-bg: rgba(21,128,61,.10);
+    --err: #B91C1C; --err-bg: rgba(185,28,28,.08);
+    --focus: rgba(79,70,229,.60);
+  }
+  :root[data-theme="system"] { color-scheme: light dark; }
+  @media (prefers-color-scheme: light) {
+    :root[data-theme="system"] {
+      --fg: #596171; --fg-hover: #0A0C11; --hover-bg: rgba(15,23,42,.07);
+      --done: #15803D; --done-bg: rgba(21,128,61,.10);
+      --err: #B91C1C; --err-bg: rgba(185,28,28,.08);
+      --focus: rgba(79,70,229,.60);
+    }
+  }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
   body {
@@ -264,16 +321,16 @@ _COPY_BUTTON_HTML = """<!doctype html>
     all: unset; box-sizing: border-box;
     display: inline-flex; align-items: center; gap: 7px;
     height: 32px; padding: 0 13px 0 11px; border-radius: 9px;
-    color: #A9B0BD; font-size: 13px; font-weight: 600; line-height: 1;
+    color: var(--fg); font-size: 13px; font-weight: 600; line-height: 1;
     cursor: pointer; user-select: none; -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color .18s ease, color .18s ease, transform .12s ease;
   }
-  button:hover { background: rgba(255,255,255,.07); color: #ECEEF2; }
+  button:hover { background: var(--hover-bg); color: var(--fg-hover); }
   button:active { transform: scale(.96); }
-  button:focus-visible { outline: 2px solid rgba(165,180,252,.65); outline-offset: 1px; }
-  button[data-state="done"]  { color: #86EFAC; background: rgba(134,239,172,.10); }
-  button[data-state="error"] { color: #FCA5A5; background: rgba(252,165,165,.10); }
+  button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  button[data-state="done"]  { color: var(--done); background: var(--done-bg); }
+  button[data-state="error"] { color: var(--err); background: var(--err-bg); }
 
   .ico { position: relative; width: 16px; height: 16px; flex: none; }
   .ico svg {
@@ -381,11 +438,14 @@ def to_whatsapp(text) -> str:
 
 
 def render_copy_button(text: str, key_suffix: str):
+    theme = st.session_state.get("theme", "system")
     # "<" di-escape supaya jawaban yang berisi "</script>" tidak merusak skrip
     payload = json.dumps(to_whatsapp(text), ensure_ascii=False).replace("<", "\\u003c")
     page = (
         _COPY_BUTTON_HTML
         .replace("__KEY__", html.escape(str(key_suffix)))
+        .replace("__THEME__", theme)
+        .replace("__SCHEME__", "light dark" if theme == "system" else theme)
         .replace("__TEXT__", payload)
     )
     # Lebar iframe dikunci sedikit di atas lebar tombol (label terpanjang: "Gagal menyalin"),
@@ -482,8 +542,12 @@ if user_question:
 # ---------------------------------------------------------------------------
 is_empty = len(st.session_state.messages) == 0
 
+# Penanda tema (.sapa-theme-light / -dark / -system) ikut di elemen yang sama dengan penanda
+# status agar tidak menambah elemen baru; theme.py membacanya lewat :has().
+_theme_cls = f"sapa-theme-{st.session_state.theme}"
 st.markdown(
-    '<div class="sapa-empty"></div>' if is_empty else '<div class="sapa-chat-active"></div>',
+    ('<div class="sapa-empty"></div>' if is_empty else '<div class="sapa-chat-active"></div>')
+    + f'<div class="{_theme_cls}"></div>',
     unsafe_allow_html=True,
 )
 st.markdown(get_custom_css(), unsafe_allow_html=True)
@@ -510,6 +574,9 @@ if is_empty:
         ''',
         unsafe_allow_html=True,
     )
+    # Belum ada topbar di layar awal: tombol tema melayang di pojok kanan atas (CSS: .st-key-theme_corner)
+    with st.container(key="theme_corner"):
+        render_theme_toggle()
 else:
     with st.container(key="topbar"):
         st.markdown(
@@ -522,6 +589,7 @@ else:
             ''',
             unsafe_allow_html=True,
         )
+        render_theme_toggle()
         st.button(
             "+ Baru",
             key="new_chat",

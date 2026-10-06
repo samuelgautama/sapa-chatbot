@@ -47,6 +47,211 @@ def _row(key: str) -> str:
 _QA_ROW = _row('quick_actions')
 _TB_ROW = _row('topbar')
 _CONFIRM_ROW = _row('confirm_dialog')
+_TC_ROW = _row('theme_corner')
+
+# ---------------------------------------------------------------------------
+# Palet warna. HANYA warna / bayangan / latar — tidak ada ukuran, jarak, posisi,
+# flexbox, atau animasi. Dark = default (nilai lama, tidak diubah); Light = baru.
+# Nama variabelnya sama persis, jadi seluruh CSS cukup memakai var(--...).
+# ---------------------------------------------------------------------------
+_DARK_VARS = '''    --scheme: dark;
+
+    /* Permukaan & teks */
+    --bg: #07080C;
+    --bg-rgb: 7,8,12;
+    --text: #F1F3F7;
+    --text-2: #C3C9D4;
+    --text-3: #A3ABB9;
+    --text-strong: #FFFFFF;
+    --text-disabled: rgba(226,229,235,.58);
+    --line: rgba(255,255,255,.08);
+    --line-2: rgba(255,255,255,.14);
+    --surface-hover: rgba(255,255,255,.09);
+    --fill-xs: rgba(255,255,255,.03);
+    --fill-s: rgba(255,255,255,.04);
+    --fill-m: rgba(255,255,255,.05);
+    --scroll: rgba(255,255,255,.12);
+    --accent: #A5B4FC;
+    --accent-rgb: 165,180,252;
+    --code-fg: #E8EBF2;
+    --code-bg: rgba(255,255,255,.09);
+
+    /* Latar halaman: gradient dasar, "aurora", dan vinyet */
+    --app-bg:
+        radial-gradient(1200px 1000px at 50% 100%, rgba(30,20,55,.55), transparent 62%),
+        linear-gradient(180deg, #0C0E16 0%, #08090D 55%, #050508 100%);
+    --aurora:
+        radial-gradient(32% 26% at 14% 10%, rgba(99,102,241,.40), transparent 72%),
+        radial-gradient(30% 24% at 88% 6%, rgba(56,189,248,.28), transparent 72%),
+        radial-gradient(40% 32% at 22% 92%, rgba(168,85,247,.26), transparent 72%),
+        radial-gradient(34% 28% at 82% 96%, rgba(236,72,153,.14), transparent 74%);
+    --vignette:
+        radial-gradient(120% 90% at 50% 38%, transparent 55%, rgba(0,0,0,.42) 100%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0px, transparent 1px, transparent 3px);
+    --vignette-blend: soft-light;
+    --logo-filter: none;
+
+    /* Bayangan */
+    --inset: inset 0 1px 0 rgba(255,255,255,.06);
+    --sh-toggle-hover: var(--inset), 0 4px 14px rgba(0,0,0,.20);
+    --sh-pop: 0 24px 60px rgba(0,0,0,.5), 0 2px 10px rgba(0,0,0,.3), 0 -1px 0 rgba(165,180,252,.10) inset, var(--inset);
+    --sh-modal: 0 30px 70px rgba(0,0,0,.55), 0 4px 16px rgba(0,0,0,.35), 0 -1px 0 rgba(165,180,252,.10) inset, var(--inset);
+    --sh-input: 0 3px 12px rgba(0,0,0,.22), var(--inset);
+    --sh-input-hover: 0 5px 18px rgba(0,0,0,.26), var(--inset);
+    --sh-input-focus: 0 0 0 3px rgba(165,180,252,.13), 0 4px 20px rgba(0,0,0,.30), var(--inset);
+    --sh-send: 0 2px 8px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.9);
+    --sh-bubble: 0 2px 10px rgba(0,0,0,.15);
+    --sh-alert: 0 10px 30px rgba(0,0,0,.40), var(--inset);
+    --sh-primary: 0 6px 18px rgba(99,102,241,.28);
+
+    /* Popup bantuan cepat, dialog, backdrop */
+    --toggle-bg: rgba(30,32,40,.72);
+    --toggle-open-bg: rgba(165,180,252,.16);
+    --toggle-open-border: rgba(165,180,252,.5);
+    --toggle-open-icon: #FFFFFF;
+    --pop-bg: rgba(24,26,34,.97);
+    --modal-bg: rgba(24,26,34,.98);
+    --scrim-pop: rgba(4,5,9,.58);
+    --scrim-modal: rgba(4,5,9,.68);
+    --primary-bg: linear-gradient(180deg, #B7C2FD 0%, #97A6F7 100%);
+    --primary-fg: #12131A;
+    --primary-border: rgba(165,180,252,.55);
+
+    /* Kolom input & tombol kirim */
+    --input-bg: #1C1E24;
+    --input-bg-focus: rgba(32,34,42,.98);
+    --input-border: rgba(255,255,255,.11);
+    --input-border-hover: rgba(255,255,255,.15);
+    --input-border-focus: rgba(165,180,252,.55);
+    --send-bg: linear-gradient(180deg, #FFFFFF 0%, #E2E4E8 100%);
+    --send-fg: #0A0C11;
+    --send-off-bg: rgba(255,255,255,.08);
+    --send-off-fg: rgba(255,255,255,.30);
+    --ring-track: rgba(255,255,255,.14);
+
+    /* Pesan, peringatan, loading waveform */
+    --bubble-bg: rgba(255,255,255,.11);
+    --bubble-border: rgba(255,255,255,.08);
+    --bubble-text: #F5F7FB;
+    --alert-bg: rgba(32,24,10,.82);
+    --alert-border: rgba(251,191,36,.30);
+    --alert-strong: #FCD34D;
+    --wave-a: #009FDF;
+    --wave-b: #39A849;
+    --wave-glow: 0 0 6px rgba(0,159,223,.35);
+    --wave-min-o: .45;'''
+
+_LIGHT_VARS = '''    --scheme: light;
+
+    /* Permukaan & teks: putih / abu sangat terang, teks abu kehitaman */
+    --bg: #F5F6FA;
+    --bg-rgb: 245,246,250;
+    --text: #13151B;
+    --text-2: #3B4250;
+    --text-3: #596171;
+    --text-strong: #0A0C11;
+    --text-disabled: rgba(19,21,27,.40);
+    --line: rgba(15,23,42,.10);
+    --line-2: rgba(15,23,42,.18);
+    --surface-hover: rgba(15,23,42,.06);
+    --fill-xs: rgba(15,23,42,.025);
+    --fill-s: rgba(15,23,42,.035);
+    --fill-m: rgba(15,23,42,.045);
+    --scroll: rgba(15,23,42,.22);
+    --accent: #4F46E5;
+    --accent-rgb: 79,70,229;
+    --code-fg: #1F2430;
+    --code-bg: rgba(15,23,42,.07);
+
+    /* Latar halaman: aurora pastel yang lebih lembut */
+    --app-bg:
+        radial-gradient(1200px 1000px at 50% 100%, rgba(165,180,252,.26), transparent 62%),
+        linear-gradient(180deg, #FBFBFE 0%, #F5F6FA 55%, #EDEFF5 100%);
+    --aurora:
+        radial-gradient(32% 26% at 14% 10%, rgba(99,102,241,.20), transparent 72%),
+        radial-gradient(30% 24% at 88% 6%, rgba(56,189,248,.20), transparent 72%),
+        radial-gradient(40% 32% at 22% 92%, rgba(168,85,247,.13), transparent 72%),
+        radial-gradient(34% 28% at 82% 96%, rgba(236,72,153,.08), transparent 74%);
+    --vignette:
+        radial-gradient(120% 90% at 50% 38%, transparent 60%, rgba(15,23,42,.06) 100%),
+        repeating-linear-gradient(0deg, rgba(15,23,42,.012) 0px, transparent 1px, transparent 3px);
+    --vignette-blend: normal;
+    /* Gradient teks logo berujung kuning-hijau (#C4D600) yang pucat di atas putih */
+    --logo-filter: brightness(.84) saturate(1.25);
+
+    /* Bayangan: putih transparan -> hitam/slate transparan */
+    --inset: inset 0 1px 0 rgba(15,23,42,.04);
+    --sh-toggle-hover: var(--inset), 0 4px 14px rgba(15,23,42,.12);
+    --sh-pop: 0 20px 48px rgba(15,23,42,.18), 0 2px 8px rgba(15,23,42,.10), var(--inset);
+    --sh-modal: 0 28px 64px rgba(15,23,42,.22), 0 4px 14px rgba(15,23,42,.12), var(--inset);
+    --sh-input: 0 2px 10px rgba(15,23,42,.07), var(--inset);
+    --sh-input-hover: 0 4px 16px rgba(15,23,42,.10), var(--inset);
+    --sh-input-focus: 0 0 0 3px rgba(79,70,229,.14), 0 4px 18px rgba(15,23,42,.10), var(--inset);
+    --sh-send: 0 2px 8px rgba(15,23,42,.25), inset 0 1px 0 rgba(255,255,255,.18);
+    --sh-bubble: 0 1px 4px rgba(15,23,42,.06);
+    --sh-alert: 0 8px 24px rgba(15,23,42,.12), var(--inset);
+    --sh-primary: 0 6px 18px rgba(79,70,229,.30);
+
+    /* Popup bantuan cepat, dialog, backdrop */
+    --toggle-bg: rgba(255,255,255,.88);
+    --toggle-open-bg: rgba(79,70,229,.10);
+    --toggle-open-border: rgba(79,70,229,.45);
+    --toggle-open-icon: #4F46E5;
+    --pop-bg: rgba(255,255,255,.99);
+    --modal-bg: #FFFFFF;
+    --scrim-pop: rgba(15,23,42,.30);
+    --scrim-modal: rgba(15,23,42,.42);
+    --primary-bg: linear-gradient(180deg, #6366F1 0%, #4F46E5 100%);
+    --primary-fg: #FFFFFF;
+    --primary-border: rgba(79,70,229,.60);
+
+    /* Kolom input & tombol kirim (tombol kirim jadi gelap di atas input putih) */
+    --input-bg: #FFFFFF;
+    --input-bg-focus: #FFFFFF;
+    --input-border: rgba(15,23,42,.14);
+    --input-border-hover: rgba(15,23,42,.24);
+    --input-border-focus: rgba(79,70,229,.60);
+    --send-bg: linear-gradient(180deg, #2A2F3C 0%, #0F1219 100%);
+    --send-fg: #FFFFFF;
+    --send-off-bg: rgba(15,23,42,.08);
+    --send-off-fg: rgba(15,23,42,.35);
+    --ring-track: rgba(15,23,42,.14);
+
+    /* Pesan, peringatan, loading waveform (cyan/hijau digelapkan agar kontras di putih) */
+    --bubble-bg: rgba(15,23,42,.065);
+    --bubble-border: rgba(15,23,42,.08);
+    --bubble-text: #13151B;
+    --alert-bg: rgba(255,248,230,.96);
+    --alert-border: rgba(217,119,6,.35);
+    --alert-strong: #B45309;
+    --wave-a: #0083BD;
+    --wave-b: #2F8F3E;
+    --wave-glow: 0 0 5px rgba(0,131,189,.20);
+    --wave-min-o: .75;'''
+
+# Selektor tema terang: pilihan eksplisit, atau "system" (tanpa penanda gelap/terang) + perangkat terang.
+_LIGHT_BLOCKS = (
+    ':root:has(.sapa-theme-light), .stApp:has(.sapa-theme-light) {\n' + _LIGHT_VARS + '\n}\n'
+    '@media (prefers-color-scheme: light) {\n'
+    '    :root:not(:has(.sapa-theme-dark)):not(:has(.sapa-theme-light)),\n'
+    '    .stApp:not(:has(.sapa-theme-dark)):not(:has(.sapa-theme-light)) {\n' + _LIGHT_VARS + '\n    }\n'
+    '}'
+)
+
+# Tombol tema yang tampil = kebalikan dari tema efektif (Dark -> tombol "ke terang" dst.).
+# Hanya display on/off; ukuran/posisi diatur di CSS utama.
+_LIGHT_SEL = ':root:has(.sapa-theme-light)'
+_SYSTEM_LIGHT_SEL = ':root:not(:has(.sapa-theme-dark)):not(:has(.sapa-theme-light))'
+_THEME_VIS = (
+    '.st-key-theme_to_dark { display: none !important; }\n'
+    + _LIGHT_SEL + ' .st-key-theme_to_light { display: none !important; }\n'
+    + _LIGHT_SEL + ' .st-key-theme_to_dark { display: block !important; }\n'
+    '@media (prefers-color-scheme: light) {\n'
+    '    ' + _SYSTEM_LIGHT_SEL + ' .st-key-theme_to_light { display: none !important; }\n'
+    '    ' + _SYSTEM_LIGHT_SEL + ' .st-key-theme_to_dark { display: block !important; }\n'
+    '}'
+)
+
 
 _CSS = r'''<style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -55,19 +260,9 @@ _CSS = r'''<style>
    TOKENS
    ================================================================ */
 :root {
-    color-scheme: dark;
+    /* color-scheme mengikuti tema aktif (--scheme ada di grup warna di bawah) */
+    color-scheme: var(--scheme, dark);
     --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-
-    --bg: #07080C;
-    --bg-rgb: 7,8,12;
-    --text: #F1F3F7;
-    --text-2: #C3C9D4;
-    --text-3: #A3ABB9;
-    --line: rgba(255,255,255,.08);
-    --line-2: rgba(255,255,255,.14);
-    --surface-hover: rgba(255,255,255,.09);
-    --accent: #A5B4FC;
-    --inset: inset 0 1px 0 rgba(255,255,255,.06);
 
     /* Brand mark (logo_sapa.svg, di-inline sebagai data-URI supaya tanpa request
        jaringan tambahan) + palet resminya, dipakai ulang di avatar & loading state. */
@@ -118,6 +313,23 @@ _CSS = r'''<style>
     --safe-right: env(safe-area-inset-right, 0px);
 }
 
+/* ================================================================
+   THEME COLORS — satu-satunya tempat warna tema didefinisikan
+   ----------------------------------------------------------------
+   Grup ini HANYA berisi warna, bayangan, dan latar (tidak ada ukuran, jarak,
+   posisi, flexbox, atau animasi). Default = Dark. Light Mode menimpa nilai yang
+   sama di bawahnya:
+     - .stApp:has(.sapa-theme-light)  -> pengguna memilih Light (app.py)
+     - @media (prefers-color-scheme: light) dan TIDAK ada penanda .sapa-theme-dark
+       -> tema "system" mengikuti pengaturan perangkat (juga dipakai sebelum
+          penanda sempat dirender, supaya tidak ada kilatan gelap)
+   Aturan di bagian lain file ini cukup memakai var(--...) dari grup ini.
+   ================================================================ */
+:root {
+__DARK_VARS__
+}
+__LIGHT_BLOCKS__
+
 .stApp {
     /* Tinggi kolom input: diukur JS, fallback perkiraan */
     --bar-h: var(--bottom-h, calc(var(--bar-pt) + var(--ta-h) + 2px + var(--bar-pb) + var(--safe-bottom)));
@@ -145,9 +357,7 @@ html, body {
     font-family: var(--font) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background:
-        radial-gradient(1200px 1000px at 50% 100%, rgba(30,20,55,.55), transparent 62%),
-        linear-gradient(180deg, #0C0E16 0%, #08090D 55%, #050508 100%) !important;
+    background: var(--app-bg) !important;
     background-attachment: fixed !important;
     animation: sapa-app-in .5s var(--ease) both;
     isolation: isolate;
@@ -158,11 +368,7 @@ html, body {
    lewat aturan animation-duration global di bagian bawah file ini. */
 .stApp::before {
     content: ""; position: fixed; inset: -12%; z-index: -2; pointer-events: none;
-    background:
-        radial-gradient(32% 26% at 14% 10%, rgba(99,102,241,.40), transparent 72%),
-        radial-gradient(30% 24% at 88% 6%, rgba(56,189,248,.28), transparent 72%),
-        radial-gradient(40% 32% at 22% 92%, rgba(168,85,247,.26), transparent 72%),
-        radial-gradient(34% 28% at 82% 96%, rgba(236,72,153,.14), transparent 74%);
+    background: var(--aurora);
     filter: blur(90px) saturate(150%);
     animation: sapa-aurora-drift 34s var(--ease) infinite alternate;
     will-change: transform;
@@ -171,10 +377,8 @@ html, body {
    dan latar tidak terasa "flat" — masih di belakang seluruh konten (z-index -1). */
 .stApp::after {
     content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-        radial-gradient(120% 90% at 50% 38%, transparent 55%, rgba(0,0,0,.42) 100%),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0px, transparent 1px, transparent 3px);
-    mix-blend-mode: soft-light;
+    background: var(--vignette);
+    mix-blend-mode: var(--vignette-blend);
 }
 @keyframes sapa-aurora-drift {
     0%   { transform: translate3d(0, 0, 0) scale(1); }
@@ -202,9 +406,9 @@ section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"],
 
 .stApp [data-stale="true"] { opacity: 1 !important; transition: none !important; }
 
-* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.12) transparent; }
+* { scrollbar-width: thin; scrollbar-color: var(--scroll) transparent; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 999px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
 .stApp p, .stApp li, .stApp label, .stApp button, .stApp textarea, .stApp input,
@@ -232,7 +436,10 @@ section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"],
 }
 [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] { gap: 0 !important; }
 [data-testid="stElementContainer"]:has(.sapa-empty),
-[data-testid="stElementContainer"]:has(.sapa-chat-active) { display: none !important; }
+[data-testid="stElementContainer"]:has(.sapa-chat-active),
+[data-testid="stElementContainer"]:has(.sapa-theme-light),
+[data-testid="stElementContainer"]:has(.sapa-theme-dark),
+[data-testid="stElementContainer"]:has(.sapa-theme-system) { display: none !important; }
 
 /* Kondisi kosong (default & mobile): sapaan + bantuan cepat di tengah vertikal,
    input tetap di bawah. Desktop punya tata letak sendiri (lihat media query DESKTOP). */
@@ -298,6 +505,7 @@ __TB_ROW__ {
 .sapa-chat-brand {
     display: block; flex: none; height: 18px; width: auto;
     aspect-ratio: 125 / 38;
+    filter: var(--logo-filter);
 }
 /* Sama persis dengan mekanisme perataan tombol "+ Baru" di sebelahnya
    (flex + height:100% + line-height:1) supaya keduanya pasti sejajar — line-height
@@ -319,7 +527,7 @@ __TB_ROW__ {
     padding: 0 14px !important; border-radius: 999px !important;
     display: inline-flex !important; align-items: center !important; justify-content: center !important;
     border: 1px solid var(--line) !important;
-    background: rgba(255,255,255,.05) !important;
+    background: var(--fill-m) !important;
     color: var(--text-2) !important;
     box-shadow: var(--inset) !important;
     transition: background .2s var(--ease), border-color .2s var(--ease),
@@ -327,7 +535,7 @@ __TB_ROW__ {
 }
 .st-key-new_chat button:hover {
     background: var(--surface-hover) !important;
-    border-color: var(--line-2) !important; color: #fff !important;
+    border-color: var(--line-2) !important; color: var(--text-strong) !important;
 }
 .st-key-new_chat button:active { transform: scale(.97); }
 .st-key-new_chat button [data-testid="stMarkdownContainer"] {
@@ -337,6 +545,61 @@ __TB_ROW__ {
     margin: 0 !important; font-size: 13px !important; font-weight: 600 !important;
     color: inherit !important; white-space: nowrap !important; line-height: 1 !important;
 }
+
+/* ---------- Tombol tema (matahari/bulan) ----------
+   Dua tombol dirender app.py (-> terang / -> gelap); CSS menampilkan yang relevan dengan
+   tema EFEKTIF, termasuk saat tema = "system", yang tidak bisa diketahui server.
+   Gaya mengikuti ikon "Bantuan cepat": ikon Material, aksen, 17px. */
+__THEME_VIS__
+.st-key-theme_to_light, .st-key-theme_to_dark,
+.st-key-theme_to_light [data-testid="stButton"], .st-key-theme_to_dark [data-testid="stButton"] {
+    width: auto !important; margin: 0 !important;
+}
+.st-key-theme_to_light button, .st-key-theme_to_dark button {
+    width: 34px !important; height: 34px !important; min-height: 34px !important; min-width: 34px !important;
+    box-sizing: border-box !important; padding: 0 !important; border-radius: 999px !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    border: 1px solid var(--line) !important;
+    background: var(--fill-m) !important;
+    color: var(--accent) !important;
+    box-shadow: var(--inset) !important;
+    transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.st-key-theme_to_light button:hover, .st-key-theme_to_dark button:hover {
+    background: var(--surface-hover) !important; border-color: var(--line-2) !important;
+}
+.st-key-theme_to_light button:active, .st-key-theme_to_dark button:active { transform: scale(.94); }
+.st-key-theme_to_light button [data-testid="stIconMaterial"],
+.st-key-theme_to_dark button [data-testid="stIconMaterial"] {
+    color: var(--accent) !important; font-size: 17px !important; margin: 0 !important;
+}
+/* Label tetap ada untuk pembaca layar, tapi tidak terlihat (tombol hanya ikon) */
+.st-key-theme_to_light button p, .st-key-theme_to_dark button p {
+    position: absolute !important; width: 1px !important; height: 1px !important;
+    margin: -1px !important; padding: 0 !important; overflow: hidden !important;
+    clip: rect(0 0 0 0) !important; white-space: nowrap !important;
+}
+/* Selama jawaban dibuat: klik memicu rerun yang memutus stream -> dikunci
+   (selaras dengan Bantuan cepat; lihat bagian ".sapa-generating") */
+.stApp:has(.sapa-generating) .st-key-theme_to_light button,
+.stApp:has(.sapa-generating) .st-key-theme_to_dark button {
+    opacity: .5 !important; cursor: not-allowed !important; pointer-events: none !important;
+}
+/* Layar awal (belum ada topbar): tombol tema melayang di pojok kanan atas kolom konten */
+.st-key-theme_corner {
+    position: fixed !important; z-index: 60 !important;
+    top: calc(var(--safe-top) + (var(--topbar-h) - 34px) / 2) !important;
+    right: calc(var(--main-r, 0px) + max(var(--gutter), var(--safe-right))
+                + max(0px, (100vw - var(--main-l, 0px) - var(--main-r, 0px) - var(--content-w)) / 2)) !important;
+    left: auto !important; width: auto !important; margin: 0 !important; padding: 0 !important;
+}
+__TC_ROW__ {
+    display: flex !important; flex-direction: row !important; gap: 0 !important;
+    width: auto !important; margin: 0 !important; padding: 0 !important;
+}
+.st-key-theme_corner [data-testid="stElementContainer"] { margin: 0 !important; padding: 0 !important; width: auto !important; }
+/* Di topbar: rapatkan jarak ke tombol "+ Baru" (gap 12px -> 8px) */
+.st-key-topbar .st-key-theme_to_light, .st-key-topbar .st-key-theme_to_dark { margin-right: -4px !important; }
 
 /* ================================================================
    HERO
@@ -358,6 +621,7 @@ __TB_ROW__ {
 .sapa-wordmark {
     display: block; height: clamp(2.3rem, 9vw, 4rem); width: auto;
     aspect-ratio: 125 / 38;
+    filter: var(--logo-filter);
 }
 .sapa-tagline {
     margin-top: 18px; font-size: clamp(.95rem, 2.4vw, 1.05rem);
@@ -451,7 +715,7 @@ __QA_ROW__ {
     color: var(--text-3) !important; font-size: 19px !important; flex: none;
     transition: color .2s var(--ease);
 }
-.st-key-quick_actions button:hover:not(:disabled) { background: rgba(255,255,255,.05) !important; }
+.st-key-quick_actions button:hover:not(:disabled) { background: var(--fill-m) !important; }
 .st-key-quick_actions button:hover:not(:disabled) p,
 .st-key-quick_actions button:hover:not(:disabled) [data-testid="stIconMaterial"] {
     color: var(--text) !important;
@@ -463,7 +727,7 @@ __QA_ROW__ {
     background: transparent !important; transform: none !important;
 }
 .st-key-quick_actions button:disabled p,
-.st-key-quick_actions button[disabled] p { color: rgba(226,229,235,.58) !important; }
+.st-key-quick_actions button[disabled] p { color: var(--text-disabled) !important; }
 .st-key-quick_actions button:disabled [data-testid="stIconMaterial"],
 .st-key-quick_actions button[disabled] [data-testid="stIconMaterial"] { opacity: .65 !important; }
 
@@ -526,14 +790,14 @@ __QA_ROW__ {
     display: inline-flex !important; align-items: center !important; justify-content: center !important;
     gap: 6px !important; white-space: nowrap !important;
     border: 1px solid var(--line) !important;
-    background: rgba(30,32,40,.72) !important;
+    background: var(--toggle-bg) !important;
     color: var(--text) !important; box-shadow: var(--inset) !important;
     transition: background .2s var(--ease), border-color .2s var(--ease),
                 border-radius .22s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 .st-key-qa_toggle button:hover {
     background: var(--surface-hover) !important; border-color: var(--line-2) !important;
-    box-shadow: var(--inset), 0 4px 14px rgba(0,0,0,.20) !important;
+    box-shadow: var(--sh-toggle-hover) !important;
 }
 .st-key-qa_toggle button:active { transform: scale(.97); }
 .st-key-qa_toggle button p {
@@ -551,12 +815,12 @@ __QA_ROW__ {
    halus — detail kecil yang membuat tombol & panel terasa satu potongan, bukan dua
    elemen lepas yang kebetulan bertumpuk. */
 html.sapa-qa-open .st-key-qa_toggle button {
-    background: rgba(165,180,252,.16) !important;
-    border-color: rgba(165,180,252,.5) !important;
+    background: var(--toggle-open-bg) !important;
+    border-color: var(--toggle-open-border) !important;
     border-bottom-left-radius: 7px !important;
 }
 html.sapa-qa-open .st-key-qa_toggle button [data-testid="stIconMaterial"] {
-    transform: rotate(18deg); color: #fff !important;
+    transform: rotate(18deg); color: var(--toggle-open-icon) !important;
 }
 
 /* Backdrop: meredupkan + mengaburkan latar di belakang popup supaya panel terasa
@@ -567,7 +831,7 @@ html.sapa-qa-open .st-key-qa_toggle button [data-testid="stIconMaterial"] {
     position: fixed !important; inset: 0 !important; z-index: 89 !important;
     width: 100vw !important; height: 100vh !important; height: 100dvh !important;
     margin: 0 !important; padding: 0 !important;
-    background: rgba(4,5,9,.58) !important;
+    background: var(--scrim-pop) !important;
     animation: sapa-backdrop-in .18s ease-out both;
 }
 .st-key-qa_backdrop [data-testid="stButton"],
@@ -602,14 +866,10 @@ html.sapa-qa-open .st-key-qa_toggle button [data-testid="stIconMaterial"] {
     box-sizing: border-box !important; padding: 6px !important; margin: 0 !important;
     /* Hampir opak, TANPA backdrop-filter: blur 22px di atas aurora yang bergerak harus
        disampel ulang GPU tiap frame, dan itulah yang membuat popup terasa berat di HP. */
-    background: rgba(24,26,34,.97) !important;
+    background: var(--pop-bg) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 18px 18px 18px 7px !important;   /* sudut kiri-bawah menyatu dgn tombol toggle */
-    box-shadow:
-        0 24px 60px rgba(0,0,0,.5),
-        0 2px 10px rgba(0,0,0,.3),
-        0 -1px 0 rgba(165,180,252,.10) inset,
-        var(--inset) !important;
+    box-shadow: var(--sh-pop) !important;
     transform-origin: 0 100%;
     animation: sapa-pop-in .2s var(--ease) both;
 }
@@ -645,7 +905,7 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
     position: fixed !important; inset: 0 !important; z-index: 200 !important;
     width: 100vw !important; height: 100vh !important; height: 100dvh !important;
     margin: 0 !important; padding: 0 !important;
-    background: rgba(4,5,9,.68) !important;
+    background: var(--scrim-modal) !important;
     animation: sapa-backdrop-in .18s ease-out both;
 }
 .st-key-confirm_backdrop [data-testid="stButton"],
@@ -682,14 +942,10 @@ html.sapa-kb-open .stApp { --pills-zone: 0px; }
     left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
     width: min(360px, calc(100vw - 32px)) !important;
     box-sizing: border-box !important; margin: 0 !important; padding: 22px 22px 18px !important;
-    background: rgba(24,26,34,.98) !important;
+    background: var(--modal-bg) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 20px !important;
-    box-shadow:
-        0 30px 70px rgba(0,0,0,.55),
-        0 4px 16px rgba(0,0,0,.35),
-        0 -1px 0 rgba(165,180,252,.10) inset,
-        var(--inset) !important;
+    box-shadow: var(--sh-modal) !important;
     transform-origin: center center;
     animation: sapa-modal-in .22s var(--ease) both;
 }
@@ -697,7 +953,7 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 .sapa-confirm-icon {
     width: 44px; height: 44px; margin: 0 auto 14px; border-radius: 999px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(165,180,252,.14); color: var(--accent);
+    background: rgba(var(--accent-rgb), .14); color: var(--accent);
     animation: sapa-modal-icon-in .4s var(--ease) .05s both;
 }
 .sapa-confirm-title {
@@ -728,16 +984,16 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 .st-key-confirm_dialog button:active { transform: scale(.97); }
 .st-key-confirm_dialog [data-testid="stBaseButton-secondary"] {
     border: 1px solid var(--line) !important;
-    background: rgba(255,255,255,.04) !important;
+    background: var(--fill-s) !important;
     color: var(--text-2) !important; box-shadow: none !important;
 }
 .st-key-confirm_dialog [data-testid="stBaseButton-secondary"]:hover {
-    background: var(--surface-hover) !important; border-color: var(--line-2) !important; color: #fff !important;
+    background: var(--surface-hover) !important; border-color: var(--line-2) !important; color: var(--text-strong) !important;
 }
 .st-key-confirm_dialog [data-testid="stBaseButton-primary"] {
-    border: 1px solid rgba(165,180,252,.55) !important;
-    background: linear-gradient(180deg, #B7C2FD 0%, #97A6F7 100%) !important;
-    color: #12131A !important; box-shadow: 0 6px 18px rgba(99,102,241,.28) !important;
+    border: 1px solid var(--primary-border) !important;
+    background: var(--primary-bg) !important;
+    color: var(--primary-fg) !important; box-shadow: var(--sh-primary) !important;
 }
 .st-key-confirm_dialog [data-testid="stBaseButton-primary"]:hover { filter: brightness(1.06); }
 
@@ -785,7 +1041,7 @@ __CONFIRM_ROW__ { gap: 0 !important; }
     font-size: .94rem !important; line-height: 1.7 !important;
 }
 [data-testid="stChatMessageContent"] p:last-child { margin-bottom: 0 !important; }
-[data-testid="stChatMessageContent"] strong { color: #fff !important; font-weight: 700 !important; }
+[data-testid="stChatMessageContent"] strong { color: var(--text-strong) !important; font-weight: 700 !important; }
 [data-testid="stChatMessageContent"] ul,
 [data-testid="stChatMessageContent"] ol {
     margin: .2em 0 .8em !important; padding-left: 1.3em !important;
@@ -797,7 +1053,7 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 [data-testid="stChatMessageContent"] h2,
 [data-testid="stChatMessageContent"] h3,
 [data-testid="stChatMessageContent"] h4 {
-    margin: .25em 0 .6em !important; color: #fff !important;
+    margin: .25em 0 .6em !important; color: var(--text-strong) !important;
     font-size: 1.04rem !important; line-height: 1.3 !important; font-weight: 700 !important;
 }
 /* ---------- Keterbacaan: warna teks dipaksa terang ----------
@@ -810,15 +1066,15 @@ __CONFIRM_ROW__ { gap: 0 !important; }
   :where(p, li, ul, ol, span, em, i, b, td, th, h1, h2, h3, h4, h5, h6, small, label, dd, dt):not([class*="sapa-"]) {
     color: var(--text) !important;
 }
-:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(strong, h1, h2, h3, h4, h5, h6) { color: #fff !important; }
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(strong, h1, h2, h3, h4, h5, h6) { color: var(--text-strong) !important; }
 :where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(a) {
-    color: var(--accent) !important; text-decoration-color: rgba(165,180,252,.5);
+    color: var(--accent) !important; text-decoration-color: rgba(var(--accent-rgb), .5);
 }
 :where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(blockquote, blockquote *) { color: var(--text-2) !important; }
 :where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(code) {
-    color: #E8EBF2 !important; background: rgba(255,255,255,.09) !important;
+    color: var(--code-fg) !important; background: var(--code-bg) !important;
 }
-:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(pre, pre *) { color: #E8EBF2 !important; }
+:where([data-testid="stMarkdownContainer"], [data-testid="stChatMessageContent"]) :where(pre, pre *) { color: var(--code-fg) !important; }
 :where([data-testid="stChatMessageContent"]) :where(th, td) { border-color: var(--line-2) !important; }
 :where([data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *) { color: var(--text-2) !important; }
 :where([data-testid="stAlert"], [data-testid="stAlert"] *) { color: var(--text) !important; }
@@ -843,12 +1099,12 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 .st-key-rate_limit [data-testid="stAlert"] { width: 100% !important; }
 .st-key-rate_limit [data-testid="stAlert"] > div,
 .st-key-rate_limit [data-testid="stAlert"] [data-baseweb="notification"] {
-    background: rgba(32,24,10,.82) !important;
+    background: var(--alert-bg) !important;
     backdrop-filter: blur(16px) saturate(150%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
-    border: 1px solid rgba(251,191,36,.30) !important;
+    border: 1px solid var(--alert-border) !important;
     border-radius: 14px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,.40), var(--inset) !important;
+    box-shadow: var(--sh-alert) !important;
     padding: 11px 14px !important;
     font-family: var(--font) !important;
     align-items: center !important; gap: 10px !important;
@@ -858,7 +1114,7 @@ __CONFIRM_ROW__ { gap: 0 !important; }
     color: var(--text) !important; font-size: 14px !important; line-height: 1.5 !important;
     margin: 0 !important; overflow-wrap: anywhere !important;
 }
-.st-key-rate_limit [data-testid="stAlert"] strong { color: #FCD34D !important; white-space: nowrap; }
+.st-key-rate_limit [data-testid="stAlert"] strong { color: var(--alert-strong) !important; white-space: nowrap; }
 @media (max-width: 767px) {
     .st-key-rate_limit [data-testid="stAlert"] > div,
     .st-key-rate_limit [data-testid="stAlert"] [data-baseweb="notification"] {
@@ -875,7 +1131,7 @@ __CONFIRM_ROW__ { gap: 0 !important; }
 [data-testid="stElementContainer"]:has(.sapa-cooldown-sync) { display: none !important; }
 html.sapa-cooldown [data-testid="stChatInputSubmitButton"] {
     position: relative !important; cursor: not-allowed !important;
-    background: rgba(255,255,255,.08) !important; color: transparent !important;
+    background: var(--send-off-bg) !important; color: transparent !important;
     box-shadow: none !important; transform: none !important;
     animation: sapa-cd-settle .42s var(--ease) both;
 }
@@ -883,7 +1139,7 @@ html.sapa-cooldown [data-testid="stChatInputSubmitButton"] svg { opacity: 0 !imp
 html.sapa-cooldown [data-testid="stChatInputSubmitButton"]::before {
     content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
     animation: sapa-cd-ring-in .5s var(--ease) both;
-    background: conic-gradient(var(--accent) calc(var(--cd-p, 0) * 360deg), rgba(255,255,255,.14) 0);
+    background: conic-gradient(var(--accent) calc(var(--cd-p, 0) * 360deg), var(--ring-track) 0);
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
             mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
 }
@@ -956,9 +1212,9 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
     margin: 0 !important;
     padding: 11px 16px !important;
     border-radius: 20px !important;
-    background: rgba(255,255,255,.11) !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,.15) !important;
+    background: var(--bubble-bg) !important;
+    border: 1px solid var(--bubble-border) !important;
+    box-shadow: var(--sh-bubble) !important;
     box-sizing: border-box !important;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) > [data-testid="stChatMessageContent"] > *,
@@ -971,7 +1227,7 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
     margin: 0 !important; line-height: 1.55 !important; text-align: left !important;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) > [data-testid="stChatMessageContent"] * {
-    color: #F5F7FB !important;
+    color: var(--bubble-text) !important;
 }
 
 /* Teks pengguna ditampilkan apa adanya (baris baru terjaga, tanpa parsing markdown) */
@@ -1015,8 +1271,8 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 .sapa-thinking-wave span {
     display: block !important;
     width: 2.5px !important; border-radius: 2px !important;
-    background: linear-gradient(180deg, var(--brand-cyan), var(--brand-green)) !important;
-    box-shadow: 0 0 6px rgba(0,159,223,.35);
+    background: linear-gradient(180deg, var(--wave-a), var(--wave-b)) !important;
+    box-shadow: var(--wave-glow);
     /* setiap garis diberi tinggi dasar, durasi & jeda berbeda supaya gerakan
        terkesan acak (audio-reactive), bukan animasi 5 garis yang serempak */
     animation: sapa-wave-bounce ease-in-out infinite both !important;
@@ -1032,13 +1288,13 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 .sapa-thinking-wave span:nth-child(4) { --h: 12px; animation-duration: 1.32s !important; animation-delay: -.34s !important; }
 .sapa-thinking-wave span:nth-child(5) { --h: 16px; animation-duration: 1.02s !important; animation-delay: -.55s !important; }
 @keyframes sapa-wave-bounce {
-    0%, 100% { height: 4px; opacity: .45; }
+    0%, 100% { height: 4px; opacity: var(--wave-min-o); }
     50%      { height: var(--h); opacity: 1; }
 }
 
 .sapa-thinking-label {
     font-size: 13px !important; font-weight: 600 !important; white-space: nowrap;
-    color: #fff !important;   /* putih polos, tanpa efek shimmer */
+    color: var(--text-strong) !important;   /* polos, tanpa efek shimmer */
 }
 
 /* ================================================================
@@ -1051,7 +1307,7 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 [data-testid="stExpander"] {
     border: 1px solid var(--line) !important;
     border-radius: 14px !important;
-    background: rgba(255,255,255,.03) !important;
+    background: var(--fill-xs) !important;
     box-shadow: var(--inset);
     overflow: hidden; isolation: isolate;          /* isolation: clip radius rapi di Safari */
     margin-top: 10px !important; padding: 0 !important;
@@ -1079,7 +1335,7 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 }
 [data-testid="stExpander"] summary::-webkit-details-marker { display: none !important; }
 [data-testid="stExpander"] summary:hover,
-[data-testid="stExpander"] summary:focus-visible { background: rgba(255,255,255,.04) !important; }
+[data-testid="stExpander"] summary:focus-visible { background: var(--fill-s) !important; }
 [data-testid="stExpander"] summary p {
     margin: 0 !important; color: var(--text-2) !important;
     font-size: 12.5px !important; font-weight: 500 !important; white-space: nowrap !important;
@@ -1116,7 +1372,7 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 .sapa-src-num {
     flex: none; width: 20px; height: 20px; margin-top: 1px;
     display: grid; place-items: center; border-radius: 6px;
-    background: rgba(165,180,252,.14); color: var(--accent);
+    background: rgba(var(--accent-rgb), .14); color: var(--accent);
     font-size: 11px; font-weight: 700;
 }
 .sapa-src-meta { min-width: 0; }
@@ -1124,16 +1380,16 @@ html.sapa-confirm-open .stApp::before { animation-play-state: paused !important;
 .sapa-src-section { color: var(--text-3); font-size: 11.5px; margin-top: 2px; }
 .sapa-src-body {
     padding: 10px 12px; border-radius: 10px;
-    background: rgba(255,255,255,.03); border: 1px solid var(--line);
+    background: var(--fill-xs); border: 1px solid var(--line);
     color: var(--text-2); font-size: 12.5px; line-height: 1.6;
     overflow-wrap: anywhere;
 }
 
 iframe {
     border: 0 !important; background: transparent !important; max-width: 100% !important;
-    /* color-scheme iframe harus sama dengan dokumen di dalamnya (dark); kalau beda,
-       browser mengecatnya dengan kanvas OPAK → muncul kotak hitam selebar kolom */
-    color-scheme: dark !important;
+    /* color-scheme iframe harus sama dengan dokumen di dalamnya (mengikuti tema aktif);
+       kalau beda, browser mengecatnya dengan kanvas OPAK → muncul kotak selebar kolom */
+    color-scheme: var(--scheme, dark) !important;
 }
 /* Iframe tombol salin: hanya selebar tombolnya, tidak melebar sampai ujung */
 [data-testid="stChatMessageContent"] iframe {
@@ -1196,10 +1452,10 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 /* Buat background input solid agar tidak tembus pandang */
 [data-testid="stChatInput"] {
     width: 100% !important;
-    background: #1C1E24 !important; /* Diubah dari rgba semi-transparan ke solid */
-    border: 1px solid rgba(255,255,255,.11) !important;
+    background: var(--input-bg) !important; /* solid agar tidak tembus pandang */
+    border: 1px solid var(--input-border) !important;
     border-radius: 26px !important;
-    box-shadow: 0 3px 12px rgba(0,0,0,.22), var(--inset) !important;
+    box-shadow: var(--sh-input) !important;
     outline: none !important;
     transition: border-color .25s var(--ease), background-color .25s var(--ease), box-shadow .25s var(--ease);
     overflow: hidden !important; isolation: isolate !important;
@@ -1209,13 +1465,13 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     padding: 0 !important;
 }
 [data-testid="stChatInput"]:hover {
-    border-color: rgba(255,255,255,.15) !important;
-    box-shadow: 0 5px 18px rgba(0,0,0,.26), var(--inset) !important;
+    border-color: var(--input-border-hover) !important;
+    box-shadow: var(--sh-input-hover) !important;
 }
 [data-testid="stChatInput"]:focus-within {
-    background: rgba(32,34,42,.98) !important;
-    border-color: rgba(165,180,252,.55) !important;
-    box-shadow: 0 0 0 3px rgba(165,180,252,.13), 0 4px 20px rgba(0,0,0,.30), var(--inset) !important;
+    background: var(--input-bg-focus) !important;
+    border-color: var(--input-border-focus) !important;
+    box-shadow: var(--sh-input-focus) !important;
 }
 
 /* ====== RIWAYAT BUG "kotak input menyempit" (3 percobaan sebelumnya) ======
@@ -1289,17 +1545,17 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
     margin: 0 calc((var(--ta-h) - var(--btn)) / 2) calc((var(--ta-h) - var(--btn)) / 2) 0 !important;
     padding: 0 !important;
     border-radius: 50% !important; border: 0 !important;
-    background: linear-gradient(180deg, #FFFFFF 0%, #E2E4E8 100%) !important;
-    color: #0A0C11 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.9) !important;
+    background: var(--send-bg) !important;
+    color: var(--send-fg) !important;
+    box-shadow: var(--sh-send) !important;
     display: inline-flex !important; align-items: center !important; justify-content: center !important;
     transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
 [data-testid="stChatInputSubmitButton"]:hover:not(:disabled) { transform: scale(1.07); }
 [data-testid="stChatInputSubmitButton"]:active:not(:disabled) { transform: scale(.96); }
 [data-testid="stChatInputSubmitButton"]:disabled {
-    background: rgba(255,255,255,.08) !important;
-    color: rgba(255,255,255,.30) !important;
+    background: var(--send-off-bg) !important;
+    color: var(--send-off-fg) !important;
     box-shadow: none !important; transform: none !important;
 }
 [data-testid="stChatInputSubmitButton"] svg {
@@ -1750,6 +2006,15 @@ _LAYOUT_JS = r'''
       return;
     }
 
+    // Tombol tema: dikunci selama jawaban dibuat (rerun akan memutus stream); selain itu
+    // diteruskan ke Streamlit (server menyimpan pilihan tema) dan popup ditutup.
+    var themeBtn = t.closest('.st-key-theme_to_light button, .st-key-theme_to_dark button');
+    if (themeBtn) {
+      if (q('.sapa-generating')) { swallow(e); nudge(themeBtn); return; }
+      closePopups();
+      return;
+    }
+
     // "+ Baru" dan dialog konfirmasinya
     if (t.closest('.st-key-new_chat button')) { swallow(e); root.classList.add('sapa-confirm-open'); return; }
     if (t.closest('.st-key-confirm_backdrop button, .st-key-confirm_cancel button')) {
@@ -1789,6 +2054,10 @@ def get_custom_css() -> str:
         .replace('__QA_ROW__', _QA_ROW)
         .replace('__TB_ROW__', _TB_ROW)
         .replace('__CONFIRM_ROW__', _CONFIRM_ROW)
+        .replace('__TC_ROW__', _TC_ROW)
+        .replace('__THEME_VIS__', _THEME_VIS)
+        .replace('__DARK_VARS__', _DARK_VARS)
+        .replace('__LIGHT_BLOCKS__', _LIGHT_BLOCKS)
     )
 
 
