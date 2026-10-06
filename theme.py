@@ -627,19 +627,34 @@ __TC_ROW__ {
 :is([data-baseweb="popover"], [data-baseweb="tooltip"]):has([data-testid="stTooltipContent"]) div:has([data-testid="stTooltipContent"]) {
     background: transparent !important; background-color: transparent !important;
     border: 0 !important; box-shadow: none !important; outline: 0 !important;
+    /* Tooltip tidak boleh punya scroll: pembungkus bawaan bisa membawa tinggi/overflow tetap
+       (dihitung untuk padding bawaan Streamlit), sehingga setelah padding & border diganti di
+       bawah, isinya terpotong dan muncul scrollbar. Tinggi dibiarkan mengikuti isi. */
+    height: auto !important; min-height: 0 !important; max-height: none !important;
+    overflow: visible !important;
 }
 [data-testid="stTooltipContent"] {
     background: var(--pop-bg) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 12px !important;
     box-shadow: var(--sh-alert) !important;
+    box-sizing: border-box !important;
     padding: 8px 12px !important;
     font-family: var(--font) !important; font-size: 13px !important;
     font-weight: 500 !important; line-height: 1.4 !important;
+    /* Anti-scroll: tinggi mengikuti isi, tanpa overflow, dan tanpa scrollbar sama sekali
+       (jaring pengaman kalau ada gaya bawaan yang masih memaksa overflow). */
+    height: auto !important; min-height: 0 !important; max-height: none !important;
+    overflow: visible !important; overflow-y: visible !important;
+    scrollbar-width: none !important;
 }
+[data-testid="stTooltipContent"]::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
 [data-testid="stTooltipContent"],
 [data-testid="stTooltipContent"] * { color: var(--text) !important; }
-[data-testid="stTooltipContent"] p { margin: 0 !important; }
+[data-testid="stTooltipContent"] p { margin: 0 !important; white-space: normal !important; }
+[data-testid="stTooltipContent"] [data-testid="stMarkdownContainer"] {
+    height: auto !important; max-height: none !important; overflow: visible !important;
+}
 
 /* Di topbar: rapatkan jarak ke tombol "+ Baru" (gap 12px -> 8px) */
 .st-key-topbar .st-key-theme_to_light, .st-key-topbar .st-key-theme_to_dark { margin-right: -4px !important; }
