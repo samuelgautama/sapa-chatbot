@@ -560,6 +560,7 @@ __THEME_VIS__
     width: 34px !important; height: 34px !important; min-height: 34px !important; min-width: 34px !important;
     box-sizing: border-box !important; padding: 0 !important; border-radius: 999px !important;
     display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    position: relative !important; gap: 0 !important;
     border: 1px solid var(--line) !important;
     background: var(--fill-m) !important;
     color: var(--accent) !important;
@@ -570,12 +571,14 @@ __THEME_VIS__
     background: var(--surface-hover) !important; border-color: var(--line-2) !important;
 }
 .st-key-theme_to_light button:active, .st-key-theme_to_dark button:active { transform: scale(.94); }
-/* Ikon digambar sendiri (SVG via CSS mask), bukan font Material: glyph font punya
-   bearing/ascent sendiri sehingga bulan/matahari selalu bergeser dari tengah. SVG ini
-   ber-viewBox simetris (bbox tepat di 12,12), dipusatkan oleh flex pada <button>. Warna
-   mengikuti currentColor (= aksen). */
+/* Ikon digambar sendiri (SVG via CSS mask), bukan font Material. SVG ber-viewBox simetris
+   (bbox tepat di 12,12). Warna mengikuti currentColor (= aksen).
+   Posisinya ABSOLUT (inset:0 + margin:auto), BUKAN anak flex: <button> Streamlit masih
+   memuat wadah label (<div stMarkdownContainer>, labelnya disembunyikan) dan punya `gap`
+   antar anak; sebagai anak flex, ikon jadi bergeser setengah gap (~4px) ke kiri dari
+   tengah. Dengan posisi absolut, ikon tepat di tengah tombol apa pun isi/gap-nya. */
 .st-key-theme_to_light button::before, .st-key-theme_to_dark button::before {
-    content: ""; display: block; flex: none;
+    content: ""; display: block; position: absolute; inset: 0; margin: auto;
     width: 18px; height: 18px; background-color: currentColor;
     -webkit-mask: var(--theme-ico) center / 18px 18px no-repeat;
             mask: var(--theme-ico) center / 18px 18px no-repeat;
@@ -612,6 +615,32 @@ __TC_ROW__ {
     width: auto !important; margin: 0 !important; padding: 0 !important;
 }
 .st-key-theme_corner [data-testid="stElementContainer"] { margin: 0 !important; padding: 0 !important; width: auto !important; }
+/* ---------- Tooltip bawaan Streamlit (parameter help=) ----------
+   Tooltip memakai tema Streamlit sendiri (gelap), sedangkan warna teksnya ikut aturan teks
+   aplikasi ini -> di mode Light jadi teks gelap di atas gelembung gelap (tak terbaca).
+   Sekarang warnanya diambil dari token tema aplikasi, jadi otomatis benar di Dark & Light,
+   termasuk saat tema = "system". Karena tooltip dirender di portal (di luar .stApp), token
+   tetap sampai ke sini lewat :root. Pembungkus bawaan (Body/Inner baseweb) dibuat
+   transparan agar tidak ada tepi gelap di sekeliling gelembung; permukaan, radius, border,
+   dan bayangan dipasang di wadah isinya saja. */
+:is([data-baseweb="popover"], [data-baseweb="tooltip"]):has([data-testid="stTooltipContent"]),
+:is([data-baseweb="popover"], [data-baseweb="tooltip"]):has([data-testid="stTooltipContent"]) div:has([data-testid="stTooltipContent"]) {
+    background: transparent !important; background-color: transparent !important;
+    border: 0 !important; box-shadow: none !important; outline: 0 !important;
+}
+[data-testid="stTooltipContent"] {
+    background: var(--pop-bg) !important;
+    border: 1px solid var(--line-2) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--sh-alert) !important;
+    padding: 8px 12px !important;
+    font-family: var(--font) !important; font-size: 13px !important;
+    font-weight: 500 !important; line-height: 1.4 !important;
+}
+[data-testid="stTooltipContent"],
+[data-testid="stTooltipContent"] * { color: var(--text) !important; }
+[data-testid="stTooltipContent"] p { margin: 0 !important; }
+
 /* Di topbar: rapatkan jarak ke tombol "+ Baru" (gap 12px -> 8px) */
 .st-key-topbar .st-key-theme_to_light, .st-key-topbar .st-key-theme_to_dark { margin-right: -4px !important; }
 
