@@ -76,20 +76,18 @@ _DARK_VARS = '''    --scheme: dark;
     --code-fg: #E8EBF2;
     --code-bg: rgba(255,255,255,.09);
 
-    /* Latar halaman: gradient dasar, "aurora", dan vinyet */
+    /* Latar halaman: gradient statis + vinyet (tanpa aurora) */
     --app-bg:
+        radial-gradient(900px 600px at 12% 0%, rgba(99,102,241,.16), transparent 70%),
+        radial-gradient(800px 560px at 92% 0%, rgba(56,189,248,.09), transparent 70%),
         radial-gradient(1200px 1000px at 50% 100%, rgba(30,20,55,.55), transparent 62%),
         linear-gradient(180deg, #0C0E16 0%, #08090D 55%, #050508 100%);
-    --aurora:
-        radial-gradient(32% 26% at 14% 10%, rgba(99,102,241,.40), transparent 72%),
-        radial-gradient(30% 24% at 88% 6%, rgba(56,189,248,.28), transparent 72%),
-        radial-gradient(40% 32% at 22% 92%, rgba(168,85,247,.26), transparent 72%),
-        radial-gradient(34% 28% at 82% 96%, rgba(236,72,153,.14), transparent 74%);
     --vignette:
         radial-gradient(120% 90% at 50% 38%, transparent 55%, rgba(0,0,0,.42) 100%),
         repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0px, transparent 1px, transparent 3px);
     --vignette-blend: soft-light;
-    --logo-filter: none;
+    --wm-dark: block;
+    --wm-light: none;
 
     /* Bayangan */
     --inset: inset 0 1px 0 rgba(255,255,255,.06);
@@ -163,21 +161,20 @@ _LIGHT_VARS = '''    --scheme: light;
     --code-fg: #1F2430;
     --code-bg: rgba(15,23,42,.07);
 
-    /* Latar halaman: aurora pastel yang lebih lembut */
+    /* Latar halaman: gradient statis pastel */
     --app-bg:
-        radial-gradient(1200px 1000px at 50% 100%, rgba(165,180,252,.26), transparent 62%),
+        radial-gradient(900px 600px at 12% 0%, rgba(99,102,241,.10), transparent 70%),
+        radial-gradient(800px 560px at 92% 0%, rgba(56,189,248,.10), transparent 70%),
+        radial-gradient(1200px 1000px at 50% 100%, rgba(165,180,252,.24), transparent 62%),
         linear-gradient(180deg, #FBFBFE 0%, #F5F6FA 55%, #EDEFF5 100%);
-    --aurora:
-        radial-gradient(32% 26% at 14% 10%, rgba(99,102,241,.20), transparent 72%),
-        radial-gradient(30% 24% at 88% 6%, rgba(56,189,248,.20), transparent 72%),
-        radial-gradient(40% 32% at 22% 92%, rgba(168,85,247,.13), transparent 72%),
-        radial-gradient(34% 28% at 82% 96%, rgba(236,72,153,.08), transparent 74%);
     --vignette:
         radial-gradient(120% 90% at 50% 38%, transparent 60%, rgba(15,23,42,.06) 100%),
         repeating-linear-gradient(0deg, rgba(15,23,42,.012) 0px, transparent 1px, transparent 3px);
     --vignette-blend: normal;
-    /* Gradient teks logo berujung kuning-hijau (#C4D600) yang pucat di atas putih */
-    --logo-filter: brightness(.84) saturate(1.25);
+    /* Logo: varian terang (app.py) dengan ujung gradient teks hijau tua, bukan kuning-hijau
+       #C4D600 yang pucat di atas putih. Dua <img> dirender; hanya satu yang tampil. */
+    --wm-dark: none;
+    --wm-light: block;
 
     /* Bayangan: putih transparan -> hitam/slate transparan */
     --inset: inset 0 1px 0 rgba(15,23,42,.04);
@@ -245,10 +242,10 @@ _SYSTEM_LIGHT_SEL = ':root:not(:has(.sapa-theme-dark)):not(:has(.sapa-theme-ligh
 _THEME_VIS = (
     '.st-key-theme_to_dark { display: none !important; }\n'
     + _LIGHT_SEL + ' .st-key-theme_to_light { display: none !important; }\n'
-    + _LIGHT_SEL + ' .st-key-theme_to_dark { display: block !important; }\n'
+    + _LIGHT_SEL + ' .st-key-theme_to_dark { display: flex !important; }\n'
     '@media (prefers-color-scheme: light) {\n'
     '    ' + _SYSTEM_LIGHT_SEL + ' .st-key-theme_to_light { display: none !important; }\n'
-    '    ' + _SYSTEM_LIGHT_SEL + ' .st-key-theme_to_dark { display: block !important; }\n'
+    '    ' + _SYSTEM_LIGHT_SEL + ' .st-key-theme_to_dark { display: flex !important; }\n'
     '}'
 )
 
@@ -362,28 +359,14 @@ html, body {
     animation: sapa-app-in .5s var(--ease) both;
     isolation: isolate;
 }
-/* Lapisan "aurora": beberapa gumpalan warna besar & buram yang bergerak pelan,
-   di belakang seluruh konten (z-index -1), untuk kesan latar yang lebih hidup
-   dan modern dibanding gradient statis. Dihormati oleh prefers-reduced-motion
-   lewat aturan animation-duration global di bagian bawah file ini. */
-.stApp::before {
-    content: ""; position: fixed; inset: -12%; z-index: -2; pointer-events: none;
-    background: var(--aurora);
-    filter: blur(90px) saturate(150%);
-    animation: sapa-aurora-drift 34s var(--ease) infinite alternate;
-    will-change: transform;
-}
-/* Vinyet halus + grain tipis di atas aurora supaya tepi layar sedikit meredup
-   dan latar tidak terasa "flat" — masih di belakang seluruh konten (z-index -1). */
+/* Lapisan "aurora" (blur 90px + animasi tanpa henti) DIHAPUS demi performa render;
+   warna latar kini hanya gradient statis di --app-bg. */
+/* Vinyet halus + grain tipis supaya tepi layar sedikit meredup dan latar tidak
+   terasa "flat" — di belakang seluruh konten (z-index -1). */
 .stApp::after {
     content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background: var(--vignette);
     mix-blend-mode: var(--vignette-blend);
-}
-@keyframes sapa-aurora-drift {
-    0%   { transform: translate3d(0, 0, 0) scale(1); }
-    50%  { transform: translate3d(-2.5%, 2%, 0) scale(1.06); }
-    100% { transform: translate3d(2.5%, -1.5%, 0) scale(1); }
 }
 @keyframes sapa-app-in { from { opacity: 0 } to { opacity: 1 } }
 @keyframes sapa-fade-up {
@@ -494,6 +477,25 @@ __TB_ROW__ {
     align-self: center !important;
 }
 .st-key-topbar [data-testid="stElementContainer"]:has(.sapa-chat-header) { flex: 1 1 auto; }
+/* Alignment: setiap item topbar (merek, tombol tema, "+ Baru") dipaksa selebar-isi, setinggi
+   34px, dan isinya dipusatkan secara vertikal. Pembungkus markdown Streamlit (stMarkdown /
+   stMarkdownContainer) dan pembungkus tombol sering membawa margin/padding/min-height
+   sendiri yang menggeser logo beberapa px dari tombol; semuanya dinolkan di sini. */
+:where(.st-key-topbar) [data-testid="stElementContainer"] {   /* :where = spesifisitas rendah, agar aturan sembunyi tombol tema tetap menang */
+    display: flex !important; align-items: center !important;
+}
+.st-key-topbar [data-testid="stElementContainer"] {
+    height: 34px !important; min-height: 0 !important;
+    margin: 0 !important; padding: 0 !important;
+}
+.st-key-topbar [data-testid="stMarkdown"],
+.st-key-topbar [data-testid="stMarkdownContainer"],
+.st-key-topbar [data-testid="stButton"] {
+    display: flex !important; align-items: center !important;
+    height: 34px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+}
+.st-key-topbar [data-testid="stMarkdownContainer"] { height: auto !important; }
+.sapa-chat-brand { align-self: center; }
 .st-key-topbar [data-testid="stElementContainer"]:has([data-testid="stButton"]) { flex: 0 0 auto; }
 .st-key-topbar [data-testid="stButton"] { align-self: center !important; }
 
@@ -505,7 +507,6 @@ __TB_ROW__ {
 .sapa-chat-brand {
     display: block; flex: none; height: 18px; width: auto;
     aspect-ratio: 125 / 38;
-    filter: var(--logo-filter);
 }
 /* Sama persis dengan mekanisme perataan tombol "+ Baru" di sebelahnya
    (flex + height:100% + line-height:1) supaya keduanya pasti sejajar — line-height
@@ -569,9 +570,16 @@ __THEME_VIS__
     background: var(--surface-hover) !important; border-color: var(--line-2) !important;
 }
 .st-key-theme_to_light button:active, .st-key-theme_to_dark button:active { transform: scale(.94); }
+.st-key-theme_to_light button > div, .st-key-theme_to_dark button > div,
+.st-key-theme_to_light button [data-testid="stMarkdownContainer"], .st-key-theme_to_dark button [data-testid="stMarkdownContainer"] {
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    gap: 0 !important; margin: 0 !important; padding: 0 !important; width: auto !important; height: auto !important;
+}
 .st-key-theme_to_light button [data-testid="stIconMaterial"],
 .st-key-theme_to_dark button [data-testid="stIconMaterial"] {
-    color: var(--accent) !important; font-size: 17px !important; margin: 0 !important;
+    color: var(--accent) !important; font-size: 18px !important; line-height: 1 !important;
+    width: 18px !important; height: 18px !important; margin: 0 !important; padding: 0 !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
 }
 /* Label tetap ada untuk pembaca layar, tapi tidak terlihat (tombol hanya ikon) */
 .st-key-theme_to_light button p, .st-key-theme_to_dark button p {
@@ -609,6 +617,8 @@ __TC_ROW__ {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; padding: 0 8px;
 }
+.sapa-wordmark.sapa-wm-dark, .sapa-chat-brand.sapa-wm-dark { display: var(--wm-dark); }
+.sapa-wordmark.sapa-wm-light, .sapa-chat-brand.sapa-wm-light { display: var(--wm-light); }
 .sapa-title {
     margin: 0; line-height: 1.05;
     animation: sapa-fade-up .55s var(--ease) both;
@@ -621,7 +631,6 @@ __TC_ROW__ {
 .sapa-wordmark {
     display: block; height: clamp(2.3rem, 9vw, 4rem); width: auto;
     aspect-ratio: 125 / 38;
-    filter: var(--logo-filter);
 }
 .sapa-tagline {
     margin-top: 18px; font-size: clamp(.95rem, 2.4vw, 1.05rem);
@@ -864,7 +873,7 @@ html.sapa-qa-open .st-key-qa_toggle button [data-testid="stIconMaterial"] {
     max-height: min(420px, calc(100vh - var(--top-zone) - var(--above-bar) - var(--pills-h) - 32px)) !important;
     overflow-y: auto !important; overflow-x: hidden !important; scrollbar-width: none;
     box-sizing: border-box !important; padding: 6px !important; margin: 0 !important;
-    /* Hampir opak, TANPA backdrop-filter: blur 22px di atas aurora yang bergerak harus
+    /* Hampir opak, TANPA backdrop-filter: blur 22px di atas latar harus
        disampel ulang GPU tiap frame, dan itulah yang membuat popup terasa berat di HP. */
     background: var(--pop-bg) !important;
     border: 1px solid var(--line-2) !important;
@@ -1190,9 +1199,6 @@ html:not(.sapa-qa-open) .stApp:has(.sapa-chat-active) .st-key-quick_actions,
 html:not(.sapa-qa-open) .st-key-qa_backdrop,
 html:not(.sapa-confirm-open) .st-key-confirm_backdrop,
 html:not(.sapa-confirm-open) .st-key-confirm_dialog { display: none !important; }
-/* Aurora (blur 90px, bergerak terus) dijeda selagi popup terbuka: GPU fokus ke popup. */
-html.sapa-qa-open .stApp::before,
-html.sapa-confirm-open .stApp::before { animation-play-state: paused !important; }
 
 /* Tabel & kode lebar tidak boleh mendorong halaman melebar */
 [data-testid="stChatMessageContent"] pre,
