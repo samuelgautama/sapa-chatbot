@@ -46,6 +46,8 @@ CONTEXT_DEPENDENT_PATTERNS = (
     r"\bselanjutnya\b",
     r"\b3 program\b",
     r"\b2 program\b",
+    r"\b(?:syaratnya|caranya|iurannya|biayanya|prosesnya|langkahnya)\b",
+    r"\bapa saja\b",
 )
 
 

@@ -198,8 +198,14 @@ def detect_calculation_request(question: str) -> bool:
         "berapa bayar", "bayar per bulan", "biaya per bulan", "iuran per bulan",
     )
     has_calculation_word = any(word in text for word in calculation_words)
-    has_program_or_income = any(token in text for token in ("jkk", "jkm", "jht", "penghasilan", "pendapatan", "rp", "per bulan"))
-    return has_calculation_word and has_program_or_income
+    has_program_or_income = any(
+        token in text
+        for token in ("jkk", "jkm", "jht", "penghasilan", "pendapatan", "rp", "per bulan")
+    )
+    has_program_count = bool(
+        re.search(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b", text)
+    )
+    return has_calculation_word and (has_program_or_income or has_program_count)
 
 
 def build_calculation_response(

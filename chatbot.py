@@ -37,6 +37,7 @@ from retrieval_utils import (
     build_retrieval_query,
     rerank_scored_documents,
 )
+from conversation_context import ConversationContext, build_conversation_context
 
 from calculator import (
     build_calculation_response,
@@ -668,12 +669,19 @@ def _fallback_response(intent_name, domain_relevant=True):
         f"Untuk memastikan jawabannya, silakan hubungi **{contact}**."
     )
 
-def _try_deterministic_calculation(question):
-    """Mengembalikan jawaban numerik tanpa LLM jika pertanyaan memang meminta hitung iuran."""
+def _try_deterministic_calculation(
+    question: str,
+    context: Optional[ConversationContext] = None,
+):
+    """Mengembalikan jawaban numerik tanpa LLM dengan mewarisi slot percakapan."""
     if not detect_calculation_request(question):
         return None
 
-    base_income = extract_base_income(question)
+    context = context or ConversationContext()
+
+    # Pertanyaan terbaru selalu menang. Jika slot tidak disebut, warisi nilai terakhir
+    # yang tersimpan dari percakapan user sebelumnya.
+    base_income = extract_base_income(question) or context.base_income
     if base_income is None:
         return (
             "## Simulasi Iuran BPU\n\n"
@@ -682,13 +690,15 @@ def _try_deterministic_calculation(question):
             "atau **3 program (JKK + JKM + JHT)**."
         )
 
-    programs = extract_programs(question)
+    programs = extract_programs(question) or context.programs
     discount_requested = detect_discount_request(question)
     discount = False
     discount_note = ""
 
     if discount_requested:
-        sector = detect_sector(question)
+        # Sektor boleh diwarisi dari percakapan sebelumnya, tetapi permintaan promo sendiri
+        # tidak disimpan agar simulasi berikutnya tidak otomatis ikut diskon.
+        sector = detect_sector(question) or context.sector
         status, eligible = promo_status(sector=sector)
         discount_note = f"\n\n*Status promo: {status}*"
         if eligible:
@@ -798,6 +808,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
 
     intent_name = detect_intent(question)
     intent_instruction = get_intent_instruction(intent_name)
+    conversation_context = build_conversation_context(question, history)
 
     relevant_docs, retrieval_query, retrieval_details = retrieve_documents(
         question,
@@ -805,6 +816,19 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         history=history,
         top_k=TOP_K,
     )
+
+    # Tahap perhitungan deterministik dijalankan SEBELUM confidence fallback.
+    # Dengan begitu follow-up seperti "hitung iuran untuk 3 program" tetap bisa
+    # memakai penghasilan dari bubble sebelumnya meski retrieval sedang kurang yakin.
+    deterministic_calculation = _try_deterministic_calculation(
+        question,
+        context=conversation_context,
+    )
+    if deterministic_calculation is not None:
+        return _AskPlan(
+            sources=relevant_docs,
+            static_answer=sanitize_assistant_output(deterministic_calculation),
+        )
 
     # Jika tidak ada dokumen yang lolos retrieval/confidence gate, jangan panggil LLM.
     # Ini mencegah pertanyaan di luar domain mendapatkan jawaban yang terdengar meyakinkan.
@@ -822,15 +846,6 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
             ),
         )
 
-    # Tahap 5: pertanyaan aritmetika iuran tidak dikirim ke LLM untuk dihitung.
-    # Python menghitung angka secara deterministik; RAG tetap memasok sumber yang tampil di UI.
-    deterministic_calculation = _try_deterministic_calculation(question)
-    if deterministic_calculation is not None:
-        return _AskPlan(
-            sources=relevant_docs,
-            static_answer=sanitize_assistant_output(deterministic_calculation),
-        )
-
     context = format_context(relevant_docs)
     # AUGMENTATION: gabungkan potongan dokumen hasil retrieval
 
@@ -845,6 +860,8 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         "HASIL RETRIEVAL: Sumber di bawah telah lolos pemeriksaan relevansi minimum. "
         "Jangan menyebut skor similarity sebagai probabilitas atau tingkat kepastian kepada pengguna. "
         f"Jumlah kandidat yang diperiksa: {retrieval_details['candidate_count']}.\n\n"
+        "KONTEKS TERSTRUKTUR DARI PERCAKAPAN USER (bukan sumber fakta dokumen):\n"
+        f"{conversation_context.to_prompt()}\n\n"
         f"KONTEKS DOKUMEN:\n{context}\n\n"
         f"PERTANYAAN TERBARU:\n{question}"
     )
