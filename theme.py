@@ -1925,8 +1925,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV7) return;
-  window.__sapaLayoutV7 = true;
+  if (window.__sapaLayoutV8) return;
+  window.__sapaLayoutV8 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -1979,8 +1979,7 @@ _LAYOUT_JS = r'''
     if (bar && bar.offsetHeight) root.style.setProperty('--bottom-h', bar.offsetHeight + 'px');
 
     // 2b) Tepi kiri tombol "Tautan Penting" (jangkar panelnya)
-    var lt = q('.st-key-links_toggle button');
-    if (lt) root.style.setProperty('--links-l', Math.max(0, Math.round(lt.getBoundingClientRect().left)) + 'px');
+    measureLinks();
 
     // 3) Posisi area utama
     var main = q('[data-testid="stMain"]');
@@ -2195,9 +2194,15 @@ _LAYOUT_JS = r'''
   function closePopups() { root.classList.remove('sapa-qa-open', 'sapa-links-open', 'sapa-confirm-open'); syncAria(); }
   function closeTogglePopups() { root.classList.remove('sapa-qa-open', 'sapa-links-open'); syncAria(); }
   // Panel "Tautan Penting" berdiri tepat di atas tombolnya -> butuh tepi kiri tombol (px)
+  // Yang diukur adalah WADAH tombol, bukan <button>-nya: tombol punya transform: scale(.97) saat
+  // :active, dan event klik terjadi selagi tombol masih :active -> hasil ukur bergeser ~2px ke
+  // kanan, lalu "melompat" ke kiri begitu tombol dilepas dan diukur ulang (itulah kedipan
+  // kecil saat panel dibuka). Wadah tidak pernah di-transform, jadi nilainya selalu stabil.
   function measureLinks() {
-    var b = q('.st-key-links_toggle button');
-    if (b) root.style.setProperty('--links-l', Math.max(0, Math.round(b.getBoundingClientRect().left)) + 'px');
+    var c = q('.st-key-links_toggle');
+    if (!c) return;
+    var px = Math.max(0, Math.round(c.getBoundingClientRect().left)) + 'px';
+    if (root.style.getPropertyValue('--links-l') !== px) root.style.setProperty('--links-l', px);   // tulis hanya bila berubah
   }
   function swallow(e) { e.preventDefault(); e.stopImmediatePropagation(); }
   document.addEventListener('keydown', function (e) {
@@ -2305,9 +2310,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v7")) return;
+    if (doc.getElementById("sapa-layout-js-v8")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v7";
+    s.id = "sapa-layout-js-v8";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{

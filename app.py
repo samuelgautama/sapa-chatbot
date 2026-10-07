@@ -59,11 +59,11 @@ def load_page_icon(fallback: str = "💬"):
 # Tautan penting (popup "Tautan Penting"). Ganti url/label/ikon sesuai kebutuhan; ikon memakai
 # nama Material Symbols (https://fonts.google.com/icons). Jumlah item bebas (daftar bisa di-scroll).
 important_links = [
-    {"label": "Materi pembekalan", "icon": "school", "url": "https://example.com/materi-pembekalan"},
-    {"label": "Form pendaftaran BPU", "icon": "how_to_reg", "url": "https://example.com/form-pendaftaran-bpu"},
-    {"label": "Form penempatan mahasiswa magang", "icon": "assignment_ind", "url": "https://example.com/form-penempatan-magang"},
-    {"label": "Panduan & SOP lapangan", "icon": "menu_book", "url": "https://example.com/panduan-sop-lapangan"},
-    {"label": "Pusat bantuan (FAQ)", "icon": "help", "url": "https://example.com/pusat-bantuan"},
+    {"label": "Materi pembekalan", "icon": "school", "url": "https://drive.google.com/drive/folders/1ga-Tx8eh8TEEmxPK7NWmHVLm7faoIoNC"},
+    {"label": "Form pendaftaran BPU", "icon": "app_registration", "url": "https://docs.google.com/forms/d/e/1FAIpQLScFsjR2-C8eAuQ_Hir8GzZn5T6h15OhNBV16WxC_xPXq4kzPA/viewform"},
+    {"label": "Penempatan mahasiswa magang", "icon": "assignment_ind", "url": "https://docs.google.com/spreadsheets/d/1j2cfGONrIl83nCFcxeAb9UrlFrIwVEgTFOSwcaYhGOc/edit?gid=333284338#gid=333284338"},
+    {"label": "Kanal pembayaran", "icon": "account_balance_wallet", "url": "https://www.bpjsketenagakerjaan.go.id/kanal-pembayaran.html"},
+    {"label": "Brosur BPU", "icon": "description", "url": "https://drive.google.com/drive/folders/16B-ZcFzFrAhT7YRQe78_Uj1HJlJLPBdV"},
 ]
 
 
