@@ -56,6 +56,17 @@ def load_page_icon(fallback: str = "💬"):
     return fallback
 
 
+# Tautan penting (popup "Tautan Penting"). Ganti url/label/ikon sesuai kebutuhan; ikon memakai
+# nama Material Symbols (https://fonts.google.com/icons). Jumlah item bebas (daftar bisa di-scroll).
+important_links = [
+    {"label": "Materi pembekalan", "icon": "school", "url": "https://example.com/materi-pembekalan"},
+    {"label": "Form pendaftaran BPU", "icon": "how_to_reg", "url": "https://example.com/form-pendaftaran-bpu"},
+    {"label": "Form penempatan mahasiswa magang", "icon": "assignment_ind", "url": "https://example.com/form-penempatan-magang"},
+    {"label": "Panduan & SOP lapangan", "icon": "menu_book", "url": "https://example.com/panduan-sop-lapangan"},
+    {"label": "Pusat bantuan (FAQ)", "icon": "help", "url": "https://example.com/pusat-bantuan"},
+]
+
+
 st.set_page_config(
     page_title="SAPA — Teman Magang",
     page_icon=load_page_icon(),
@@ -77,6 +88,11 @@ if "used_actions" not in st.session_state:
     st.session_state.used_actions = set()
 if "qa_open" not in st.session_state:
     st.session_state.qa_open = False   # popup bantuan cepat (hanya dipakai saat chat berjalan)
+if "links_open" not in st.session_state:
+    # Popup tautan penting. Sama seperti qa_open: buka/tutup sebenarnya dikendalikan JS di sisi
+    # klien (theme.py: html.sapa-links-open) supaya instan tanpa rerun; state ini disetel False
+    # setiap kali pesan dikirim / bantuan dipilih / chat direset, supaya konsisten dengan qa_open.
+    st.session_state.links_open = False
 if "last_message_ts" not in st.session_state:
     st.session_state.last_message_ts = None     # waktu (monotonic) pesan terakhir yang DITERIMA; untuk rate limit
 if "theme" not in st.session_state:
@@ -142,6 +158,7 @@ def start_new_conversation():
     st.session_state.sources_map = {}
     st.session_state.used_actions = set()
     st.session_state.qa_open = False
+    st.session_state.links_open = False
 
 
 def set_theme(mode: str) -> None:
@@ -195,7 +212,20 @@ def render_quick_action_buttons():
                 st.session_state.used_actions.add(action["key"])
                 st.session_state.pending_prompt = action["prompt"]
                 st.session_state.qa_open = False   # popup menutup setelah memilih
+                st.session_state.links_open = False
                 st.rerun()
+
+
+def render_links_popup():
+    """Daftar tautan penting (isi popup "Tautan Penting"). Tiap item membuka tab baru."""
+    with st.container(key="links_popup"):
+        for link in important_links:
+            st.link_button(
+                link["label"],
+                link["url"],
+                icon=f":material/{link['icon']}:",
+                use_container_width=True,
+            )
 
 
 def md_safe(text) -> str:
@@ -550,6 +580,7 @@ if user_question:
         # Popup bantuan cepat yang masih terbuka ditutup begitu pesan diterima, supaya
         # tidak ada tombol yang bisa diklik (dan memutus jawaban) selama jawaban dibuat.
         st.session_state.qa_open = False
+        st.session_state.links_open = False
 
 
 # ---------------------------------------------------------------------------
@@ -663,8 +694,9 @@ if not is_empty:
 # 4. Bantuan cepat (disable kalau sudah pernah diklik)
 #    Chat kosong    : daftar terbuka, rata kiri (desktop: di bawah input,
 #                     mobile: tepat di atas input)
-#    Chat berjalan  : hanya tombol "Bantuan cepat" di atas input; daftarnya
-#                     muncul sebagai popup saat tombol diklik. Popup menutup
+#    Chat berjalan  : tombol "Bantuan cepat" + "Tautan Penting" berdampingan di atas
+#                     input; daftarnya muncul sebagai popup saat tombol diklik
+#                     (satu popup saja yang terbuka pada satu waktu). Popup menutup
 #                     kalau: tombol diklik lagi, klik di luar popup, Esc, atau
 #                     salah satu bantuan dipilih.
 #    Popup SELALU dirender (tersembunyi lewat CSS) dan dibuka/ditutup oleh JS di
@@ -674,13 +706,22 @@ with st.container(key="qa_zone"):
     if is_empty:
         render_quick_action_buttons()
     else:
-        st.button(
-            "Bantuan cepat",
-            icon=":material/bolt:",
-            key="qa_toggle",
-        )
-        st.button("Tutup", key="qa_backdrop")   # area tap-untuk-menutup, ditangani JS
+        # Dua tombol pembuka popup berdampingan dalam satu baris fixed (flex + gap, lihat theme.py).
+        # Hanya satu popup yang boleh terbuka: JS menutup yang lain saat salah satunya dibuka.
+        with st.container(key="qa_pills"):
+            st.button(
+                "Bantuan cepat",
+                icon=":material/bolt:",
+                key="qa_toggle",
+            )
+            st.button(
+                "Tautan Penting",
+                icon=":material/link:",
+                key="links_toggle",
+            )
+        st.button("Tutup", key="qa_backdrop")   # area tap-untuk-menutup (dipakai kedua popup), ditangani JS
         render_quick_action_buttons()
+        render_links_popup()
 
 
 # ---------------------------------------------------------------------------
