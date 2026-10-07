@@ -632,13 +632,28 @@ __TC_ROW__ {
        bawah, isinya terpotong dan muncul scrollbar. Tinggi dibiarkan mengikuti isi. */
     height: auto !important; min-height: 0 !important; max-height: none !important;
     overflow: visible !important;
+    /* Akar popover juga mengikuti isi: Popper memusatkan tooltip berdasarkan lebar akar ini,
+       jadi akar yang lebih lebar dari kotaknya membuat kotak bergeser dari tengah tombol. */
+    width: max-content !important; min-width: 0 !important;
+    max-width: min(320px, calc(100vw - 24px)) !important;
+}
+/* Lapisan dalam (Body/Inner baseweb): lebar mengikuti isi, tanpa padding/margin bawaan.
+   Kalau tidak, lebar yang sudah "terkunci" untuk padding/font bawaan Streamlit membuat kotak
+   lebih lebar dari teks (ruang kosong di kanan) dan bayangannya terlihat tidak menempel. */
+:is([data-baseweb="popover"], [data-baseweb="tooltip"]):has([data-testid="stTooltipContent"]) div:has([data-testid="stTooltipContent"]) {
+    width: max-content !important; min-width: 0 !important;
+    max-width: min(320px, calc(100vw - 24px)) !important;
+    padding: 0 !important; margin: 0 !important;
 }
 [data-testid="stTooltipContent"] {
     background: var(--pop-bg) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 12px !important;
-    box-shadow: var(--sh-alert) !important;
+    box-shadow: 0 4px 14px rgba(15,23,42,.18), var(--inset) !important;
     box-sizing: border-box !important;
+    width: max-content !important; min-width: 0 !important;
+    max-width: min(320px, calc(100vw - 24px)) !important;
+    margin: 0 !important; text-align: left !important;
     padding: 8px 12px !important;
     font-family: var(--font) !important; font-size: 13px !important;
     font-weight: 500 !important; line-height: 1.4 !important;
@@ -651,9 +666,16 @@ __TC_ROW__ {
 [data-testid="stTooltipContent"]::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
 [data-testid="stTooltipContent"],
 [data-testid="stTooltipContent"] * { color: var(--text) !important; }
+/* Markdown bawaan Streamlit memberi pembungkus teks margin-bottom NEGATIF (-1rem) untuk meniadakan
+   margin bawah <p>-nya. Margin <p> sudah kita nolkan, tapi margin negatif pembungkusnya tertinggal:
+   tinggi kotak jadi ~16px lebih pendek dari teksnya, sehingga teks "tumpah" ke tepi bawah
+   (padding bawah hilang, teks tidak di tengah kotak). Semua margin non-<p> di dalam tooltip dinolkan. */
+[data-testid="stTooltipContent"] :not(p) { margin: 0 !important; }
 [data-testid="stTooltipContent"] p { margin: 0 !important; white-space: normal !important; }
+[data-testid="stTooltipContent"] p + p { margin-top: .5em !important; }   /* tooltip multi-paragraf */
 [data-testid="stTooltipContent"] [data-testid="stMarkdownContainer"] {
     height: auto !important; max-height: none !important; overflow: visible !important;
+    padding: 0 !important;
 }
 
 /* Di topbar: rapatkan jarak ke tombol "+ Baru" (gap 12px -> 8px) */
