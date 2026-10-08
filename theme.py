@@ -613,7 +613,7 @@ __THEME_VIS__
     left: auto !important; width: auto !important; margin: 0 !important; padding: 0 !important;
 }
 __TC_ROW__ {
-    display: flex !important; flex-direction: row !important; gap: 0 !important;
+    display: flex !important; flex-direction: row !important; align-items: center !important; gap: 8px !important;
     width: auto !important; margin: 0 !important; padding: 0 !important;
 }
 .st-key-theme_corner [data-testid="stElementContainer"] { margin: 0 !important; padding: 0 !important; width: auto !important; }
@@ -1000,7 +1000,7 @@ html.sapa-links-open .st-key-links_toggle button [data-testid="stIconMaterial"] 
    (update() / klik) mengukur tepi kiri tombol -> --links-l. Kalau panel tidak muat di sisi
    kanan (mobile), geser ke kiri sampai pas di dalam margin layar (tidak pernah melewati
    tepi kolom). --lw = lebar panel, dipakai bersama oleh width & left. */
-.stApp:has(.sapa-chat-active) .st-key-links_popup {
+.st-key-links_popup {
     --lw: min(340px, calc(100vw - var(--col-l) - var(--main-r, 0px) - max(var(--gutter), var(--safe-right))));
     position: fixed !important; z-index: 96 !important;
     width: var(--lw) !important;
@@ -1018,7 +1018,7 @@ html.sapa-links-open .st-key-links_toggle button [data-testid="stIconMaterial"] 
     transform-origin: 0 100%;
     animation: sapa-pop-in .2s var(--ease) both;
 }
-.stApp:has(.sapa-chat-active) .st-key-links_popup::-webkit-scrollbar { display: none; }
+.st-key-links_popup::-webkit-scrollbar { display: none; }
 @media (max-width: 767px) {
     /* panel digeser/dilebarkan ke margin layar -> sudut kiri-bawah tidak lagi menempel tombol */
     .stApp:has(.sapa-chat-active) .st-key-links_popup { border-radius: 18px !important; transform-origin: 50% 100%; }
@@ -1075,6 +1075,45 @@ __LP_ROW__ {
 .st-key-links_popup a:hover::after { transform: translate(2px, -2px); opacity: 1; background-color: var(--accent); }
 .st-key-links_popup a:active { transform: scale(.99); }
 .st-key-links_popup a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---------- Tautan Penting di LAYAR AWAL ----------
+   Penempatan: baris pojok kanan atas yang sudah dipakai tombol tema (.st-key-theme_corner),
+   tepat di KIRI tombol tema, sejajar dengan sisi kanan "+ Baru" di top bar chat. Tidak
+   menyentuh sapaan, input, maupun daftar Bantuan cepat (semuanya elemen fixed terpisah).
+   Panel & backdrop dirender app.py di wadah .st-key-links_empty dan terbuka ke BAWAH,
+   rata kanan dengan tombolnya. Di HP, tombol hanya ikon (lingkaran 34px) supaya tidak
+   menabrak logo yang ada di tengah atas. */
+.stApp:has(.sapa-chat-active) .st-key-links_empty,
+.stApp:has(.sapa-chat-active) .st-key-theme_corner { display: none !important; }   /* sisa elemen layar awal selama jawaban pertama dibuat */
+.stApp:has(.sapa-empty) .st-key-qa_pills { display: none !important; }              /* sisa baris tombol chat saat "+ Baru" */
+.st-key-theme_corner .st-key-links_toggle { height: 34px !important; }
+.st-key-theme_corner .st-key-links_toggle button { height: 34px !important; min-height: 34px !important; }
+html.sapa-links-open .st-key-theme_corner { z-index: 103 !important; }             /* tombol tetap di atas backdrop saat panel terbuka */
+html.sapa-links-open .st-key-theme_corner .st-key-links_toggle button { border-radius: 999px !important; }
+@media (max-width: 767px) {
+    .st-key-theme_corner .st-key-links_toggle button { width: 34px !important; min-width: 34px !important; padding: 0 !important; gap: 0 !important; }
+    .st-key-theme_corner .st-key-links_toggle button [data-testid="stMarkdownContainer"] {
+        position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
+        padding: 0 !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important;
+    }
+}
+.stApp:has(.sapa-empty) .st-key-links_empty .st-key-qa_backdrop { z-index: 101 !important; }   /* menutupi input (z 100) juga */
+.stApp:has(.sapa-empty) .st-key-links_popup {
+    --lw: min(340px, calc(100vw - var(--main-l, 0px) - var(--main-r, 0px) - 2 * max(var(--gutter), var(--safe-left), var(--safe-right))));
+    --lp-top: calc(var(--safe-top) + (var(--topbar-h) - 34px) / 2 + 34px + 8px);
+    z-index: 102 !important;
+    left: auto !important; bottom: auto !important;
+    right: calc(var(--main-r, 0px) + max(var(--gutter), var(--safe-right))
+                + max(0px, (100vw - var(--main-l, 0px) - var(--main-r, 0px) - var(--content-w)) / 2)) !important;
+    top: var(--lp-top) !important;
+    max-height: min(420px, calc(100vh - var(--lp-top) - 24px)) !important;
+    border-radius: 18px !important; transform-origin: 100% 0 !important;
+    animation: sapa-pop-in-down .2s var(--ease) both !important;
+}
+@keyframes sapa-pop-in-down {
+    from { opacity: 0; transform: translateY(-10px) scale(.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 /* Keyboard terbuka -> tombol & popup disembunyikan supaya area chat lega */
 html.sapa-kb-open .stApp:has(.sapa-chat-active) .st-key-qa_zone { display: none !important; }
@@ -1384,7 +1423,7 @@ html.sapa-cd-ready [data-testid="stChatInputSubmitButton"]::after {
    dipilih (tidak lagi tertinggal sampai jawaban selesai). Spesifisitas sengaja tinggi agar
    mengalahkan aturan display lain di file ini. */
 html:not(.sapa-qa-open) .stApp:has(.sapa-chat-active) .st-key-quick_actions,
-html:not(.sapa-links-open) .stApp:has(.sapa-chat-active) .st-key-links_popup,
+html:not(.sapa-links-open) .st-key-links_popup,
 html:not(.sapa-qa-open):not(.sapa-links-open) .st-key-qa_backdrop,
 html:not(.sapa-confirm-open) .st-key-confirm_backdrop,
 html:not(.sapa-confirm-open) .st-key-confirm_dialog { display: none !important; }
@@ -1925,8 +1964,8 @@ html.sapa-kb-open [data-testid="stBottomBlockContainer"] {
 # ---------------------------------------------------------------------------
 _LAYOUT_JS = r'''
 (function () {
-  if (window.__sapaLayoutV8) return;
-  window.__sapaLayoutV8 = true;
+  if (window.__sapaLayoutV9) return;
+  window.__sapaLayoutV9 = true;
 
   var root = document.documentElement;
   var vv = window.visualViewport;
@@ -2146,7 +2185,7 @@ _LAYOUT_JS = r'''
       }
     }
     // Kembali ke layar kosong (mis. setelah "+ Baru") -> pastikan popup tidak tertinggal "terbuka"
-    if (!q('.sapa-chat-active')) root.classList.remove('sapa-qa-open', 'sapa-links-open', 'sapa-confirm-open');
+    if (!q('.sapa-chat-active')) root.classList.remove('sapa-qa-open', 'sapa-confirm-open');   // links-open sah di layar awal
   }
   var syncQueued = false;
   function queueSync() {
@@ -2187,9 +2226,11 @@ _LAYOUT_JS = r'''
   // memilih bantuan cepat dan "Ya, mulai baru".
   // Hanya satu popup (Bantuan cepat / Tautan Penting) yang boleh terbuka sekaligus.
   function syncAria() {
-    var a = q('.st-key-qa_toggle button'), b = q('.st-key-links_toggle button');
-    if (a) a.setAttribute('aria-expanded', root.classList.contains('sapa-qa-open') ? 'true' : 'false');
-    if (b) b.setAttribute('aria-expanded', root.classList.contains('sapa-links-open') ? 'true' : 'false');
+    // querySelectorAll: tombol Tautan Penting ada di dua tempat (layar awal & baris tombol chat)
+    var qaOpen = root.classList.contains('sapa-qa-open') ? 'true' : 'false';
+    var lkOpen = root.classList.contains('sapa-links-open') ? 'true' : 'false';
+    document.querySelectorAll('.st-key-qa_toggle button').forEach(function (b) { b.setAttribute('aria-expanded', qaOpen); });
+    document.querySelectorAll('.st-key-links_toggle button').forEach(function (b) { b.setAttribute('aria-expanded', lkOpen); });
   }
   function closePopups() { root.classList.remove('sapa-qa-open', 'sapa-links-open', 'sapa-confirm-open'); syncAria(); }
   function closeTogglePopups() { root.classList.remove('sapa-qa-open', 'sapa-links-open'); syncAria(); }
@@ -2199,7 +2240,7 @@ _LAYOUT_JS = r'''
   // kanan, lalu "melompat" ke kiri begitu tombol dilepas dan diukur ulang (itulah kedipan
   // kecil saat panel dibuka). Wadah tidak pernah di-transform, jadi nilainya selalu stabil.
   function measureLinks() {
-    var c = q('.st-key-links_toggle');
+    var c = q('.st-key-qa_pills .st-key-links_toggle');   // hanya baris tombol chat (di layar awal panel rata kanan, tak perlu jangkar)
     if (!c) return;
     var px = Math.max(0, Math.round(c.getBoundingClientRect().left)) + 'px';
     if (root.style.getPropertyValue('--links-l') !== px) root.style.setProperty('--links-l', px);   // tulis hanya bila berubah
@@ -2310,9 +2351,9 @@ def get_layout_script() -> str:
 (function () {{
   try {{
     var doc = window.parent.document;
-    if (doc.getElementById("sapa-layout-js-v8")) return;
+    if (doc.getElementById("sapa-layout-js-v9")) return;
     var s = doc.createElement("script");
-    s.id = "sapa-layout-js-v8";
+    s.id = "sapa-layout-js-v9";
     s.textContent = {payload};
     doc.head.appendChild(s);
   }} catch (e) {{

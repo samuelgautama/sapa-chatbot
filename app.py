@@ -63,7 +63,7 @@ important_links = [
     {"label": "Form pendaftaran BPU", "icon": "app_registration", "url": "https://docs.google.com/forms/d/e/1FAIpQLScFsjR2-C8eAuQ_Hir8GzZn5T6h15OhNBV16WxC_xPXq4kzPA/viewform"},
     {"label": "Penempatan mahasiswa magang", "icon": "assignment_ind", "url": "https://docs.google.com/spreadsheets/d/1j2cfGONrIl83nCFcxeAb9UrlFrIwVEgTFOSwcaYhGOc/edit?gid=333284338#gid=333284338"},
     {"label": "Kanal pembayaran", "icon": "account_balance_wallet", "url": "https://www.bpjsketenagakerjaan.go.id/kanal-pembayaran.html"},
-    {"label": "Brosur BPU", "icon": "description", "url": "https://drive.google.com/drive/folders/16B-ZcFzFrAhT7YRQe78_Uj1HJlJLPBdV"},
+    {"label": "Brosur BPU", "icon": "description", "url": "https://example.com/pusat-bantuan"},
 ]
 
 
@@ -622,7 +622,14 @@ if is_empty:
     )
     # Belum ada topbar di layar awal: tombol tema melayang di pojok kanan atas (CSS: .st-key-theme_corner)
     with st.container(key="theme_corner"):
+        # Tautan Penting: di kiri tombol tema (CSS menaruhnya sebaris; di HP hanya ikon)
+        st.button("Tautan Penting", icon=":material/link:", key="links_toggle")
         render_theme_toggle()
+    # Panel + backdrop tautan untuk layar awal (fixed, terbuka ke bawah dari pojok kanan atas).
+    # Dibungkus satu wadah supaya mudah disembunyikan begitu chat berjalan.
+    with st.container(key="links_empty"):
+        st.button("Tutup", key="qa_backdrop")   # area tap-untuk-menutup, ditangani JS
+        render_links_popup()
 else:
     with st.container(key="topbar"):
         st.markdown(
