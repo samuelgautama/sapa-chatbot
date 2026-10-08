@@ -110,6 +110,7 @@ _DARK_VARS = '''    --scheme: dark;
     --toggle-open-border: rgba(165,180,252,.5);
     --toggle-open-icon: #FFFFFF;
     --pop-bg: rgba(24,26,34,.97);
+    --pop-solid: #181A22;   /* sama dengan --pop-bg tetapi 100% opak (panel yang tidak boleh tembus pandang) */
     --modal-bg: rgba(24,26,34,.98);
     --scrim-pop: rgba(4,5,9,.58);
     --scrim-modal: rgba(4,5,9,.68);
@@ -196,6 +197,7 @@ _LIGHT_VARS = '''    --scheme: light;
     --toggle-open-border: rgba(79,70,229,.45);
     --toggle-open-icon: #4F46E5;
     --pop-bg: rgba(255,255,255,.99);
+    --pop-solid: #FFFFFF;
     --modal-bg: #FFFFFF;
     /* kabut putih (bukan abu): menyatu mulus dengan fade bg di belakang kolom input */
     --scrim-pop: rgba(245,246,250,.78);
@@ -1011,7 +1013,9 @@ html.sapa-links-open .st-key-links_toggle button [data-testid="stIconMaterial"] 
     max-height: min(420px, calc(100vh - var(--top-zone) - var(--above-bar) - var(--pills-h) - 32px)) !important;
     overflow-y: auto !important; overflow-x: hidden !important; scrollbar-width: none;
     box-sizing: border-box !important; padding: 6px !important; margin: 0 !important;
-    background: var(--pop-bg) !important;
+    /* OPAK (bukan --pop-bg yang .97): di layar awal panel menumpuk di atas logo & sapaan, dan
+       3% transparansi saja sudah membuat logo/teks hero terlihat samar menembus panel. */
+    background: var(--pop-solid) !important;
     border: 1px solid var(--line-2) !important;
     border-radius: 18px 18px 18px 7px !important;
     box-shadow: var(--sh-pop) !important;
@@ -1023,8 +1027,18 @@ html.sapa-links-open .st-key-links_toggle button [data-testid="stIconMaterial"] 
     /* panel digeser/dilebarkan ke margin layar -> sudut kiri-bawah tidak lagi menempel tombol */
     .stApp:has(.sapa-chat-active) .st-key-links_popup { border-radius: 18px !important; transform-origin: 50% 100%; }
 }
+/* Susunan daftar: kolom + jarak antar baris SAJA. Dulu aturan ini juga memuat
+   width:100% / padding:0 / margin:0. Di Streamlit yang menaruh class ber-key LANGSUNG pada
+   stVerticalBlock, selector __LP_ROW__ justru mengenai PANEL itu sendiri, dan karena
+   spesifisitasnya lebih tinggi dari aturan panel di atas, ia menimpa `width: var(--lw)` dan
+   `padding: 6px`. Akibatnya (position: fixed) panel selebar LAYAR dan barisnya menempel ke
+   tepi — popup terlihat berantakan, di desktop hanya panah di ujung kanan yang kelihatan.
+   Lebar & padding sekarang hanya diatur satu tempat: aturan panel. */
 __LP_ROW__ {
     display: flex !important; flex-direction: column !important; gap: 4px !important;
+}
+/* Versi Streamlit yang membungkus wadah ber-key (blok dalam terpisah): blok dalam selebar panel */
+.st-key-links_popup > [data-testid="stVerticalBlock"] {
     width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important;
 }
 .st-key-links_popup [data-testid="stElementContainer"],
@@ -1090,12 +1104,12 @@ __LP_ROW__ {
 .st-key-theme_corner .st-key-links_toggle button { height: 34px !important; min-height: 34px !important; }
 html.sapa-links-open .st-key-theme_corner { z-index: 103 !important; }             /* tombol tetap di atas backdrop saat panel terbuka */
 html.sapa-links-open .st-key-theme_corner .st-key-links_toggle button { border-radius: 999px !important; }
-@media (max-width: 767px) {
-    .st-key-theme_corner .st-key-links_toggle button { width: 34px !important; min-width: 34px !important; padding: 0 !important; gap: 0 !important; }
-    .st-key-theme_corner .st-key-links_toggle button [data-testid="stMarkdownContainer"] {
-        position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
-        padding: 0 !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important;
-    }
+/* ICON SAJA di desktop maupun HP: lingkaran 34px, sama dengan tombol tema di sebelahnya. Teks
+   "Tautan Penting" disembunyikan secara visual tetapi tetap ada di DOM (dibaca pembaca layar). */
+.st-key-theme_corner .st-key-links_toggle button { width: 34px !important; min-width: 34px !important; padding: 0 !important; gap: 0 !important; }
+.st-key-theme_corner .st-key-links_toggle button [data-testid="stMarkdownContainer"] {
+    position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
+    padding: 0 !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important;
 }
 .stApp:has(.sapa-empty) .st-key-links_empty .st-key-qa_backdrop { z-index: 101 !important; }   /* menutupi input (z 100) juga */
 .stApp:has(.sapa-empty) .st-key-links_popup {
