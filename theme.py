@@ -1111,6 +1111,28 @@ html.sapa-links-open .st-key-theme_corner .st-key-links_toggle button { border-r
     position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
     padding: 0 !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important;
 }
+/* Sejajar vertikal dengan tombol tema (dua tombol 34px di baris pojok yang sama).
+   Penyebab selisih: wadah tombol Streamlit (stButton) berupa blok biasa berisi <button>
+   inline-flex, jadi tingginya ikut "strut" baris teks (line-height 1,6 x font) dan tombol
+   duduk di baseline, bukan di tengah. Tombol tema (wadah tinggi auto) dan tombol tautan
+   (wadah dikunci 34px) terdampak berbeda, sehingga salah satunya bergeser 1-3px. Solusi: kedua
+   wadah dibuat flex 34px (tanpa strut) dan ketiga elemen pembungkus dikunci setinggi tombol. */
+.st-key-theme_corner .st-key-links_toggle,
+.st-key-theme_corner .st-key-theme_to_light,
+.st-key-theme_corner .st-key-theme_to_dark { height: 34px !important; min-height: 0 !important; }
+.st-key-theme_corner [data-testid="stButton"] {
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    height: 34px !important; margin: 0 !important; padding: 0 !important;
+}
+/* Ikon tautan (glyph font) dipusatkan mutlak di tombol, seperti ikon matahari/bulan yang digambar
+   lewat ::before; sebelumnya glyph duduk ~1px lebih rendah dari pusat lingkarannya. */
+.st-key-theme_corner .st-key-links_toggle button { position: relative !important; }
+.st-key-theme_corner .st-key-links_toggle button [data-testid="stIconMaterial"] {
+    position: absolute !important; inset: 0 !important; margin: auto !important;
+    width: 20px !important; height: 20px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    line-height: 1 !important;
+}
 .stApp:has(.sapa-empty) .st-key-links_empty .st-key-qa_backdrop { z-index: 101 !important; }   /* menutupi input (z 100) juga */
 .stApp:has(.sapa-empty) .st-key-links_popup {
     --lw: min(340px, calc(100vw - var(--main-l, 0px) - var(--main-r, 0px) - 2 * max(var(--gutter), var(--safe-left), var(--safe-right))));
