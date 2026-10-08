@@ -45,9 +45,11 @@ from calculator import (
     detect_calculation_request,
     detect_discount_request,
     detect_sector,
-    extract_base_income,
+    extract_income_attempt,
     extract_programs,
+    format_rupiah,
     promo_status,
+    MIN_INCOME,
     PROMO_PERIODS,
 )
 # SystemMessage -> untuk mengirim "aturan main" / persona tetap ke LLM (system prompt)
@@ -669,19 +671,64 @@ def _fallback_response(intent_name, domain_relevant=True):
         f"Untuk memastikan jawabannya, silakan hubungi **{contact}**."
     )
 
+def _below_minimum_response(amount, *, inherited: bool) -> str:
+    """Penolakan eksplisit untuk dasar penghasilan di bawah minimum (tanpa memakai angka lain)."""
+    source = "pada pesan sebelumnya" if inherited else "pada pertanyaan ini"
+    return (
+        "## Simulasi Iuran BPU\n\n"
+        f"Nominal yang disebut {source} (**{format_rupiah(amount)}**) berada di bawah batas minimum. "
+        f"Dasar penghasilan yang didaftarkan minimal **{format_rupiah(MIN_INCOME)} per bulan**.\n\n"
+        f"Sebutkan dasar penghasilan **{format_rupiah(MIN_INCOME)} atau lebih** untuk saya hitung."
+    )
+
+
+_SLOT_LABELS = {
+    "base_income": "dasar penghasilan",
+    "programs": "pilihan program",
+    "sector": "sektor pekerjaan",
+}
+
+
+def _inherited_note(context: ConversationContext, discount_requested: bool) -> str:
+    """Beritahu user slot mana yang dipakai dari pesan sebelumnya (bukan dari pertanyaan ini)."""
+    slots = [
+        slot for slot in context.inherited_slots
+        if slot != "sector" or discount_requested   # sektor hanya relevan untuk promo
+    ]
+    if not slots:
+        return ""
+    labels = " dan ".join(_SLOT_LABELS[slot] for slot in slots)
+    return (
+        f"\n\n*Catatan: {labels} dipakai dari pesan sebelumnya. Sebutkan nilai baru jika berbeda, "
+        "atau tulis \"calon peserta baru\" untuk memulai simulasi dari awal.*"
+    )
+
+
 def _try_deterministic_calculation(
     question: str,
     context: Optional[ConversationContext] = None,
 ):
     """Mengembalikan jawaban numerik tanpa LLM dengan mewarisi slot percakapan."""
-    if not detect_calculation_request(question):
-        return None
-
     context = context or ConversationContext()
 
-    # Pertanyaan terbaru selalu menang. Jika slot tidak disebut, warisi nilai terakhir
-    # yang tersimpan dari percakapan user sebelumnya.
-    base_income = extract_base_income(question) or context.base_income
+    if not detect_calculation_request(
+        question, has_income_context=context.base_income is not None
+    ):
+        return None
+
+    # Nominal di bawah minimum yang disebut pada pertanyaan INI harus ditolak secara eksplisit,
+    # bukan diam-diam diganti penghasilan lama dari percakapan.
+    attempt = extract_income_attempt(question)
+    if attempt is not None and attempt < MIN_INCOME:
+        return _below_minimum_response(attempt, inherited=False)
+
+    # Pertanyaan terbaru selalu menang (sudah ditangani build_conversation_context).
+    # Slot yang tidak disebut diwarisi dari pesan user sebelumnya dan WAJIB diberitahukan.
+    base_income = context.base_income
+    if base_income is not None and base_income < MIN_INCOME:
+        return _below_minimum_response(
+            base_income, inherited="base_income" in context.inherited_slots
+        )
     if base_income is None:
         return (
             "## Simulasi Iuran BPU\n\n"
@@ -690,15 +737,16 @@ def _try_deterministic_calculation(
             "atau **3 program (JKK + JKM + JHT)**."
         )
 
-    programs = extract_programs(question) or context.programs
+    programs = context.programs
     discount_requested = detect_discount_request(question)
+    inherited_note = _inherited_note(context, discount_requested)
     discount = False
     discount_note = ""
 
     if discount_requested:
         # Sektor boleh diwarisi dari percakapan sebelumnya, tetapi permintaan promo sendiri
         # tidak disimpan agar simulasi berikutnya tidak otomatis ikut diskon.
-        sector = detect_sector(question) or context.sector
+        sector = context.sector
         status, eligible = promo_status(sector=sector)
         discount_note = f"\n\n*Status promo: {status}*"
         if eligible:
@@ -722,19 +770,20 @@ def _try_deterministic_calculation(
         )
         response = (
             "## Simulasi Iuran BPU\n\n"
-            f"Dasar penghasilan: **{two_programs.base_income}**\n\n"
+            f"Dasar penghasilan: **{format_rupiah(two_programs.base_income)}**\n\n"
             "**2 program — JKK + JKM**\n\n"
             + build_calculation_response(two_programs)
             + "\n\n**3 program — JKK + JKM + JHT**\n\n"
             + build_calculation_response(three_programs)
             + discount_note
+            + inherited_note
         )
         return response
 
     result = calculate_bpu_contribution(
         base_income, programs, discount_jkk_jkm=discount
     )
-    return build_calculation_response(result) + discount_note
+    return build_calculation_response(result) + discount_note + inherited_note
 
 
 def _temporal_context(question: str) -> str:

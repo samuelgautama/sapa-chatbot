@@ -113,15 +113,21 @@ def calculate_bpu_contribution(
 
 
 def _parse_money(raw: str) -> Decimal:
-    """Parse beberapa format umum nominal Indonesia: 1.000.000 / 1000000 / 1 juta."""
+    """Parse format nominal Indonesia: 1.000.000 / 1000000 / 1 juta / 1,5jt / 800 ribu."""
     text = raw.lower().strip()
     text = text.replace("rp", "").replace("idr", "").strip()
 
-    # Bentuk: 1,5 juta / 1.5 juta / 1 juta
-    million_match = re.fullmatch(r"([0-9]+(?:[\.,][0-9]+)?)\s*juta", text)
+    # Bentuk: 1,5 juta / 1.5 juta / 1 juta / 1jt
+    million_match = re.fullmatch(r"([0-9]+(?:[\.,][0-9]+)?)\s*(?:juta|jt)", text)
     if million_match:
         number = million_match.group(1).replace(",", ".")
         return Decimal(number) * Decimal("1000000")
+
+    # Bentuk: 800 ribu / 800rb
+    thousand_match = re.fullmatch(r"([0-9]+(?:[\.,][0-9]+)?)\s*(?:ribu|rb)", text)
+    if thousand_match:
+        number = thousand_match.group(1).replace(",", ".")
+        return Decimal(number) * Decimal("1000")
 
     cleaned = text.replace(".", "").replace(",", "")
     digits = re.sub(r"[^0-9]", "", cleaned)
@@ -130,82 +136,188 @@ def _parse_money(raw: str) -> Decimal:
     return Decimal(digits)
 
 
-def extract_base_income(question: str) -> Optional[Decimal]:
-    """Mencoba menemukan nominal dasar penghasilan dari pertanyaan user."""
+# Penanda bahwa sebuah angka dimaksudkan sebagai nominal uang (bukan tahun, jumlah, dsb).
+_MONEY_MARKER = re.compile(
+    r"rp\s*[0-9]"                                  # Rp800.000
+    r"|[0-9][0-9\.,]*\s*(?:juta|jt|ribu|rb)\b"      # 1 juta, 800 ribu
+    r"|\b[0-9]{1,3}(?:\.[0-9]{3})+\b"               # 800.000
+)
+_INCOME_CONTEXT = re.compile(
+    r"(?:penghasilan|pendapatan|dasar\s+penghasilan|gaji)[^0-9]{0,30}"
+    r"((?:rp\s*)?[0-9][0-9\.,]*(?:\s*(?:juta|jt|ribu|rb))?)"
+)
+_INCOME_PATTERNS = (
+    r"(?:rp\s*)?[0-9][0-9\.,]*\s*(?:juta|jt)\b",
+    r"(?:rp\s*)?[0-9][0-9\.]{3,}(?:\s*(?:per\s*bulan|/\s*bulan|sebulan))?",
+)
+_INCOME_ATTEMPT_PATTERNS = _INCOME_PATTERNS + (
+    r"(?:rp\s*)?[0-9][0-9\.,]*\s*(?:ribu|rb)\b",
+    r"rp\s*[0-9][0-9\.,]*",
+)
+
+
+def _first_money(text: str, patterns, *, require_marker: bool) -> Optional[Decimal]:
+    """Nilai pertama yang terbaca dari pola-pola `patterns` (tanpa cek minimum)."""
+    for pattern in patterns:
+        for match in re.finditer(pattern, text):
+            raw = match.group(0)
+            if require_marker and not _MONEY_MARKER.search(raw):
+                continue
+            try:
+                return _parse_money(raw)
+            except ValueError:
+                continue
+    return None
+
+
+def extract_base_income(question: str, *, enforce_minimum: bool = True) -> Optional[Decimal]:
+    """Mencoba menemukan nominal dasar penghasilan dari pertanyaan user.
+
+    enforce_minimum=True (default, perilaku lama): hanya nominal >= MIN_INCOME yang
+    dikembalikan; nominal lebih kecil diabaikan.
+
+    enforce_minimum=False: nominal yang JELAS disebut sebagai penghasilan (didahului kata
+    penghasilan/pendapatan/gaji) dikembalikan walau di bawah minimum, supaya pemanggil bisa
+    menolak secara eksplisit alih-alih diam-diam memakai angka lama dari percakapan.
+    """
     text = question.lower()
 
-    patterns = [
-        r"(?:rp\s*)?[0-9][0-9\.,]*\s*juta",
-        r"(?:rp\s*)?[0-9][0-9\.]{3,}(?:\s*(?:per\s*bulan|/\s*bulan|sebulan))?",
-        r"(?:penghasilan|pendapatan|dasar\s+penghasilan)(?:\s+sekitar|\s+sebesar|\s*=|\s*:)?\s*(?:rp\s*)?[0-9][0-9\.,]*",
-    ]
-
     # Prioritaskan frasa setelah kata penghasilan/pendapatan.
-    contextual = re.search(
-        r"(?:penghasilan|pendapatan|dasar\s+penghasilan)[^0-9]{0,30}((?:rp\s*)?[0-9][0-9\.,]*(?:\s*juta)?)",
-        text,
-    )
+    contextual = _INCOME_CONTEXT.search(text)
     if contextual:
         try:
             value = _parse_money(contextual.group(1))
-            if value >= MIN_INCOME:
+            if value >= MIN_INCOME or (not enforce_minimum and value > 0):
                 return value
         except ValueError:
             pass
 
-    for pattern in patterns:
-        match = re.search(pattern, text)
-        if not match:
-            continue
-        raw = match.group(0)
-        try:
-            value = _parse_money(raw)
+    for pattern in _INCOME_PATTERNS:
+        for match in re.finditer(pattern, text):
+            try:
+                value = _parse_money(match.group(0))
+            except ValueError:
+                continue
             if value >= MIN_INCOME:
                 return value
-        except ValueError:
-            continue
 
     return None
 
 
+def extract_income_attempt(question: str) -> Optional[Decimal]:
+    """Nominal uang apa pun yang disebut user (berpenanda Rp/juta/ribu/titik ribuan), tanpa cek minimum.
+
+    Dipakai HANYA pada permintaan hitung untuk mendeteksi percobaan memasukkan penghasilan di
+    bawah minimum. Angka polos seperti tahun (2026) tidak dihitung.
+    """
+    value = _first_money(question.lower(), _INCOME_ATTEMPT_PATTERNS, require_marker=True)
+    return value if value is not None and value > 0 else None
+
+
+_PROGRAM_REGEX = {
+    "JKK": r"\bjkk\b|kecelakaan\s+kerja",
+    "JKM": r"\bjkm\b|kematian",
+    "JHT": r"\bjht\b|hari\s+tua",
+}
+_PROGRAM_ANY = r"(?:jkk|jkm|jht|kecelakaan\s+kerja|kematian|hari\s+tua)"
+_NEGATION = re.compile(
+    r"\b(?:tanpa|selain|kecuali|bukan|tidak\s+(?:termasuk|usah|perlu|pakai|ikut|mau|ambil|dengan))"
+    r"\s+(?:program\s+|jaminan\s+)?"
+    r"((?:" + _PROGRAM_ANY + r"\b(?:\s*(?:,|\+|&|dan|atau)\s*)?)+)"
+)
+_THREE_PROGRAMS = re.compile(r"\b3\s*(?:program|jaminan)\b|tiga\s*(?:program|jaminan)")
+_TWO_PROGRAMS = re.compile(r"\b2\s*(?:program|jaminan)\b|dua\s*(?:program|jaminan)")
+
+
+def _programs_in(text: str) -> list[str]:
+    return [name for name in SUPPORTED_PROGRAMS if re.search(_PROGRAM_REGEX[name], text)]
+
+
 def extract_programs(question: str) -> tuple[str, ...]:
-    """Deteksi program yang disebut user tanpa menebak ketika tidak ada penyebutan."""
+    """Deteksi program yang diminta user, termasuk negasi ("tanpa JHT") dan frasa jumlah.
+
+    Aturan:
+    - program yang didahului tanpa/selain/kecuali/bukan/tidak termasuk dikeluarkan;
+    - "3 program" berarti ketiganya (kecuali ada pengecualian);
+    - "2 program" tanpa nama program berarti JKK + JKM;
+    - kombinasi yang ambigu mengembalikan () agar pemanggil menampilkan opsi 2 dan 3 program;
+    - tidak ada penyebutan sama sekali -> () (tidak menebak).
+    """
     text = question.lower()
-    programs: list[str] = []
 
-    if re.search(r"\bjkk\b|kecelakaan kerja", text):
-        programs.append("JKK")
-    if re.search(r"\bjkm\b|kematian", text):
-        programs.append("JKM")
-    if re.search(r"\bjht\b|hari tua", text):
-        programs.append("JHT")
+    excluded: set[str] = set()
 
-    # Ungkapan jumlah program yang umum pada materi magang.
-    if not programs:
-        if re.search(r"\b3\s*(program|jaminan)\b|tiga\s*(program|jaminan)", text):
-            return ("JKK", "JKM", "JHT")
-        if re.search(r"\b2\s*(program|jaminan)\b|dua\s*(program|jaminan)", text):
-            return ("JKK", "JKM")
+    def _collect(match: re.Match) -> str:
+        excluded.update(_programs_in(match.group(1)))
+        return " "
 
-    return tuple(programs)
+    positive_text = _NEGATION.sub(_collect, text)
+    named = _programs_in(positive_text)
+
+    count = 3 if _THREE_PROGRAMS.search(text) else 2 if _TWO_PROGRAMS.search(text) else None
+
+    if count == 3 and not excluded:
+        return SUPPORTED_PROGRAMS
+    if count == 2:
+        if len(named) == 2:
+            return tuple(named)
+        if not named:
+            return tuple(p for p in ("JKK", "JKM") if p not in excluded)
+        if len(named) < 2:
+            return ()  # mis. "2 program termasuk JHT": ambigu, jangan menebak
+
+    if named:
+        result = named
+    elif excluded:
+        result = list(SUPPORTED_PROGRAMS)
+    else:
+        return ()
+
+    return tuple(p for p in result if p not in excluded)
 
 
-def detect_calculation_request(question: str) -> bool:
-    """Cek apakah pertanyaan cukup jelas merupakan permintaan hitung iuran."""
+_EXPLICIT_CALC_WORDS = ("hitung", "simulasi", "total iuran")
+_QUESTION_CALC_WORDS = (
+    "berapa iuran", "berapa bayar", "bayar per bulan", "biaya per bulan", "iuran per bulan",
+)
+_NON_BPU_CONTEXT = re.compile(
+    r"\b(?:penerima\s+upah|pemberi\s+kerja|perusahaan|pekerja\s+formal|klaim|santunan)\b"
+)
+_BPU_MENTION = re.compile(r"\bbpu\b|bukan\s+penerima\s+upah")
+_PROGRAM_COUNT = re.compile(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b")
+
+
+def detect_calculation_request(question: str, *, has_income_context: bool = False) -> bool:
+    """Cek apakah pertanyaan cukup jelas merupakan permintaan hitung iuran BPU.
+
+    Pertanyaan informasional ("berapa iuran JHT?", "berapa iuran JKK untuk penerima upah?")
+    TIDAK dianggap simulasi kecuali ada nominal penghasilan, penyebutan jumlah program, atau
+    kata kerja hitung/simulasi yang eksplisit. `has_income_context=True` berarti percakapan
+    sudah punya dasar penghasilan, sehingga follow-up seperti "kalau 3 program?" cukup.
+    """
     text = question.lower()
-    calculation_words = (
-        "hitung", "berapa iuran", "simulasi iuran", "total iuran",
-        "berapa bayar", "bayar per bulan", "biaya per bulan", "iuran per bulan",
-    )
-    has_calculation_word = any(word in text for word in calculation_words)
-    has_program_or_income = any(
-        token in text
-        for token in ("jkk", "jkm", "jht", "penghasilan", "pendapatan", "rp", "per bulan")
-    )
-    has_program_count = bool(
-        re.search(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b", text)
-    )
-    return has_calculation_word and (has_program_or_income or has_program_count)
+
+    # Pertanyaan tentang Penerima Upah / klaim / perusahaan bukan simulasi iuran BPU.
+    if _NON_BPU_CONTEXT.search(text) and not _BPU_MENTION.search(text):
+        return False
+
+    explicit = any(word in text for word in _EXPLICIT_CALC_WORDS)
+    question_form = any(word in text for word in _QUESTION_CALC_WORDS)
+    has_count = bool(_PROGRAM_COUNT.search(text))
+    has_money = bool(_MONEY_MARKER.search(text))
+    has_amount = has_money or bool(re.search(r"\b(?:penghasilan|pendapatan)\b", text))
+    has_program = bool(re.search(r"\b(?:jkk|jkm|jht)\b", text))
+    asks_value = "berapa" in text or "total" in text
+
+    if explicit:
+        return has_amount or has_count or has_program or "per bulan" in text
+    # "Berapa total 3 program untuk penghasilan Rp1.000.000?", "Rp2 juta, berapa JKK dan JKM?"
+    if asks_value and has_money and (has_program or has_count or "iuran" in text or "total" in text):
+        return True
+    if question_form:
+        return has_amount or has_count
+    # Follow-up pendek di percakapan yang sudah punya penghasilan: "kalau 3 program?"
+    return has_income_context and has_count
 
 
 def build_calculation_response(

@@ -24,6 +24,7 @@ berikutnya secara tidak sengaja.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any, Iterable, Optional
@@ -31,13 +32,38 @@ from typing import Any, Iterable, Optional
 from calculator import detect_sector, extract_base_income, extract_programs
 
 
+# Slot hanya diwarisi dari N pesan user terakhir. Tanpa batas, penghasilan calon peserta
+# pertama masih terpakai puluhan pesan kemudian untuk calon peserta lain.
+MAX_CONTEXT_USER_MESSAGES = 6
+
+# Frasa yang menandai user berpindah ke calon peserta lain / memulai simulasi baru.
+# Slot dari pesan SEBELUM pesan penanda tidak diwarisi lagi.
+_RESET_PATTERN = re.compile(
+    r"\b(?:"
+    r"(?:calon\s+peserta|peserta|calon|orang|pelanggan|warga|bapak|ibu|pak|bu)\s+(?:lain|lainnya|baru|berikutnya|selanjutnya)"
+    r"|(?:bapak|pak)\s*/\s*(?:ibu|bu)\s+lain"
+    r"|ganti\s+calon"
+    r"|mulai\s+(?:dari\s+awal|ulang|baru)"
+    r"|simulasi\s+baru"
+    r"|reset"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
 @dataclass(frozen=True)
 class ConversationContext:
-    """Snapshot slot percakapan yang aman dipakai oleh logic deterministik."""
+    """Snapshot slot percakapan yang aman dipakai oleh logic deterministik.
+
+    inherited_slots berisi nama slot ("base_income", "programs", "sector") yang nilainya
+    BUKAN berasal dari pertanyaan saat ini melainkan diwarisi dari pesan sebelumnya.
+    Pemanggil wajib menampilkannya ke user agar pewarisan tidak terjadi diam-diam.
+    """
 
     base_income: Optional[Decimal] = None
     programs: tuple[str, ...] = ()
     sector: Optional[str] = None
+    inherited_slots: tuple[str, ...] = ()
 
     @property
     def has_any(self) -> bool:
@@ -86,24 +112,63 @@ def _latest_slot(
     return None
 
 
+def _active_user_messages(
+    previous_users: list[str],
+    current: str,
+    max_messages: int = MAX_CONTEXT_USER_MESSAGES,
+) -> list[str]:
+    """Pesan user yang masih boleh menyumbang slot: setelah penanda reset terakhir, dalam jendela N pesan."""
+    messages = previous_users + ([current] if current else [])
+
+    last_reset = None
+    for index, message in enumerate(messages):
+        if _RESET_PATTERN.search(message):
+            last_reset = index
+    if last_reset is not None:
+        messages = messages[last_reset:]
+
+    return messages[-max_messages:]
+
+
+def _income_slot(message: str):
+    # Tanpa cek minimum: nominal penghasilan di bawah minimum tetap menjadi "penghasilan terbaru"
+    # agar tidak diam-diam digantikan angka lama; penolakannya dilakukan oleh pemanggil.
+    return extract_base_income(message, enforce_minimum=False)
+
+
 def build_conversation_context(
     current_question: str,
     history: Iterable[dict[str, Any]] | None,
+    max_messages: int = MAX_CONTEXT_USER_MESSAGES,
 ) -> ConversationContext:
     """
     Bangun context dengan prioritas:
 
-        pertanyaan terbaru > pesan user sebelumnya.
+        pertanyaan terbaru > pesan user sebelumnya (dalam jendela, setelah reset terakhir).
 
-    Nilai dari pertanyaan saat ini dimasukkan terlebih dahulu sehingga extractor
-    tidak perlu diubah dan perilaku parser yang sudah ada tetap terpakai.
+    Slot yang tidak disebut pada pertanyaan terbaru tetapi terisi dari riwayat dicatat di
+    `inherited_slots`.
     """
     current = str(current_question or "").strip()
     previous_users = _user_messages(history)
-    all_user_messages = previous_users + ([current] if current else [])
+    messages = _active_user_messages(previous_users, current, max_messages)
+
+    base_income = _latest_slot(messages, _income_slot)
+    programs = _latest_slot(messages, extract_programs) or ()
+    sector = _latest_slot(messages, detect_sector)
+
+    inherited: list[str] = []
+    if current:
+        if base_income is not None and _income_slot(current) is None:
+            inherited.append("base_income")
+        if programs and not extract_programs(current):
+            inherited.append("programs")
+        if sector is not None and detect_sector(current) is None:
+            inherited.append("sector")
 
     return ConversationContext(
-        base_income=_latest_slot(all_user_messages, extract_base_income),
-        programs=_latest_slot(all_user_messages, extract_programs) or (),
-        sector=_latest_slot(all_user_messages, detect_sector),
+        base_income=base_income,
+        programs=programs,
+        sector=sector,
+        inherited_slots=tuple(inherited),
     )
