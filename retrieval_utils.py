@@ -28,6 +28,16 @@ STOPWORDS = {
     "apa", "apakah", "berapa", "bagaimana", "bisa", "saya", "kami", "kamu", "ini",
     "itu", "ada", "jadi", "agar", "sebagai", "dapat", "akan", "nya", "ya", "kah",
     "saja", "lebih", "sudah", "belum", "jika", "kalau", "tentang", "dengan", "secara",
+    # Kata pada header query hasil penjahitan (build_retrieval_query): bukan isi pertanyaan,
+    # tidak boleh menggerus lexical overlap.
+    "konteks", "pertanyaan", "sebelumnya", "lanjutan",
+}
+
+# Pesan yang tidak membawa topik (ucapan/persetujuan). Tidak dipakai sebagai "pertanyaan sebelumnya".
+NON_CONTENT_TOKENS = {
+    "terima", "kasih", "makasih", "thanks", "thx", "ok", "oke", "okey", "baik", "siap",
+    "halo", "hai", "hi", "hello", "hey", "selamat", "pagi", "siang", "sore", "malam",
+    "dadah", "bye", "mantap", "sip", "oh", "ya", "iya", "sama",
 }
 
 CONTEXT_DEPENDENT_PATTERNS = (
@@ -37,18 +47,21 @@ CONTEXT_DEPENDENT_PATTERNS = (
     r"\bsebelumnya\b",
     r"\bsetelah itu\b",
     r"\bkalau yang\b",
-    r"\bkalau\b",
     r"\bkalau begitu\b",
     r"\bbagaimana dengan\b",
     r"\bberikutnya\b",
-    r"\blalu\b",
-    r"\bkemudian\b",
     r"\bselanjutnya\b",
     r"\b3 program\b",
     r"\b2 program\b",
     r"\b(?:syaratnya|caranya|iurannya|biayanya|prosesnya|langkahnya)\b",
-    r"\bapa saja\b",
 )
+# Pola longgar ("kalau", "lalu", "apa saja") dulu ada di daftar di atas sehingga pertanyaan mandiri seperti
+# "Kalau saya tidak punya KTP bagaimana?" atau "apa saja syarat daftar BPU?" ikut dijahit dengan
+# pertanyaan sebelumnya. Kini hanya dianggap follow-up bila pendek dan DIAWALI kata sambung.
+FOLLOW_UP_OPENERS = re.compile(
+    r"^(?:dan|terus|lalu|kemudian|berikutnya|kalau|jika|gimana kalau|bagaimana kalau)\b"
+)
+FOLLOW_UP_MAX_WORDS = 6
 
 
 def normalize_tokens(text: str) -> set[str]:
@@ -70,10 +83,9 @@ def needs_history_for_retrieval(question: str) -> bool:
     if any(re.search(pattern, normalized) for pattern in CONTEXT_DEPENDENT_PATTERNS):
         return True
 
-    # Pertanyaan sangat pendek hanya memakai history bila bentuknya memang seperti
-    # follow-up, bukan sekadar karena jumlah karakternya sedikit.
-    first_word = normalized.split(maxsplit=1)[0] if normalized.split() else ""
-    return len(normalized) <= 30 and first_word in {"dan", "terus", "lalu", "kemudian", "berikutnya"}
+    # Pertanyaan pendek hanya memakai history bila bentuknya memang seperti follow-up
+    # ("kalau 3 program?", "dan JHT?"), bukan sekadar karena jumlah katanya sedikit.
+    return bool(FOLLOW_UP_OPENERS.match(normalized)) and len(normalized.split()) <= FOLLOW_UP_MAX_WORDS
 
 
 def build_retrieval_query(
@@ -92,7 +104,7 @@ def build_retrieval_query(
         for message in recent
         if isinstance(message, dict)
         and message.get("role") == "user"
-        and str(message.get("content", "")).strip()
+        and (normalize_tokens(str(message.get("content", ""))) - NON_CONTENT_TOKENS)
     ]
 
     if not previous_user_questions:
@@ -151,11 +163,16 @@ def rerank_scored_documents(
     # Pass 1: diversifikasi berdasarkan section.
     for document, combined, lexical, semantic, _order in candidates:
         metadata = getattr(document, "metadata", {}) or {}
-        section_key = str(
-            metadata.get("section_id")
-            or metadata.get("section")
-            or metadata.get("source_file")
-            or "unknown"
+        # section_id hanya unik per FILE ("section-3" ada di tiap dokumen), jadi kuncinya harus
+        # menyertakan file sumber; kalau tidak, chunk dari file berbeda dianggap section yang sama.
+        section_key = (
+            str(metadata.get("source_file") or "")
+            + "::"
+            + str(
+                metadata.get("section_id")
+                or metadata.get("section")
+                or "unknown"
+            )
         )
         if section_counts.get(section_key, 0) >= max_chunks_per_section:
             continue

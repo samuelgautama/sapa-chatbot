@@ -217,7 +217,7 @@ FIELD_INTENTS = {
         "label": "🔄 Follow-up Peserta",
         "keywords": [
             "follow up", "follow-up", "tindak lanjut", "konfirmasi pembayaran",
-            "belum bayar", "sudah bayar", "bukti kepesertaan", "kartu"
+            "belum bayar", "sudah bayar", "bukti kepesertaan"
         ],
         "instruction": (
             "Bantu mahasiswa melakukan tindak lanjut setelah pendaftaran. Gunakan alur yang tersedia "
@@ -299,6 +299,14 @@ def _off_domain_response():
     )
 
 
+# Penanda referensi INTERNAL knowledge base. Kata umum seperti "dokumen" atau "sumber" saja bukan
+# penanda: "Catatan: siapkan dokumen identitas" adalah isi jawaban yang sah.
+_INTERNAL_REF = re.compile(
+    r"\bfaq\b|\.txt\b|\.md\b|\bsumber\s*\d+|konteks dokumen|knowledge base|basis pengetahuan"
+    r"|\bchunk\b|retrieval|metadata"
+)
+
+
 def sanitize_assistant_output(text: str) -> str:
     """Hapus referensi internal knowledge base dari teks yang akan dilihat user.
 
@@ -314,13 +322,10 @@ def sanitize_assistant_output(text: str) -> str:
     # Hapus parenthetical / inline references seperti:
     # (lihat FAQ-04), (FAQ‑36), [FAQ-04], lihat `proses_pendaftaran_bpu.txt`.
     internal_ref_patterns = [
-        r"\s*\((?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^)\n]*(?:\.txt|\.md))\)\.?",
-        r"\s*\[(?:lihat|rujuk|merujuk(?: ke)?|sesuai)?\s*(?:FAQ\s*[-‑–—]?\s*\d+|[^\]]+\.txt)\]\.?",
-        r"\s*(?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^.\n]+\.txt)\.?",
+        r"[ \t]*\((?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^)\n]*(?:\.txt|\.md))\)\.?",
+        r"[ \t]*\[(?:lihat|rujuk|merujuk(?: ke)?|sesuai)?\s*(?:FAQ\s*[-‑–—]?\s*\d+|[^\]]+\.txt)\]\.?",
+        r"[ \t]*(?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^.\n]+\.txt)\.?",
     ]
-    for pattern in internal_ref_patterns:
-        cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE)
-
     # Hapus baris meta yang membicarakan sumber internal / FAQ sebagai bahan
     # evaluasi. Jangan menghapus isi jawaban substantif.
     lines = []
@@ -330,7 +335,7 @@ def sanitize_assistant_output(text: str) -> str:
             lines.append("")
             continue
         internal_meta = (
-            "catatan:" in low and ("faq" in low or "sumber" in low or "dokumen" in low)
+            "catatan:" in low and _INTERNAL_REF.search(low)
         ) or (
             any(token in low for token in ("didukung oleh", "didukung oleh definisi", "didukung oleh sumber"))
             and ("faq" in low or ".txt" in low or "sumber" in low)
@@ -343,6 +348,11 @@ def sanitize_assistant_output(text: str) -> str:
 
     cleaned = "\n".join(lines)
 
+    # Hapus referensi inline SETELAH filter baris meta di atas. Kalau dibalik, "Catatan: lihat FAQ-04
+    # untuk detail." kehilangan kata FAQ lebih dulu dan menyisakan "Catatan: untuk detail."
+    for pattern in internal_ref_patterns:
+        cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE)
+
     # Hapus label retrieval yang kadang ikut dipantulkan model.
     cleaned = re.sub(r"\[SUMBER\s*\d+\]\s*", "", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\[Sumber\s*\d+\]\s*", "", cleaned, flags=re.IGNORECASE)
@@ -350,7 +360,8 @@ def sanitize_assistant_output(text: str) -> str:
 
     # Rapikan whitespace setelah pembersihan.
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
-    cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+    # Hanya ratakan spasi ganda DI TENGAH baris; indentasi awal baris (sub-bullet) dipertahankan.
+    cleaned = re.sub(r"(?<=\S)[ \t]{2,}", " ", cleaned)
     return cleaned.strip()
 
 # --- SYSTEM PROMPT ---
@@ -534,15 +545,20 @@ def _normalize_history(history):
 
 
 def detect_intent(question):
-    """Mendeteksi jenis bantuan lapangan secara ringan tanpa memanggil LLM tambahan."""
+    """Mendeteksi jenis bantuan lapangan secara ringan tanpa memanggil LLM tambahan.
+
+    Urutan prioritas: keberatan paling awal. Keberatan calon peserta ("iurannya mahal")
+    juga memuat kata "iuran", sehingga jika simulasi dicek lebih dulu, mode menangani
+    keberatan hampir tidak pernah aktif. Kata kunci dicocokkan sebagai AWAL kata
+    ("rp" cocok "Rp1.000.000" tetapi tidak "terpercaya").
+    """
     question_lower = question.lower().strip()
 
-    # Cek intent yang lebih spesifik terlebih dahulu.
     priority_order = [
+        "keberatan",
         "follow_up",
         "pendaftaran",
         "simulasi",
-        "keberatan",
         "identifikasi",
         "edukasi",
         "umum",
@@ -550,7 +566,7 @@ def detect_intent(question):
 
     for intent_name in priority_order:
         intent = FIELD_INTENTS[intent_name]
-        if any(keyword in question_lower for keyword in intent["keywords"]):
+        if any(re.search(r"(?<!\w)" + re.escape(keyword), question_lower) for keyword in intent["keywords"]):
             return intent_name
 
     return "umum"
@@ -1034,6 +1050,21 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     return _AskPlan(sources=relevant_docs, messages=messages)
 
 
+def _llm_error_message(exc: Exception) -> str:
+    """Pesan ramah (tanpa detail teknis) untuk kegagalan pemanggilan LLM."""
+    name = type(exc).__name__.lower()
+    detail = str(exc).lower()
+    if "ratelimit" in name or "429" in detail or "rate limit" in detail or "rate_limit" in detail:
+        reason = "Batas penggunaan layanan jawaban sedang tercapai. Tunggu sekitar satu menit lalu coba kirim ulang pertanyaan."
+    elif "timeout" in name or "timed out" in detail or "connection" in name:
+        reason = "Koneksi ke layanan jawaban terputus atau terlalu lama. Periksa sinyal internet lalu coba kirim ulang."
+    elif "auth" in name or "401" in detail or "invalid api key" in detail:
+        reason = "Layanan jawaban belum dikonfigurasi dengan benar (kunci API). Hubungi pengelola aplikasi."
+    else:
+        reason = "Layanan jawaban sedang bermasalah. Coba kirim ulang pertanyaan beberapa saat lagi."
+    return "Maaf, saya belum bisa menjawab saat ini. " + reason
+
+
 def ask(question, retriever, llm, history=None):
     """
     Fungsi RAG non-streaming (tetap dipertahankan untuk evaluation/benchmark & kode lama).
@@ -1044,8 +1075,12 @@ def ask(question, retriever, llm, history=None):
     if plan.static_answer is not None:
         return plan.static_answer, plan.sources
 
-    response = llm.invoke(plan.messages)
-    # GENERATION: LLM menerima aturan sistem + riwayat + konteks sumber + pertanyaan terbaru
+    try:
+        response = llm.invoke(plan.messages)
+        # GENERATION: LLM menerima aturan sistem + riwayat + konteks sumber + pertanyaan terbaru
+    except Exception as exc:
+        logger.exception("Pemanggilan LLM gagal")
+        return _llm_error_message(exc), plan.sources
 
     return sanitize_assistant_output(response.content), plan.sources
     # kembalikan teks jawaban LLM beserta dokumen sumber untuk ditampilkan transparan
@@ -1114,18 +1149,32 @@ class AnswerStream:
 
         raw = ""
         committed = 0   # panjang raw yang sudah berupa baris-baris lengkap
-        for chunk in self._llm.stream(self._messages):
-            # GENERATION (streaming): token datang bertahap dari LLM
-            piece = _chunk_text(chunk)
-            if not piece:
-                continue
-            raw += piece
-            cut = raw.rfind("\n") + 1
-            if cut > committed:
-                committed = cut
-                delta = self._delta(raw[:cut])
-                if delta:
-                    yield delta
+        try:
+            for chunk in self._llm.stream(self._messages):
+                # GENERATION (streaming): token datang bertahap dari LLM
+                piece = _chunk_text(chunk)
+                if not piece:
+                    continue
+                raw += piece
+                cut = raw.rfind("\n") + 1
+                if cut > committed:
+                    committed = cut
+                    delta = self._delta(raw[:cut])
+                    if delta:
+                        yield delta
+        except Exception as exc:
+            # Stream gagal (rate limit, koneksi putus, dsb): akhiri dengan pesan ramah, bukan
+            # exception yang mematikan UI. Jawaban parsial (jika ada) dipertahankan + diberi catatan.
+            logger.exception("Streaming LLM gagal")
+            notice = _llm_error_message(exc)
+            partial = sanitize_assistant_output(raw)
+            self.text = f"{partial}\n\n{notice}" if partial else notice
+            if self.text.startswith(self.emitted):
+                tail = self.text[len(self.emitted):]
+                self.emitted = self.text
+                if tail:
+                    yield tail
+            return
 
         # Akhir stream: sanitasi penuh = versi final yang disimpan ke riwayat
         self.text = sanitize_assistant_output(raw)
