@@ -29,10 +29,9 @@ MIN_INCOME = Decimal("1000000")
 
 SUPPORTED_PROGRAMS = ("JKK", "JKM", "JHT")
 
-PROMO_PERIODS = {
-    "transportasi": (date(2026, 1, 1), date(2027, 3, 31)),
-    "non_transportasi": (date(2026, 4, 1), date(2026, 12, 31)),
-}
+# Periode promo didefinisikan SATU kali di promo_config.py (diimpor ulang di sini agar
+# `from calculator import PROMO_PERIODS` lama tetap berfungsi).
+from promo_config import PROMO_PERIODS, today_jakarta
 
 TRANSPORT_KEYWORDS = ("ojek online", "ojol", "kurir", "sopir angkutan", "transportasi")
 NON_TRANSPORT_KEYWORDS = ("pedagang", "petani", "nelayan", "umkm", "usaha kecil", "usaha mandiri")
@@ -374,12 +373,7 @@ def detect_discount_request(question: str) -> bool:
 
 def promo_status(*, sector: Optional[str], on_date: Optional[date] = None) -> tuple[str, bool]:
     """Validasi promo berdasarkan periode sumber; mengembalikan (status, eligible)."""
-    if on_date is None:
-        from datetime import datetime
-        from zoneinfo import ZoneInfo
-        current = datetime.now(ZoneInfo("Asia/Jakarta")).date()
-    else:
-        current = on_date
+    current = on_date or today_jakarta()
 
     if sector is None:
         active = []

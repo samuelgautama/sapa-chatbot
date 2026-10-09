@@ -51,8 +51,8 @@ from calculator import (
     format_rupiah,
     promo_status,
     MIN_INCOME,
-    PROMO_PERIODS,
 )
+from promo_config import maintenance_warnings, promo_timeline, today_jakarta
 # SystemMessage -> untuk mengirim "aturan main" / persona tetap ke LLM (system prompt)
 # HumanMessage  -> untuk mengirim isi pesan dari user (konteks + pertanyaan) secara terpisah
 # Memisahkan keduanya adalah cara yang lebih benar dibanding menggabung semuanya
@@ -139,10 +139,8 @@ MAX_HISTORY_MESSAGES_FOR_RETRIEVAL = 4
 MAX_CHUNKS_PER_SECTION = 2
 # batasi chunk dari section yang sama agar TOP_K tidak dipenuhi potongan yang hampir identik
 
-PROMO_SOURCES = {
-    "non_transportasi": "April 2026 – Desember 2026",
-    "transportasi": "Januari 2026 – Maret 2027",
-}
+# Periode promo: lihat promo_config.py (sumber tunggal). PROMO_SOURCES lama dihapus karena
+# tidak dipakai dan menjadi salinan kedua yang bisa basi.
 
 # Tahap 2: chatbot difokuskan sebagai "Asisten Akuisisi BPU".
 # Intent dipakai untuk mengubah cara chatbot membantu mahasiswa magang,
@@ -464,8 +462,15 @@ dan kewajiban peserta jaminan sosial."""
 
 # --- BAGIAN 3: FUNGSI-FUNGSI UTAMA ---
 
+def _log_promo_maintenance():
+    """Peringatan di log saat startup bila promo sudah/hampir berakhir (kode + dokumen perlu diperbarui)."""
+    for message in maintenance_warnings():
+        logger.warning(message)
+
+
 def load_retriever():
     """Memuat kembali vector store dari disk dan membungkusnya sebagai retriever."""
+    _log_promo_maintenance()
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
     # siapkan "penerjemah" teks -> vector angka, harus sama dengan saat indexing
 
@@ -888,37 +893,54 @@ def _try_deterministic_calculation(
     return build_calculation_response(result) + discount_note + inherited_note
 
 
-def _temporal_context(question: str) -> str:
-    """Berikan status waktu untuk informasi promo yang memiliki periode berlaku."""
-    if not detect_discount_request(question) and not any(
-        word in question.lower() for word in ("promo", "diskon", "potongan", "50%")
-    ):
+_PROMO_WORDS = ("promo", "diskon", "potongan", "50%")
+_PROMO_IN_TEXT = re.compile(r"promo|diskon|potongan", re.IGNORECASE)
+
+
+def _temporal_context(question: str, documents=None, today=None) -> str:
+    """Status waktu untuk informasi promo yang memiliki periode berlaku.
+
+    Disuntikkan bila pertanyaan menyebut promo ATAU dokumen yang diambil menyebut promo/diskon.
+    Kasus kedua penting: pertanyaan umum ("iuran JKK berapa?") bisa mengambil chunk yang menulis
+    "sedang berlaku diskon 50%", dan tanpa tanggal sistem LLM akan mengulang klaim basi itu.
+    """
+    asks_about_promo = detect_discount_request(question) or any(
+        word in question.lower() for word in _PROMO_WORDS
+    )
+    docs_mention_promo = any(
+        _PROMO_IN_TEXT.search(str(getattr(document, "page_content", "")))
+        for document in (documents or [])
+    )
+    if not (asks_about_promo or docs_mention_promo):
         return "Tanggal sistem Asia/Jakarta: tidak diperlukan untuk pertanyaan ini."
 
-    from datetime import datetime
-    from zoneinfo import ZoneInfo
+    current = today or today_jakarta()
+    status_lines = [f"Tanggal sistem Asia/Jakarta: {current.isoformat()}."]
 
-    today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
-    status_lines = [f"Tanggal sistem Asia/Jakarta: {today.isoformat()}."]
-
-    for sector, (start, end) in PROMO_PERIODS.items():
-        if start <= today <= end:
+    for item in promo_timeline(current):
+        sector = item.sector.replace("_", " ")
+        if item.state == "active":
             status_lines.append(
-                f"Promo 50% JKK+JKM untuk sektor {sector.replace('_', ' ')} sedang berada dalam periode "
-                f"berlaku sampai {end.isoformat()}."
+                f"Promo 50% JKK+JKM untuk sektor {sector} sedang berada dalam periode "
+                f"berlaku sampai {item.end.isoformat()}."
             )
-        elif today < start:
+        elif item.state == "upcoming":
             status_lines.append(
-                f"Promo 50% JKK+JKM untuk sektor {sector.replace('_', ' ')} belum mulai; periode {start.isoformat()} sampai {end.isoformat()}."
+                f"Promo 50% JKK+JKM untuk sektor {sector} belum mulai; periode "
+                f"{item.start.isoformat()} sampai {item.end.isoformat()}."
             )
         else:
             status_lines.append(
-                f"Promo 50% JKK+JKM untuk sektor {sector.replace('_', ' ')} sudah berakhir pada {end.isoformat()}."
+                f"Promo 50% JKK+JKM untuk sektor {sector} sudah berakhir pada {item.end.isoformat()}."
             )
 
     status_lines.append(
         "Jangan menyebut promo sebagai berlaku tanpa memperhatikan sektor dan periode di atas. "
         "JHT tidak termasuk diskon 50%."
+    )
+    status_lines.append(
+        "Dokumen ditulis pada tanggal tertentu dan dapat menyebut promo sebagai \"sedang berlaku\" "
+        "atau \"saat ini\". Jika berbeda dengan status di atas, IKUTI status di atas."
     )
     return "\n".join(status_lines)
 
@@ -1024,7 +1046,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         "dari KONTEKS DOKUMEN.\n\n"
         f"INTENT BANTUAN LAPANGAN: {intent_name}\n"
         f"BENTUK BANTUAN YANG DIUTAMAKAN: {intent_instruction}\n"
-        f"VALIDITAS INFORMASI BERTANGGAL:\n{_temporal_context(question)}\n\n"
+        f"VALIDITAS INFORMASI BERTANGGAL:\n{_temporal_context(question, relevant_docs)}\n\n"
         f"{_retrieval_notice(retrieval_details)}"
         f"Jumlah kandidat yang diperiksa: {retrieval_details['candidate_count']}.\n\n"
         "KONTEKS TERSTRUKTUR DARI PERCAKAPAN USER (bukan sumber fakta dokumen):\n"
