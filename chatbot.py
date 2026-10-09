@@ -11,6 +11,7 @@ Modul ini tidak dijalankan langsung, melainkan dipanggil oleh app.py (antarmuka 
 
 # --- BAGIAN 1: IMPORT LIBRARY ---
 
+import logging
 import os
 import re
 from dataclasses import dataclass
@@ -94,6 +95,41 @@ MIN_RELEVANCE_SCORE = float(os.getenv("MIN_RELEVANCE_SCORE", "0.15"))
 # ambang minimum skor relevansi LangChain (0-1) agar hasil retrieval dianggap cukup
 # relevan. Nilai ini sengaja dibuat configurable untuk dikalibrasi menggunakan
 # evaluation dataset pada tahap berikutnya.
+
+RESCUE_MIN_LEXICAL = float(os.getenv("RESCUE_MIN_LEXICAL", "0.20"))
+RESCUE_MIN_SEMANTIC = float(os.getenv("RESCUE_MIN_SEMANTIC", "0.10"))
+# Tahap penyelamatan (ketika semua kandidat di bawah MIN_RELEVANCE_SCORE) hanya berlaku untuk
+# query yang memuat istilah domain, DAN salah satu: overlap leksikal >= RESCUE_MIN_LEXICAL atau
+# skor semantik >= RESCUE_MIN_SEMANTIC. Tanpa syarat domain, kata umum seperti "hari" pada
+# "harga bitcoin hari ini" cocok dengan chunk "Jaminan Hari Tua" dan lolos.
+
+UNSCORED_MIN_LEXICAL = 0.5
+# Ketika skor semantik tidak tersedia (API scoring gagal), query tanpa istilah domain hanya
+# lolos bila overlap leksikalnya kuat (>= nilai ini).
+
+DOMAIN_KEYWORDS = (
+    "bpjs", "bpu", "jkk", "jkm", "jht", "jamsostek", "peserta",
+    "iuran", "pendaftaran", "akuisisi", "magang", "jaminan", "kepesertaan",
+    "kartu", "klaim", "ketenagakerjaan", "calon peserta", "follow up", "follow-up",
+)
+
+logger = logging.getLogger(__name__)
+_logged_retrieval_issues: set = set()
+
+
+def is_domain_relevant(text) -> bool:
+    """True bila teks memuat istilah domain BPJS/BPU/magang."""
+    lowered = (text or "").lower()
+    return any(keyword in lowered for keyword in DOMAIN_KEYWORDS)
+
+
+def _log_retrieval_issue(key: str, message: str, *args, exc_info=False):
+    """Log peringatan retrieval sekali per jenis masalah (hindari banjir log tiap request)."""
+    if key in _logged_retrieval_issues:
+        logger.debug(message, *args)
+        return
+    _logged_retrieval_issues.add(key)
+    logger.warning(message, *args, exc_info=exc_info)
 
 MAX_HISTORY_MESSAGES = 8
 # jumlah maksimum pesan lama yang diteruskan ke LLM untuk menjaga konteks percakapan
@@ -529,12 +565,16 @@ def _retrieve_with_confidence(retriever, query):
     """
     Mengambil kandidat dokumen sekaligus skor relevansinya.
 
+    Mengembalikan (scored_documents, scoring_available, scoring_error).
+
     LangChain FAISS menyediakan similarity_search_with_relevance_scores() yang
-    menghasilkan skor dalam rentang yang dimaksudkan 0-1 (semakin tinggi semakin
-    relevan). Jika API tersebut tidak tersedia pada versi LangChain yang dipakai,
-    fungsi mundur ke retriever biasa tanpa mengklaim adanya confidence score.
+    menghasilkan skor yang dimaksudkan 0-1 (semakin tinggi semakin relevan). Jika API
+    itu gagal atau tidak ada, fungsi mundur ke retriever biasa. Kegagalan TIDAK lagi
+    ditelan diam-diam: dicatat ke log dan dibawa lewat scoring_error, dan
+    _select_relevant_documents memakai gate leksikal sebagai pengganti confidence gate.
     """
     vector_store = getattr(retriever, "vectorstore", None)
+    scoring_error = None
 
     if vector_store is not None and hasattr(vector_store, "similarity_search_with_relevance_scores"):
         try:
@@ -542,13 +582,25 @@ def _retrieve_with_confidence(retriever, query):
                 query,
                 k=RETRIEVAL_K,
             )
-            return scored_documents, True
-        except Exception:
-            # Jangan membuat aplikasi mati hanya karena API scoring berbeda antar versi.
-            pass
+            return scored_documents, True, None
+        except Exception as exc:
+            scoring_error = f"{type(exc).__name__}: {exc}"
+            _log_retrieval_issue(
+                "scoring-failed",
+                "Scoring relevansi gagal (%s). Confidence gate semantik NONAKTIF; memakai gate leksikal.",
+                scoring_error,
+                exc_info=True,
+            )
+    else:
+        scoring_error = "vector store tidak menyediakan similarity_search_with_relevance_scores"
+        _log_retrieval_issue(
+            "scoring-missing",
+            "Scoring relevansi tidak tersedia (%s). Confidence gate semantik NONAKTIF; memakai gate leksikal.",
+            scoring_error,
+        )
 
     documents = retriever.invoke(query)
-    return [(document, None) for document in documents], False
+    return [(document, None) for document in documents], False, scoring_error
 
 
 def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
@@ -566,14 +618,27 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
         clean_history,
         max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
     )
-    scored_documents, scoring_available = _retrieve_with_confidence(
+    scored_documents, scoring_available, scoring_error = _retrieve_with_confidence(
         retriever,
         retrieval_query,
     )
 
+    # Skor di luar 0-1 menandakan skala relevance score tidak cocok dengan ambang (mis. embedding
+    # tidak dinormalisasi). Ambang MIN_RELEVANCE_SCORE tidak bermakna dalam kondisi itu.
+    score_scale_warning = any(
+        score is not None and not (0.0 <= float(score) <= 1.0)
+        for _document, score in scored_documents
+    )
+    if score_scale_warning:
+        _log_retrieval_issue(
+            "score-scale",
+            "Skor relevansi di luar rentang 0-1. Periksa normalisasi embedding / metrik jarak indeks "
+            "dan kalibrasi ulang MIN_RELEVANCE_SCORE.",
+        )
+
     # _select_relevant_documents memakai TOP_K global agar konfigurasi runtime chatbot tetap
     # konsisten. Parameter top_k di sini hanya digunakan evaluation bila ingin membaca subset lebih kecil.
-    selected_docs, best_score = _select_relevant_documents(
+    selected_docs, best_score, gate_status = _select_relevant_documents(
         scored_documents,
         scoring_available,
         retrieval_query,
@@ -582,6 +647,9 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
 
     details = {
         "scoring_available": scoring_available,
+        "scoring_error": scoring_error,
+        "score_scale_warning": score_scale_warning,
+        "gate_status": gate_status,
         "candidate_count": len(scored_documents),
         "selected_count": len(selected_docs),
         "best_semantic_score": (float(best_score) if best_score is not None else None),
@@ -589,20 +657,41 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
     return selected_docs, retrieval_query, details
 
 
+def _best_score(scored_documents):
+    scores = [float(score) for _doc, score in scored_documents if score is not None]
+    return max(scores) if scores else None
+
+
 def _select_relevant_documents(scored_documents, scoring_available, query):
-    """Menyaring kandidat dan melakukan reranking + diversifikasi section."""
+    """Menyaring kandidat, reranking + diversifikasi section.
+
+    Mengembalikan (dokumen, skor_semantik_terbaik, gate_status) dengan gate_status:
+    - "passed"   : lolos MIN_RELEVANCE_SCORE;
+    - "rescued"  : di bawah ambang tetapi lolos penyelamatan (hanya query berdomain);
+    - "unscored" : skor tidak tersedia, lolos gate leksikal;
+    - "rejected" : tidak ada yang lolos (pemanggil harus memakai fallback);
+    - "empty"    : tidak ada kandidat sama sekali.
+    """
     if not scored_documents:
-        return [], None
+        return [], None, "empty"
+
+    domain_ok = is_domain_relevant(query)
 
     if not scoring_available:
+        # Tanpa skor semantik, confidence gate diganti gate leksikal: query harus memuat istilah
+        # domain, atau overlap leksikalnya kuat. Dulu jalur ini selalu meloloskan semuanya.
         reranked = rerank_scored_documents(
             query,
             scored_documents,
             top_k=TOP_K,
             max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
         )
-        documents = [document for document, _combined, _lexical, _semantic in reranked]
-        return documents, None
+        if not reranked:
+            return [], None, "rejected"
+        best_lexical = reranked[0][2]
+        if not (domain_ok or best_lexical >= UNSCORED_MIN_LEXICAL):
+            return [], None, "rejected"
+        return [document for document, _c, _l, _s in reranked], None, "unscored"
 
     # Confidence gate tetap menggunakan semantic score mentah. Reranking lexical hanya
     # menentukan urutan kandidat yang sudah lolos gate, bukan mengubah definisi confidence.
@@ -612,10 +701,20 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
         if score is not None and float(score) >= MIN_RELEVANCE_SCORE
     ]
 
-    if not relevant:
-        # Threshold terlalu ketat dapat membuat seluruh hasil hilang, terutama ketika
-        # skala relevance score berubah antar-versi LangChain/vector metric. Sebelum
-        # memicu fallback, lakukan satu tahap penyelamatan berbasis reranking lexical.
+    if relevant:
+        reranked = rerank_scored_documents(
+            query,
+            relevant,
+            top_k=TOP_K,
+            max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
+        )
+        selected = [document for document, _c, _l, _s in reranked]
+        return selected, max(float(score) for _doc, score in relevant), "passed"
+
+    # Tahap penyelamatan: ambang bisa terlalu ketat bila skala skor berubah antar-versi/metrik.
+    # Hanya untuk query berdomain; query tanpa istilah domain langsung ditolak.
+    best_score = _best_score(scored_documents)
+    if domain_ok:
         rescue = rerank_scored_documents(
             query,
             scored_documents,
@@ -623,27 +722,14 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
             max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
         )
         if rescue:
-            best = rescue[0]
-            _document, _combined, lexical_score, semantic_score = best
-            if lexical_score >= 0.20 or (semantic_score is not None and float(semantic_score) >= 0.05):
-                selected = [document for document, _combined, _lexical, _semantic in rescue]
-                best_score = max(
-                    float(score) for _doc, score in scored_documents if score is not None
-                ) if any(score is not None for _doc, score in scored_documents) else None
-                return selected, best_score
+            _document, _combined, lexical_score, semantic_score = rescue[0]
+            if lexical_score >= RESCUE_MIN_LEXICAL or (
+                semantic_score is not None and float(semantic_score) >= RESCUE_MIN_SEMANTIC
+            ):
+                return [document for document, _c, _l, _s in rescue], best_score, "rescued"
 
-        best_score = scored_documents[0][1] if scored_documents else None
-        return [], best_score
+    return [], best_score, "rejected"
 
-    reranked = rerank_scored_documents(
-        query,
-        relevant,
-        top_k=TOP_K,
-        max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
-    )
-    selected = [document for document, _combined, _lexical, _semantic in reranked]
-    best_score = max(float(score) for _doc, score in relevant)
-    return selected, best_score
 
 def _fallback_response(intent_name, domain_relevant=True):
     """
@@ -821,6 +907,26 @@ def _temporal_context(question: str) -> str:
     return "\n".join(status_lines)
 
 
+def _retrieval_notice(details) -> str:
+    """Catatan hasil retrieval untuk LLM yang jujur soal tingkat keyakinan sumber."""
+    gate = details.get("gate_status", "passed")
+    no_score = "Jangan menyebut skor similarity sebagai probabilitas atau tingkat kepastian kepada pengguna. "
+    if gate == "passed":
+        return (
+            "HASIL RETRIEVAL: Sumber di bawah telah lolos pemeriksaan relevansi minimum. " + no_score
+        )
+    reason = (
+        "relevansinya RENDAH (hanya lolos pemeriksaan cadangan)"
+        if gate == "rescued"
+        else "relevansinya TIDAK TERUKUR (skor semantik tidak tersedia)"
+    )
+    return (
+        f"HASIL RETRIEVAL: Perhatian, {reason}. Gunakan sumber di bawah HANYA bila benar-benar "
+        "menjawab pertanyaan. Jika tidak, katakan bahwa informasinya belum tersedia dan arahkan ke "
+        "kontak pada aturan FALLBACK; jangan menebak. " + no_score
+    )
+
+
 @dataclass
 class _AskPlan:
     """
@@ -882,16 +988,13 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     # Jika tidak ada dokumen yang lolos retrieval/confidence gate, jangan panggil LLM.
     # Ini mencegah pertanyaan di luar domain mendapatkan jawaban yang terdengar meyakinkan.
     if not relevant_docs:
-        domain_keywords = (
-            "bpjs", "bpu", "jkk", "jkm", "jht", "jamsostek", "peserta",
-            "iuran", "pendaftaran", "akuisisi", "magang", "jaminan", "kepesertaan",
-            "kartu", "klaim", "ketenagakerjaan", "calon peserta", "follow up", "follow-up"
-        )
-        is_domain_relevant = any(keyword in question.lower() for keyword in domain_keywords)
+        # Pakai query retrieval (sudah memuat pertanyaan sebelumnya untuk follow-up) agar
+        # lanjutan seperti "kalau 3 program?" tetap dikenali sebagai pertanyaan domain.
+        is_domain = is_domain_relevant(retrieval_query)
         return _AskPlan(
             sources=[],
             static_answer=sanitize_assistant_output(
-                _fallback_response(intent_name, domain_relevant=is_domain_relevant)
+                _fallback_response(intent_name, domain_relevant=is_domain)
             ),
         )
 
@@ -906,8 +1009,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         f"INTENT BANTUAN LAPANGAN: {intent_name}\n"
         f"BENTUK BANTUAN YANG DIUTAMAKAN: {intent_instruction}\n"
         f"VALIDITAS INFORMASI BERTANGGAL:\n{_temporal_context(question)}\n\n"
-        "HASIL RETRIEVAL: Sumber di bawah telah lolos pemeriksaan relevansi minimum. "
-        "Jangan menyebut skor similarity sebagai probabilitas atau tingkat kepastian kepada pengguna. "
+        f"{_retrieval_notice(retrieval_details)}"
         f"Jumlah kandidat yang diperiksa: {retrieval_details['candidate_count']}.\n\n"
         "KONTEKS TERSTRUKTUR DARI PERCAKAPAN USER (bukan sumber fakta dokumen):\n"
         f"{conversation_context.to_prompt()}\n\n"
