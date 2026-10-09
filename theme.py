@@ -1133,6 +1133,20 @@ html.sapa-links-open .st-key-theme_corner .st-key-links_toggle button { border-r
     display: flex !important; align-items: center !important; justify-content: center !important;
     line-height: 1 !important;
 }
+/* Tampilan kembar dengan tombol tema di sebelahnya: isi, border, bayangan, hover & tekan sama persis
+   (token yang sama dengan .st-key-theme_to_*). Saat panel terbuka tetap berwarna aksen karena aturan
+   html.sapa-links-open (spesifisitasnya lebih tinggi) menimpa isi & border di bawah. */
+.st-key-theme_corner .st-key-links_toggle button {
+    background: var(--fill-m) !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: var(--inset) !important;
+    color: var(--accent) !important;
+}
+.st-key-theme_corner .st-key-links_toggle button:hover {
+    background: var(--surface-hover) !important; border-color: var(--line-2) !important;
+    box-shadow: var(--inset) !important;
+}
+.st-key-theme_corner .st-key-links_toggle button:active { transform: scale(.94); }
 .stApp:has(.sapa-empty) .st-key-links_empty .st-key-qa_backdrop { z-index: 101 !important; }   /* menutupi input (z 100) juga */
 .stApp:has(.sapa-empty) .st-key-links_popup {
     --lw: min(340px, calc(100vw - var(--main-l, 0px) - var(--main-r, 0px) - 2 * max(var(--gutter), var(--safe-left), var(--safe-right))));
