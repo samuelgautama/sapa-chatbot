@@ -311,12 +311,20 @@ def _off_domain_response():
     )
 
 
-# Penanda referensi INTERNAL knowledge base. Kata umum seperti "dokumen" atau "sumber" saja bukan
-# penanda: "Catatan: siapkan dokumen identitas" adalah isi jawaban yang sah.
+# --- PRE-COMPILED REGEX UNTUK OPTIMASI SANITASI ---
 _INTERNAL_REF = re.compile(
     r"\bfaq\b|\.txt\b|\.md\b|\bsumber\s*\d+|konteks dokumen|knowledge base|basis pengetahuan"
     r"|\bchunk\b|retrieval|metadata"
 )
+_INTERNAL_REF_PATTERNS = [
+    re.compile(r"[ \t]*\((?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^)\n]*(?:\.txt|\.md))\)\.?", re.IGNORECASE),
+    re.compile(r"[ \t]*\[(?:lihat|rujuk|merujuk(?: ke)?|sesuai)?\s*(?:FAQ\s*[-‑–—]?\s*\d+|[^\]]+\.txt)\]\.?", re.IGNORECASE),
+    re.compile(r"[ \t]*(?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^.\n]+\.txt)\.?", re.IGNORECASE),
+]
+_RETRIEVAL_LABEL_PATTERN = re.compile(r"\[(?:SUMBER|Sumber)\s*\d+\]\s*", re.IGNORECASE)
+_CANDIDATE_COUNT_PATTERN = re.compile(r"\bJumlah kandidat(?: yang diperiksa)?\s*:\s*\d+\.?", re.IGNORECASE)
+_MULTI_NEWLINE_PATTERN = re.compile(r"\n{3,}")
+_MID_LINE_SPACES_PATTERN = re.compile(r"(?<=\S)[ \t]{2,}")
 
 
 def sanitize_assistant_output(text: str) -> str:
@@ -331,13 +339,6 @@ def sanitize_assistant_output(text: str) -> str:
 
     cleaned = str(text).replace("\r\n", "\n")
 
-    # Hapus parenthetical / inline references seperti:
-    # (lihat FAQ-04), (FAQ‑36), [FAQ-04], lihat `proses_pendaftaran_bpu.txt`.
-    internal_ref_patterns = [
-        r"[ \t]*\((?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^)\n]*(?:\.txt|\.md))\)\.?",
-        r"[ \t]*\[(?:lihat|rujuk|merujuk(?: ke)?|sesuai)?\s*(?:FAQ\s*[-‑–—]?\s*\d+|[^\]]+\.txt)\]\.?",
-        r"[ \t]*(?:lihat|rujuk|merujuk(?: ke)?|sesuai)\s+(?:FAQ\s*[-‑–—]?\s*\d+|`[^`]+\.txt`|[^.\n]+\.txt)\.?",
-    ]
     # Hapus baris meta yang membicarakan sumber internal / FAQ sebagai bahan
     # evaluasi. Jangan menghapus isi jawaban substantif.
     lines = []
@@ -360,20 +361,18 @@ def sanitize_assistant_output(text: str) -> str:
 
     cleaned = "\n".join(lines)
 
-    # Hapus referensi inline SETELAH filter baris meta di atas. Kalau dibalik, "Catatan: lihat FAQ-04
-    # untuk detail." kehilangan kata FAQ lebih dulu dan menyisakan "Catatan: untuk detail."
-    for pattern in internal_ref_patterns:
-        cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE)
+    # Hapus referensi inline SETELAH filter baris meta di atas.
+    for pattern in _INTERNAL_REF_PATTERNS:
+        cleaned = pattern.sub("", cleaned)
 
     # Hapus label retrieval yang kadang ikut dipantulkan model.
-    cleaned = re.sub(r"\[SUMBER\s*\d+\]\s*", "", cleaned, flags=re.IGNORECASE)
-    cleaned = re.sub(r"\[Sumber\s*\d+\]\s*", "", cleaned, flags=re.IGNORECASE)
-    cleaned = re.sub(r"\bJumlah kandidat(?: yang diperiksa)?\s*:\s*\d+\.?", "", cleaned, flags=re.IGNORECASE)
+    cleaned = _RETRIEVAL_LABEL_PATTERN.sub("", cleaned)
+    cleaned = _CANDIDATE_COUNT_PATTERN.sub("", cleaned)
 
     # Rapikan whitespace setelah pembersihan.
-    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    cleaned = _MULTI_NEWLINE_PATTERN.sub("\n\n", cleaned)
     # Hanya ratakan spasi ganda DI TENGAH baris; indentasi awal baris (sub-bullet) dipertahankan.
-    cleaned = re.sub(r"(?<=\S)[ \t]{2,}", " ", cleaned)
+    cleaned = _MID_LINE_SPACES_PATTERN.sub(" ", cleaned)
     return cleaned.strip()
 
 # --- SYSTEM PROMPT ---
@@ -638,15 +637,32 @@ def _retrieve_with_confidence(retriever, query):
     return [(document, None) for document in documents], False, scoring_error
 
 
-def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
-    """Menjalankan retrieval lengkap yang dipakai chatbot dan evaluation benchmark."""
+def _prepare_question_and_history(question: str, history: list[dict] | None) -> tuple[str, list[dict]]:
+    """Sanitasi question dan history yang digunakan oleh retrieval dan ask.
+    
+    Menghindari double sanitization dengan cek _needs_sanitization.
+    """
     sanitized_question = sanitize_user_input(question)
     clean_question = sanitized_question.text
+    
     clean_history = _normalize_history(history)
     clean_history = [
-        {"role": item["role"], "content": sanitize_user_input(item["content"]).text}
+        {
+            "role": item["role"],
+            "content": (
+                sanitize_user_input(item["content"]).text
+                if _needs_sanitization(item["content"])
+                else item["content"]
+            )
+        }
         for item in clean_history
     ]
+    return clean_question, clean_history
+
+
+def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
+    """Menjalankan retrieval lengkap yang dipakai chatbot dan evaluation benchmark."""
+    clean_question, clean_history = _prepare_question_and_history(question, history)
 
     retrieval_query = build_retrieval_query(
         clean_question,
@@ -1000,15 +1016,8 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     dan penyusunan prompt. Urutan & isinya sama persis dengan ask() versi sebelumnya,
     supaya perilaku (dan hasil evaluation) tidak berubah.
     """
-    sanitized_question = sanitize_user_input(question)
-    question = sanitized_question.text
-    history = _normalize_history(history)
-    # OPTIMASI: Hanya sanitasi history jika belum tersanitasi (app.py sudah sanitasi saat input)
-    # Cek apakah ada pola data sensitif di history; skip sanitasi jika sudah bersih
-    history = [
-        {"role": item["role"], "content": sanitize_user_input(item["content"]).text if _needs_sanitization(item["content"]) else item["content"]}
-        for item in history
-    ]
+    question, history = _prepare_question_and_history(question, history)
+    
     # Percakapan ringan tidak perlu melalui RAG. Ini mencegah input seperti "halo"
     # gagal melewati confidence gate dan mendapatkan fallback yang kaku.
     small_talk = detect_small_talk(question)

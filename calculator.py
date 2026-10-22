@@ -111,23 +111,23 @@ def calculate_bpu_contribution(
     )
 
 
+# Pre-compiled money parsing patterns
+_MONEY_PARSE_PATTERN = re.compile(r"^([0-9]+(?:[\.,][0-9]+)?)\s*(?:(juta|jt)|(ribu|rb))$")
+
+
 def _parse_money(raw: str) -> Decimal:
     """Parse format nominal Indonesia: 1.000.000 / 1000000 / 1 juta / 1,5jt / 800 ribu."""
     text = raw.lower().strip()
     text = text.replace("rp", "").replace("idr", "").strip()
 
-    # Bentuk: 1,5 juta / 1.5 juta / 1 juta / 1jt
-    million_match = re.fullmatch(r"([0-9]+(?:[\.,][0-9]+)?)\s*(?:juta|jt)", text)
-    if million_match:
-        number = million_match.group(1).replace(",", ".")
-        return Decimal(number) * Decimal("1000000")
+    # Single regex match untuk juta/jt/ribu/rb dengan named groups
+    match = _MONEY_PARSE_PATTERN.match(text)
+    if match:
+        number = match.group(1).replace(",", ".")
+        multiplier = 1000000 if match.group(2) else 1000
+        return Decimal(number) * Decimal(str(multiplier))
 
-    # Bentuk: 800 ribu / 800rb
-    thousand_match = re.fullmatch(r"([0-9]+(?:[\.,][0-9]+)?)\s*(?:ribu|rb)", text)
-    if thousand_match:
-        number = thousand_match.group(1).replace(",", ".")
-        return Decimal(number) * Decimal("1000")
-
+    # Fallback untuk format plain digit tanpa label
     cleaned = text.replace(".", "").replace(",", "")
     digits = re.sub(r"[^0-9]", "", cleaned)
     if not digits:

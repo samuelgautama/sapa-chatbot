@@ -64,7 +64,9 @@ _MOBILE_PATTERN = re.compile(r"(?<![\d.,])(?:\+?62|0)[ -]?8\d{1,2}[ .-]?\d{3,4}[
 # Email lebih aman untuk disensor karena tidak dibutuhkan untuk menghitung iuran.
 _EMAIL_PATTERN = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)
 
-_IDENTITY_WORDS = ("nik saya", "ktp saya", "kk saya", "nomor rekening saya", "rekening saya")
+_IDENTITY_WORDS = {
+    "nik saya", "ktp saya", "kk saya", "nomor rekening saya", "rekening saya"
+}
 
 
 def sanitize_user_input(text: str) -> SanitizationResult:

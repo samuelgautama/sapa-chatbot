@@ -243,6 +243,9 @@ _TYPE_DELAY_MIN = 0.004
 _TYPE_RAMP_WORDS = 250
 
 
+_WORD_SPLITTER = re.compile(r"\S+\s*|\s+")
+
+
 def typewriter(deltas):
     """
     Generator untuk st.write_stream: memecah potongan teks dari LLM menjadi
@@ -256,7 +259,7 @@ def typewriter(deltas):
             if line.lstrip().startswith("|"):
                 pieces = [line]
             else:
-                pieces = re.findall(r"\S+\s*|\s+", line)
+                pieces = _WORD_SPLITTER.findall(line)
             for piece in pieces:
                 yield md_safe(piece)
                 shown += 1
@@ -447,6 +450,21 @@ _COPY_BUTTON_HTML = """<!doctype html>
 </html>"""
 
 
+# Pre-compiled regex untuk WhatsApp markdown conversion
+_WHATSAPP_RULES = {
+    "hr": re.compile(r"^[ \t]*([-*_])([ \t]*\1){2,}[ \t]*$", re.M),
+    "heading": re.compile(r"^[ \t]{0,3}#{1,6}[ \t]+(.*?)[ \t]*#*[ \t]*$", re.M),
+    "bullet": re.compile(r"^([ \t]*)[*+\u2022\-][ \t]+", re.M),
+    "link": re.compile(r"\[([^\]]+)\]\((https?://[^)\s]+)\)"),
+    "bold": re.compile(r"(\*\*|__)(?=\S)(.+?)(?<=\S)\1"),
+    "strike": re.compile(r"~~(?=\S)(.+?)(?<=\S)~~"),
+    "italic": re.compile(r"(?<![\w*])\*(?=[^\s*])(.+?)(?<=[^\s*])\*(?![\w*])"),
+    "trailing_spaces": re.compile(r"[ \t]+\n"),
+    "multi_newline": re.compile(r"\n{3,}"),
+    "bold_stripper": re.compile(r"\*\*|__"),
+}
+
+
 def to_whatsapp(text) -> str:
     """
     Ubah markdown jawaban AI menjadi teks yang tampil rapi di WhatsApp.
@@ -457,28 +475,27 @@ def to_whatsapp(text) -> str:
     t = str(text).replace("\r\n", "\n")
 
     # Garis pemisah (---, ***, ___) dibuang; harus sebelum konversi bullet
-    t = re.sub(r"^[ \t]*([-*_])([ \t]*\1){2,}[ \t]*$", "", t, flags=re.M)
+    t = _WHATSAPP_RULES["hr"].sub("", t)
     # Heading (# Judul) -> *Judul*
-    t = re.sub(
-        r"^[ \t]{0,3}#{1,6}[ \t]+(.*?)[ \t]*#*[ \t]*$",
-        lambda m: "**" + re.sub(r"\*\*|__", "", m.group(1)).strip() + "**",
-        t, flags=re.M,
+    t = _WHATSAPP_RULES["heading"].sub(
+        lambda m: "**" + _WHATSAPP_RULES["bold_stripper"].sub("", m.group(1)).strip() + "**",
+        t,
     )
     # Bullet (*, +, •, -) -> "- " dengan indentasi tetap
-    t = re.sub(r"^([ \t]*)[*+\u2022\-][ \t]+", r"\1- ", t, flags=re.M)
+    t = _WHATSAPP_RULES["bullet"].sub(r"\1- ", t)
     # [teks](https://...) -> teks (https://...)
-    t = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r"\1 (\2)", t)
+    t = _WHATSAPP_RULES["link"].sub(r"\1 (\2)", t)
     # **tebal** / __tebal__ -> penanda sementara (supaya tidak ikut diubah jadi miring)
-    t = re.sub(r"(\*\*|__)(?=\S)(.+?)(?<=\S)\1", "\x00\\2\x00", t)
+    t = _WHATSAPP_RULES["bold"].sub("\x00\\2\x00", t)
     # ~~coret~~ -> ~coret~
-    t = re.sub(r"~~(?=\S)(.+?)(?<=\S)~~", r"~\1~", t)
+    t = _WHATSAPP_RULES["strike"].sub(r"~\1~", t)
     # *miring* -> _miring_
-    t = re.sub(r"(?<![\w*])\*(?=[^\s*])(.+?)(?<=[^\s*])\*(?![\w*])", r"_\1_", t)
+    t = _WHATSAPP_RULES["italic"].sub(r"_\1_", t)
     # penanda tebal -> *tebal*
     t = t.replace("\x00", "*")
 
-    t = re.sub(r"[ \t]+\n", "\n", t)
-    t = re.sub(r"\n{3,}", "\n\n", t)
+    t = _WHATSAPP_RULES["trailing_spaces"].sub("\n", t)
+    t = _WHATSAPP_RULES["multi_newline"].sub("\n\n", t)
     return t.strip()
 
 
