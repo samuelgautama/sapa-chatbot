@@ -64,9 +64,14 @@ FOLLOW_UP_OPENERS = re.compile(
 FOLLOW_UP_MAX_WORDS = 6
 
 
+# --- OPTIMASI: Cache regex di module level ---
+_TOKEN_REGEX = re.compile(r"\b[\w%]+\b", flags=re.UNICODE)
+_COMPILED_CONTEXT_PATTERNS = [re.compile(p) for p in CONTEXT_DEPENDENT_PATTERNS]
+
+
 def normalize_tokens(text: str) -> set[str]:
     """Mengubah teks menjadi token sederhana yang cukup stabil untuk Bahasa Indonesia."""
-    raw_tokens = re.findall(r"\b[\w%]+\b", (text or "").lower(), flags=re.UNICODE)
+    raw_tokens = _TOKEN_REGEX.findall((text or "").lower())
     return {
         token
         for token in raw_tokens
@@ -80,7 +85,7 @@ def needs_history_for_retrieval(question: str) -> bool:
     if not normalized:
         return False
 
-    if any(re.search(pattern, normalized) for pattern in CONTEXT_DEPENDENT_PATTERNS):
+    if any(pattern.search(normalized) for pattern in _COMPILED_CONTEXT_PATTERNS):
         return True
 
     # Pertanyaan pendek hanya memakai history bila bentuknya memang seperti follow-up
@@ -143,9 +148,12 @@ def rerank_scored_documents(
     Return tuple: (document, combined_score, lexical_score, semantic_score).
     Semantic score tetap dipertahankan terpisah karena dipakai sebagai confidence gate.
     """
+    # OPTIMASI: Normalisasi query sekali di awal, bukan untuk tiap dokumen
+    query_tokens = normalize_tokens(query)
+    
     candidates = []
     for order, (document, semantic_score) in enumerate(scored_documents):
-        lexical_score = lexical_overlap_score(query, document)
+        lexical_score = _lexical_overlap_score_cached(query_tokens, document)
         if semantic_score is None:
             combined_score = lexical_score
         else:
@@ -193,3 +201,19 @@ def rerank_scored_documents(
                 break
 
     return selected
+
+
+def _lexical_overlap_score_cached(query_tokens: set[str], document: Any) -> float:
+    """Lexical overlap dengan query_tokens sudah dinormalisasi (untuk efisiensi)."""
+    if not query_tokens:
+        return 0.0
+
+    metadata = getattr(document, "metadata", {}) or {}
+    section = str(metadata.get("section", ""))
+    content = str(getattr(document, "page_content", ""))
+    document_tokens = normalize_tokens(f"{section} {content}")
+
+    if not document_tokens:
+        return 0.0
+
+    return len(query_tokens & document_tokens) / len(query_tokens)

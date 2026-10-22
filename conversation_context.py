@@ -153,9 +153,21 @@ def build_conversation_context(
     previous_users = _user_messages(history)
     messages = _active_user_messages(previous_users, current, max_messages)
 
-    base_income = _latest_slot(messages, _income_slot)
-    programs = _latest_slot(messages, extract_programs) or ()
-    sector = _latest_slot(messages, detect_sector)
+    # OPTIMASI: Ekstrak semua slot dalam satu pass melalui messages (bukan 3x iterasi terpisah)
+    base_income = None
+    programs = ()
+    sector = None
+    
+    for message in reversed(messages):
+        if base_income is None:
+            base_income = _income_slot(message)
+        if not programs:
+            programs = extract_programs(message) or ()
+        if sector is None:
+            sector = detect_sector(message)
+        # Hentikan iterasi jika semua slot sudah terisi
+        if base_income is not None and programs and sector is not None:
+            break
 
     inherited: list[str] = []
     if current:

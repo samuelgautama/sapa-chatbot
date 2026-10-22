@@ -734,6 +734,13 @@ with st.container(key="qa_zone"):
 # ---------------------------------------------------------------------------
 # 5. Riwayat chat
 # ---------------------------------------------------------------------------
+# OPTIMASI: Bersihkan sources_map dari indeks pesan yang sudah terhapus
+# (mencegah memory leak pada percakapan panjang)
+max_message_index = len(st.session_state.messages) - 1
+keys_to_delete = [k for k in st.session_state.sources_map if k > max_message_index]
+for key in keys_to_delete:
+    del st.session_state.sources_map[key]
+
 for index, message in enumerate(st.session_state.messages):
     with st.chat_message(message["role"]):
         if message["role"] == "user":

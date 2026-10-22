@@ -98,6 +98,20 @@ MIN_RELEVANCE_SCORE = float(os.getenv("MIN_RELEVANCE_SCORE", "0.15"))
 
 RESCUE_MIN_LEXICAL = float(os.getenv("RESCUE_MIN_LEXICAL", "0.20"))
 RESCUE_MIN_SEMANTIC = float(os.getenv("RESCUE_MIN_SEMANTIC", "0.10"))
+
+
+# --- HELPER UNTUK OPTIMASI ---
+
+# Pattern cepat untuk deteksi apakah teks berpotensi punya data sensitif
+# (cek sebelum menjalankan sanitasi penuh untuk menghindari overhead)
+_QUICK_SENSITIVE_CHECK = re.compile(r'\b(?:nik|ktp|kk|rekening|rek|hp|wa|whatsapp|telepon|@)\b', re.IGNORECASE)
+
+def _needs_sanitization(text: str) -> bool:
+    """Cek cepat apakah teks perlu disanitasi (untuk skip sanitasi berulang pada history)."""
+    if not text or len(text) < 10:
+        return False
+    # Cek pattern sensitif dan pola digit panjang
+    return bool(_QUICK_SENSITIVE_CHECK.search(text)) or bool(re.search(r'\d{8,}', text))
 # Tahap penyelamatan (ketika semua kandidat di bawah MIN_RELEVANCE_SCORE) hanya berlaku untuk
 # query yang memuat istilah domain, DAN salah satu: overlap leksikal >= RESCUE_MIN_LEXICAL atau
 # skor semantik >= RESCUE_MIN_SEMANTIC. Tanpa syarat domain, kata umum seperti "hari" pada
@@ -989,8 +1003,10 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     sanitized_question = sanitize_user_input(question)
     question = sanitized_question.text
     history = _normalize_history(history)
+    # OPTIMASI: Hanya sanitasi history jika belum tersanitasi (app.py sudah sanitasi saat input)
+    # Cek apakah ada pola data sensitif di history; skip sanitasi jika sudah bersih
     history = [
-        {"role": item["role"], "content": sanitize_user_input(item["content"]).text}
+        {"role": item["role"], "content": sanitize_user_input(item["content"]).text if _needs_sanitization(item["content"]) else item["content"]}
         for item in history
     ]
     # Percakapan ringan tidak perlu melalui RAG. Ini mencegah input seperti "halo"
