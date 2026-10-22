@@ -764,7 +764,12 @@ for index, message in enumerate(st.session_state.messages):
             render_user_message(message["content"])
         else:
             st.markdown(md_safe(message["content"]))
-            render_copy_button(str(message["content"]), f"history-{index}")
+            # Hanya render button untuk pesan history yang BUKAN pesan yang sedang di-stream.
+            # Saat user_question ada, pesan terakhir di riwayat adalah pesan user yang sedang
+            # di-proses. Jangan render button untuk pesan assistant dari riwayat lama.
+            # Button untuk jawaban baru akan di-render di section streaming (line 834+).
+            if not user_question or index < len(st.session_state.messages) - 1:
+                render_copy_button(str(message["content"]), f"history-{index}")
             src = st.session_state.sources_map.get(index)
             if src:
                 render_sources(src)
