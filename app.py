@@ -817,16 +817,24 @@ if user_question:
             deltas = iter(stream)
             first = next(deltas, None)
             if first is not None:
-                with placeholder.container():
-                    st.write_stream(typewriter(itertools.chain([first], deltas)))
+                placeholder.write_stream(typewriter(itertools.chain([first], deltas)))
 
             # Jawaban final (sanitasi penuh) yang disimpan ke riwayat. Layar hanya
             # dirender ulang bila berbeda dari yang sudah tampil (sangat jarang) atau kosong.
             answer = stream.text
             if first is None or stream.emitted != answer:
                 placeholder.markdown(md_safe(answer))
-            render_copy_button(str(answer), "latest")
-            render_sources(sources)
+            
+            # Buat placeholder SETELAH content selesai, untuk jaga urutan DOM yang benar.
+            # Button dan sources harus muncul SETELAH content assistant, bukan sebelum.
+            button_placeholder = st.empty()
+            sources_placeholder = st.empty()
+            
+            # Fill placeholder dengan button & sources
+            with button_placeholder.container():
+                render_copy_button(str(answer), "latest")
+            with sources_placeholder.container():
+                render_sources(sources)
     finally:
         generating_flag.empty()
 
