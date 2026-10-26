@@ -477,7 +477,10 @@ def _log_promo_maintenance():
 def load_retriever():
     """Memuat kembali vector store dari disk dan membungkusnya sebagai retriever."""
     _log_promo_maintenance()
-    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+    embeddings = HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL_NAME,
+        encode_kwargs={"normalize_embeddings": True}  # harus sama dengan ingest.py untuk konsistensi skor similarity
+    )
     # siapkan "penerjemah" teks -> vector angka, harus sama dengan saat indexing
 
     vector_store = FAISS.load_local(

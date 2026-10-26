@@ -34,6 +34,7 @@ from typing import Any
 
 from calculator import calculate_bpu_contribution, extract_base_income, extract_programs, detect_discount_request, detect_sector, promo_status
 from privacy_guard import sanitize_user_input
+from chatbot import MIN_RELEVANCE_SCORE
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_DATASET = ROOT / "evaluation_dataset.json"
@@ -223,7 +224,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate the Asisten Akuisisi BPU")
     parser.add_argument("--dataset", default=str(DEFAULT_DATASET))
     parser.add_argument("--top-k", type=int, default=3)
-    parser.add_argument("--min-score", type=float, default=0.30)
+    parser.add_argument("--min-score", type=float, default=MIN_RELEVANCE_SCORE)
     parser.add_argument("--with-llm", action="store_true", help="Run smoke tests through the configured LLM")
     args = parser.parse_args()
 
@@ -300,8 +301,9 @@ def main() -> int:
     if "environment_error" in results:
         print("\nPERINGATAN:", results["environment_error"])
         print("Jalankan `python ingest.py` terlebih dahulu untuk membuat vector_store.")
+        return 1
 
-    # Exit non-zero hanya untuk deterministic unit tests yang gagal.
+    # Exit non-zero jika deterministic unit tests (privacy/calculator) gagal.
     deterministic_failed = any(not x["passed"] for x in results["privacy"] + results["calculator"])
     return 1 if deterministic_failed else 0
 

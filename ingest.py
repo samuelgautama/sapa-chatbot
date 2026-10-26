@@ -172,7 +172,10 @@ def split_documents(documents):
 def build_vector_store(chunks):
     """Mengubah setiap chunk menjadi embedding, lalu menyimpannya sebagai vector store di disk."""
     print("[INFO] Memuat model embedding (mungkin butuh waktu saat pertama kali dijalankan)...")
-    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)  # siapkan "penerjemah" teks -> vector angka
+    embeddings = HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL_NAME,
+        encode_kwargs={"normalize_embeddings": True}  # normalisasi embedding agar similarity score tepat 0-1
+    )  # siapkan "penerjemah" teks -> vector angka
 
     print("[INFO] Membuat index vector dari seluruh chunk, mohon tunggu...")
     vector_store = FAISS.from_documents(chunks, embeddings)  # hitung embedding tiap chunk & susun jadi index FAISS
