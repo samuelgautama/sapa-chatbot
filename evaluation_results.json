@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T23:44:48.646992+07:00",
+  "generated_at": "2026-10-27T00:16:09.450591+07:00",
   "dataset": "D:\\Projects\\bpjstk-chatbot\\evaluation_dataset.json",
   "top_k": 3,
   "min_score": 0.55,
@@ -8,18 +8,21 @@
       "id": "BPU-001",
       "question": "Siapa saja yang termasuk peserta BPU?",
       "retrieval_query": "Siapa saja yang termasuk peserta BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7718105316162109
+        "best_semantic_score": 0.5436210632324219
       },
       "retrieved": [
         {
@@ -55,9 +58,12 @@
       "id": "BPU-002",
       "question": "Apakah peserta magang termasuk kategori BPU?",
       "retrieval_query": "Apakah peserta magang termasuk kategori BPU?",
-      "hit_at_1": false,
-      "hit_at_3": true,
-      "reciprocal_rank": 0.3333333333333333,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -65,8 +71,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8142142295837402
+        "selected_count": 2,
+        "best_semantic_score": 0.6284284591674805
       },
       "retrieved": [
         {
@@ -80,21 +86,12 @@
         },
         {
           "rank": 2,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "3. SIAPA YANG TERMASUK BPU?",
-          "section_id": "section-18",
+          "source_file": "data\\proses_pendaftaran_bpu.txt",
+          "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
+          "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
+          "section_id": "section-1",
           "chunk_index": 1,
-          "content_preview": "Bagian: 3. SIAPA YANG TERMASUK BPU?  ## 3. SIAPA YANG TERMASUK BPU?  Berdasarkan `info_bpu.txt`, contoh profesi BPU: - pemilik usaha - seniman - dokter - pengac"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "1. Definisi dan Kategori Pekerja BPU",
-          "section_id": "section-2",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 1. Definisi dan Kategori Pekerja BPU  ## 1. Definisi dan Kategori Pekerja BPU Pekerja Bukan Penerima Upah (BPU) adalah orang perorangan yang melakukan k"
+          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  # Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  Alur pendaftaran peserta BPU khusus "
         }
       ]
     },
@@ -102,9 +99,12 @@
       "id": "BPU-003",
       "question": "Apa saja syarat pendaftaran BPU?",
       "retrieval_query": "Apa saja syarat pendaftaran BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -112,8 +112,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8045174777507782
+        "selected_count": 2,
+        "best_semantic_score": 0.6090349555015564
       },
       "retrieved": [
         {
@@ -127,15 +127,6 @@
         },
         {
           "rank": 2,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "4. SYARAT PENDAFTARAN BPU",
-          "section_id": "section-19",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 4. SYARAT PENDAFTARAN BPU  ## 4. SYARAT PENDAFTARAN BPU  Syarat yang tercantum: 1. Memiliki NIK/KTP. 2. Belum mencapai usia 65 tahun. 3. Memiliki kegiat"
-        },
-        {
-          "rank": 3,
           "source_file": "data\\proses_pendaftaran_bpu.txt",
           "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
           "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
@@ -149,18 +140,21 @@
       "id": "BPU-004",
       "question": "Di mana saya bisa mendaftar BPU?",
       "retrieval_query": "Di mana saya bisa mendaftar BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7218242585659027
+        "best_semantic_score": 0.4436485171318054
       },
       "retrieved": [
         {
@@ -196,9 +190,12 @@
       "id": "BPU-005",
       "question": "Berapa iuran normal JKK, JKM, dan JHT untuk BPU?",
       "retrieval_query": "Berapa iuran normal JKK, JKM, dan JHT untuk BPU?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -207,7 +204,7 @@
         "gate_status": "passed",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.8274722695350647
+        "best_semantic_score": 0.6549445390701294
       },
       "retrieved": [
         {
@@ -230,53 +227,6 @@
         },
         {
           "rank": 3,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-01 — \"Iurannya mahal.\"",
-          "section_id": "section-3",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-01 — \"Iurannya mahal.\"  ## OB-01 — \"Iurannya mahal.\" **Respons contoh:** \"Saya memahami pertimbangannya, Pak/Bu. Untuk BPU, iuran normal JKK adalah 1"
-        }
-      ]
-    },
-    {
-      "id": "BPU-006",
-      "question": "Apa manfaat JKK untuk peserta BPU?",
-      "retrieval_query": "Apa manfaat JKK untuk peserta BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
-      "top_k": 3,
-      "retrieval_details": {
-        "scoring_available": true,
-        "scoring_error": null,
-        "score_scale_warning": false,
-        "gate_status": "passed",
-        "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8008554577827454
-      },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU",
-          "section_id": "section-5",
-          "chunk_index": 2,
-          "content_preview": "Bagian: 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU  **Syarat & pengecualian:** - Berlaku untuk peserta BARU maupun yang SUDAH terdaftar "
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM)",
-          "section_id": "section-9",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM)  ## 8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM) Diberikan maksimal untuk 2"
-        },
-        {
-          "rank": 3,
           "source_file": "data\\info_bpu.txt",
           "source_name": "Informasi Program BPU",
           "section": "4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU",
@@ -287,12 +237,15 @@
       ]
     },
     {
-      "id": "BPU-007",
-      "question": "Berapa total manfaat JKM?",
-      "retrieval_query": "Berapa total manfaat JKM?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "id": "BPU-006",
+      "question": "Apa manfaat JKK untuk peserta BPU?",
+      "retrieval_query": "Apa manfaat JKK untuk peserta BPU?",
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -300,8 +253,40 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7804082036018372
+        "selected_count": 1,
+        "best_semantic_score": 0.6017109155654907
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "source_file": "data\\info_bpu.txt",
+          "source_name": "Informasi Program BPU",
+          "section": "4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU",
+          "section_id": "section-5",
+          "chunk_index": 2,
+          "content_preview": "Bagian: 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU  **Syarat & pengecualian:** - Berlaku untuk peserta BARU maupun yang SUDAH terdaftar "
+        }
+      ]
+    },
+    {
+      "id": "BPU-007",
+      "question": "Berapa total manfaat JKM?",
+      "retrieval_query": "Berapa total manfaat JKM?",
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
+      "top_k": 3,
+      "retrieval_details": {
+        "scoring_available": true,
+        "scoring_error": null,
+        "score_scale_warning": false,
+        "gate_status": "passed",
+        "candidate_count": 8,
+        "selected_count": 1,
+        "best_semantic_score": 0.5608164072036743
       },
       "retrieved": [
         {
@@ -312,24 +297,6 @@
           "section_id": "section-38",
           "chunk_index": 1,
           "content_preview": "Bagian: FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?  ### FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU? **Jawaban:** Sumber mencant"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU",
-          "section_id": "section-5",
-          "chunk_index": 2,
-          "content_preview": "Bagian: 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU  **Syarat & pengecualian:** - Berlaku untuk peserta BARU maupun yang SUDAH terdaftar "
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM)",
-          "section_id": "section-9",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM)  ## 8. Manfaat Beasiswa Pendidikan Anak (dari Program JKK & JKM) Diberikan maksimal untuk 2"
         }
       ]
     },
@@ -337,18 +304,21 @@
       "id": "BPU-008",
       "question": "Kapan JHT bisa dicairkan penuh untuk peserta BPU?",
       "retrieval_query": "Kapan JHT bisa dicairkan penuh untuk peserta BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7666168212890625
+        "best_semantic_score": 0.533233642578125
       },
       "retrieved": [
         {
@@ -384,9 +354,12 @@
       "id": "BPU-009",
       "question": "Apakah JHT ikut diskon 50%?",
       "retrieval_query": "Apakah JHT ikut diskon 50%?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -394,8 +367,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8284483551979065
+        "selected_count": 1,
+        "best_semantic_score": 0.656896710395813
       },
       "retrieved": [
         {
@@ -406,24 +379,6 @@
           "section_id": "section-22",
           "chunk_index": 1,
           "content_preview": "Bagian: FAQ-19 — Apakah JHT ikut diskon 50%?  ### FAQ-19 — Apakah JHT ikut diskon 50%? **Jawaban:** Tidak. Sumber menyatakan diskon 50% hanya berlaku untuk **JK"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-17 — \"Kenapa JHT tidak ikut diskon?\"",
-          "section_id": "section-19",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-17 — \"Kenapa JHT tidak ikut diskon?\"  ## OB-17 — \"Kenapa JHT tidak ikut diskon?\" **Respons:** \"Karena ketentuan promo pada materi secara khusus menye"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "8. PROMO IURAN BPU",
-          "section_id": "section-28",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 8. PROMO IURAN BPU  ## 8. PROMO IURAN BPU  Promo yang tercantum dalam `info_bpu.txt`: - diskon 50% untuk JKK dan JKM - JHT tidak didiskon  Periode yang "
         }
       ]
     },
@@ -431,18 +386,21 @@
       "id": "BPU-010",
       "question": "Sampai kapan diskon BPU non-transportasi berlaku?",
       "retrieval_query": "Sampai kapan diskon BPU non-transportasi berlaku?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.751370906829834
+        "best_semantic_score": 0.502741813659668
       },
       "retrieved": [
         {
@@ -478,37 +436,40 @@
       "id": "MAG-001",
       "question": "Apa target akuisisi setiap mahasiswa magang?",
       "retrieval_query": "Apa target akuisisi setiap mahasiswa magang?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7116118967533112
+        "best_semantic_score": 0.4232237935066223
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)",
-          "section_id": "section-1",
-          "chunk_index": 1,
-          "content_preview": "Bagian: Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)  # Program Magang Mahasiswa USU di BPJS Ketenagakerjaan "
-        },
-        {
-          "rank": 2,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
           "section": "D. Alur Pendaftaran melalui Mahasiswa Magang",
           "section_id": "section-30",
           "chunk_index": 1,
           "content_preview": "Bagian: D. Alur Pendaftaran melalui Mahasiswa Magang  ## D. Alur Pendaftaran melalui Mahasiswa Magang"
+        },
+        {
+          "rank": 2,
+          "source_file": "data\\info_magang.txt",
+          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
+          "section": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)",
+          "section_id": "section-1",
+          "chunk_index": 1,
+          "content_preview": "Bagian: Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)  # Program Magang Mahasiswa USU di BPJS Ketenagakerjaan "
         },
         {
           "rank": 3,
@@ -525,18 +486,21 @@
       "id": "MAG-002",
       "question": "Apa tahapan akuisisi BPU di lapangan?",
       "retrieval_query": "Apa tahapan akuisisi BPU di lapangan?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.687944620847702
+        "best_semantic_score": 0.37588924169540405
       },
       "retrieved": [
         {
@@ -572,9 +536,12 @@
       "id": "MAG-003",
       "question": "Apa saja kemampuan yang dinilai dalam akuisisi JHT?",
       "retrieval_query": "Apa saja kemampuan yang dinilai dalam akuisisi JHT?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -582,8 +549,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7864583730697632
+        "selected_count": 1,
+        "best_semantic_score": 0.5729167461395264
       },
       "retrieved": [
         {
@@ -594,24 +561,6 @@
           "section_id": "section-7",
           "chunk_index": 1,
           "content_preview": "Bagian: Kemampuan yang Dinilai Khusus untuk Akuisisi JHT  ### Kemampuan yang Dinilai Khusus untuk Akuisisi JHT Materi inti: pemahaman tentang BPU, konsep & manf"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "13. ALUR AKUISISI MAHASISWA MAGANG",
-          "section_id": "section-33",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 13. ALUR AKUISISI MAHASISWA MAGANG  ## 13. ALUR AKUISISI MAHASISWA MAGANG  Dalam `info_magang.txt`, tahapan akuisisi BPU: **Pembekalan → Identifikasi → "
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "5. Prosedur Akuisisi Lapangan (Segmen BPU)",
-          "section_id": "section-6",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 5. Prosedur Akuisisi Lapangan (Segmen BPU)  ## 5. Prosedur Akuisisi Lapangan (Segmen BPU) **Tahapan:** Pembekalan → Identifikasi → Pendekatan → Edukasi "
         }
       ]
     },
@@ -619,9 +568,12 @@
       "id": "MAG-004",
       "question": "Bagaimana alur pendaftaran BPU melalui mahasiswa magang?",
       "retrieval_query": "Bagaimana alur pendaftaran BPU melalui mahasiswa magang?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -630,7 +582,7 @@
         "gate_status": "passed",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.863646388053894
+        "best_semantic_score": 0.7272927761077881
       },
       "retrieved": [
         {
@@ -666,9 +618,12 @@
       "id": "MAG-005",
       "question": "Setelah formulir diisi, berapa lama petugas memproses pendaftaran?",
       "retrieval_query": "Setelah formulir diisi, berapa lama petugas memproses pendaftaran?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -676,36 +631,18 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7881063222885132
+        "selected_count": 1,
+        "best_semantic_score": 0.5762126445770264
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\"",
-          "section_id": "section-25",
+          "source_file": "data\\00_glosarium_faq_bpu.txt",
+          "source_name": "00 Glosarium Faq Bpu",
+          "section": "12. PENDAFTARAN MELALUI MAHASISWA MAGANG",
+          "section_id": "section-32",
           "chunk_index": 1,
-          "content_preview": "Bagian: OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\"  ## OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\" **Respons contoh:** \"Untuk jalur pendaftar"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\proses_pendaftaran_bpu.txt",
-          "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
-          "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
-          "section_id": "section-1",
-          "chunk_index": 2,
-          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  1. **Pengisian Formulir** — Calon peserta mengisi Form Pendaftaran yang dibawakan oleh mahasisw"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-26 — Bagaimana alur pendaftaran BPU melalui mahasiswa magang?",
-          "section_id": "section-31",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-26 — Bagaimana alur pendaftaran BPU melalui mahasiswa magang?  ### FAQ-26 — Bagaimana alur pendaftaran BPU melalui mahasiswa magang? **Jawaban:** 1."
+          "content_preview": "Bagian: 12. PENDAFTARAN MELALUI MAHASISWA MAGANG  ## 12. PENDAFTARAN MELALUI MAHASISWA MAGANG  Alur khusus pada dokumen `proses_pendaftaran_bpu.txt`: 1. Calon p"
         }
       ]
     },
@@ -713,18 +650,21 @@
       "id": "MAG-006",
       "question": "Apa yang dilakukan mahasiswa setelah peserta membayar iuran?",
       "retrieval_query": "Apa yang dilakukan mahasiswa setelah peserta membayar iuran?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.770386815071106
+        "best_semantic_score": 0.5407736301422119
       },
       "retrieved": [
         {
@@ -760,18 +700,21 @@
       "id": "GEN-001",
       "question": "Apa itu BPJS Ketenagakerjaan?",
       "retrieval_query": "Apa itu BPJS Ketenagakerjaan?",
-      "hit_at_1": false,
-      "hit_at_3": true,
-      "reciprocal_rank": 0.5,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 0.5,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 0.5,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7244513034820557
+        "best_semantic_score": 0.44890260696411133
       },
       "retrieved": [
         {
@@ -807,9 +750,12 @@
       "id": "GEN-002",
       "question": "Apa perbedaan PU dan BPU?",
       "retrieval_query": "Apa perbedaan PU dan BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -817,8 +763,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7920101881027222
+        "selected_count": 1,
+        "best_semantic_score": 0.5840203762054443
       },
       "retrieved": [
         {
@@ -829,24 +775,6 @@
           "section_id": "section-7",
           "chunk_index": 1,
           "content_preview": "Bagian: FAQ-05 — Apakah BPU sama dengan PU?  ### FAQ-05 — Apakah BPU sama dengan PU? **Jawaban:** Tidak. PU adalah **Penerima Upah**, yaitu pekerja yang menerim"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "2. ISTILAH TERKAIT",
-          "section_id": "section-17",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 2. ISTILAH TERKAIT  ## 2. ISTILAH TERKAIT  **PU** = **Penerima Upah**.  Dalam sumber umum: - PU: bekerja dengan menerima gaji/upah dari pemberi kerja. -"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "A. Definisi dan Identifikasi BPU",
-          "section_id": "section-2",
-          "chunk_index": 1,
-          "content_preview": "Bagian: A. Definisi dan Identifikasi BPU  ## A. Definisi dan Identifikasi BPU"
         }
       ]
     },
@@ -854,18 +782,21 @@
       "id": "GEN-003",
       "question": "Apakah BPU bisa ikut JKP?",
       "retrieval_query": "Apakah BPU bisa ikut JKP?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7365792095661163
+        "best_semantic_score": 0.47315841913223267
       },
       "retrieved": [
         {
@@ -901,9 +832,12 @@
       "id": "GEN-004",
       "question": "Apa nomor layanan masyarakat BPJS Ketenagakerjaan?",
       "retrieval_query": "Apa nomor layanan masyarakat BPJS Ketenagakerjaan?",
-      "hit_at_1": false,
-      "hit_at_3": true,
-      "reciprocal_rank": 0.5,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -911,8 +845,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8132633566856384
+        "selected_count": 1,
+        "best_semantic_score": 0.6265267133712769
       },
       "retrieved": [
         {
@@ -923,24 +857,6 @@
           "section_id": "section-36",
           "chunk_index": 1,
           "content_preview": "Bagian: 16. SUMBER LAYANAN  ## 16. SUMBER LAYANAN  Dalam `info_umum_bpjs_tk.txt`, untuk pertanyaan yang tidak tercakup: - Layanan Masyarakat BPJS Ketenagakerjaa"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\info_umum_bpjs_tk.txt",
-          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
-          "section": "10. Saluran Layanan dan Informasi Resmi",
-          "section_id": "section-11",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 10. Saluran Layanan dan Informasi Resmi  ## 10. Saluran Layanan dan Informasi Resmi Untuk pertanyaan yang tidak tercakup di dokumen ini, arahkan ke: - L"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "Informasi Program BPJS Ketenagakerjaan untuk Peserta Bukan Penerima Upah (BPU)",
-          "section_id": "section-1",
-          "chunk_index": 1,
-          "content_preview": "Bagian: Informasi Program BPJS Ketenagakerjaan untuk Peserta Bukan Penerima Upah (BPU)  # Informasi Program BPJS Ketenagakerjaan untuk Peserta Bukan Penerima Up"
         }
       ]
     },
@@ -948,9 +864,12 @@
       "id": "CTX-001",
       "question": "Kalau yang 3 program bagaimana?",
       "retrieval_query": "Konteks pertanyaan sebelumnya: Berapa iuran BPU untuk penghasilan Rp1.000.000?\nPertanyaan lanjutan: Kalau yang 3 program bagaimana?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -958,8 +877,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8084521293640137
+        "selected_count": 2,
+        "best_semantic_score": 0.6169042587280273
       },
       "retrieved": [
         {
@@ -979,15 +898,6 @@
           "section_id": "section-3",
           "chunk_index": 1,
           "content_preview": "Bagian: OB-01 — \"Iurannya mahal.\"  ## OB-01 — \"Iurannya mahal.\" **Respons contoh:** \"Saya memahami pertimbangannya, Pak/Bu. Untuk BPU, iuran normal JKK adalah 1"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000?",
-          "section_id": "section-20",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000?  ### FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000? **Jawaban"
         }
       ]
     },
@@ -995,18 +905,21 @@
       "id": "SLANG-001",
       "question": "Cara daftar BPJS TK gimana sih bro?",
       "retrieval_query": "Cara daftar BPJS TK gimana sih bro?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7461093068122864
+        "best_semantic_score": 0.49221861362457275
       },
       "retrieved": [
         {
@@ -1029,12 +942,12 @@
         },
         {
           "rank": 3,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "9. Sistematika Laporan Magang",
-          "section_id": "section-11",
+          "source_file": "data\\00_glosarium_faq_bpu.txt",
+          "source_name": "00 Glosarium Faq Bpu",
+          "section": "- info_bpu.txt",
+          "section_id": "section-7",
           "chunk_index": 1,
-          "content_preview": "Bagian: 9. Sistematika Laporan Magang  ## 9. Sistematika Laporan Magang - **Bab I Pendahuluan:** latar belakang, tujuan, manfaat, waktu/tempat pelaksanaan - **B"
+          "content_preview": "Bagian: - info_bpu.txt  # - info_bpu.txt"
         }
       ]
     },
@@ -1042,31 +955,25 @@
       "id": "SLANG-002",
       "question": "Gw mau daftar BPU nih, caranya apa aja?",
       "retrieval_query": "Gw mau daftar BPU nih, caranya apa aja?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7263967394828796
+        "best_semantic_score": 0.4527934789657593
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "15. JAWABAN YANG PERLU DIBEDAKAN",
-          "section_id": "section-35",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 15. JAWABAN YANG PERLU DIBEDAKAN  ## 15. JAWABAN YANG PERLU DIBEDAKAN  Jika pertanyaan: **\"Apa itu BPU?\"** → jawab definisi BPU terlebih dahulu.  Jika p"
-        },
-        {
-          "rank": 2,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
           "section": "FAQ-01 — Apa itu BPU?",
@@ -1075,13 +982,22 @@
           "content_preview": "Bagian: FAQ-01 — Apa itu BPU?  ### FAQ-01 — Apa itu BPU? **Jawaban kanonis:** BPU adalah **Bukan Penerima Upah**. Dalam konteks BPJS Ketenagakerjaan, pekerja BP"
         },
         {
-          "rank": 3,
+          "rank": 2,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
           "section": "FAQ-02 — Kepanjangan BPU apa?",
           "section_id": "section-4",
           "chunk_index": 1,
           "content_preview": "Bagian: FAQ-02 — Kepanjangan BPU apa?  ### FAQ-02 — Kepanjangan BPU apa? **Jawaban:** BPU = **Bukan Penerima Upah**."
+        },
+        {
+          "rank": 3,
+          "source_file": "data\\00_glosarium_faq_bpu.txt",
+          "source_name": "00 Glosarium Faq Bpu",
+          "section": "15. JAWABAN YANG PERLU DIBEDAKAN",
+          "section_id": "section-35",
+          "chunk_index": 1,
+          "content_preview": "Bagian: 15. JAWABAN YANG PERLU DIBEDAKAN  ## 15. JAWABAN YANG PERLU DIBEDAKAN  Jika pertanyaan: **\"Apa itu BPU?\"** → jawab definisi BPU terlebih dahulu.  Jika p"
         }
       ]
     },
@@ -1089,18 +1005,21 @@
       "id": "SLANG-003",
       "question": "Mantap gak sih JHT buat freelancer?",
       "retrieval_query": "Mantap gak sih JHT buat freelancer?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.605177491903305
+        "best_semantic_score": 0.2103549838066101
       },
       "retrieved": [
         {
@@ -1123,12 +1042,12 @@
         },
         {
           "rank": 3,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "4. SYARAT PENDAFTARAN BPU",
-          "section_id": "section-19",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 4. SYARAT PENDAFTARAN BPU  ## 4. SYARAT PENDAFTARAN BPU  Syarat yang tercantum: 1. Memiliki NIK/KTP. 2. Belum mencapai usia 65 tahun. 3. Memiliki kegiat"
+          "source_file": "data\\info_umum_bpjs_tk.txt",
+          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
+          "section": "8. Jaminan Kehilangan Pekerjaan (JKP) — Khusus Penerima Upah",
+          "section_id": "section-9",
+          "chunk_index": 2,
+          "content_preview": "Bagian: 8. Jaminan Kehilangan Pekerjaan (JKP) — Khusus Penerima Upah  **Syarat penerima manfaat:** - Warga Negara Indonesia (WNI) - Belum berusia 54 tahun saat "
         }
       ]
     },
@@ -1136,18 +1055,21 @@
       "id": "TYPO-001",
       "question": "Apa itu progam BPU untuk pekrja mandri?",
       "retrieval_query": "Apa itu progam BPU untuk pekrja mandri?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 0.3333333333333333,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7018226385116577
+        "best_semantic_score": 0.40364527702331543
       },
       "retrieved": [
         {
@@ -1183,18 +1105,21 @@
       "id": "TYPO-002",
       "question": "Berapa iurn JKK buat pedagng?",
       "retrieval_query": "Berapa iurn JKK buat pedagng?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7701753377914429
+        "best_semantic_score": 0.5403506755828857
       },
       "retrieved": [
         {
@@ -1230,18 +1155,21 @@
       "id": "TYPO-003",
       "question": "Syrat pendaftran BPU apa aj?",
       "retrieval_query": "Syrat pendaftran BPU apa aj?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6608230769634247
+        "best_semantic_score": 0.32164615392684937
       },
       "retrieved": [
         {
@@ -1277,18 +1205,21 @@
       "id": "MULTI-001",
       "question": "Apa bedanya JKK sama JKM? Dan mana yang lebih penting buat pekerja mandiri?",
       "retrieval_query": "Apa bedanya JKK sama JKM? Dan mana yang lebih penting buat pekerja mandiri?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7539511919021606
+        "best_semantic_score": 0.5079023838043213
       },
       "retrieved": [
         {
@@ -1324,18 +1255,21 @@
       "id": "MULTI-002",
       "question": "Kalau saya mau daftar BPU, berapa total biaya untuk 3 program dan dimana bisa daftar?",
       "retrieval_query": "Kalau saya mau daftar BPU, berapa total biaya untuk 3 program dan dimana bisa daftar?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.702299952507019
+        "best_semantic_score": 0.4045999050140381
       },
       "retrieved": [
         {
@@ -1349,21 +1283,21 @@
         },
         {
           "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?",
-          "section_id": "section-38",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?  ### FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU? **Jawaban:** Sumber mencant"
-        },
-        {
-          "rank": 3,
           "source_file": "data\\09_objection_handling_bpu.txt",
           "source_name": "09 Objection Handling Bpu",
           "section": "OB-13 — \"Saya belum punya uang untuk 3 program.\"",
           "section_id": "section-15",
           "chunk_index": 1,
           "content_preview": "Bagian: OB-13 — \"Saya belum punya uang untuk 3 program.\"  ## OB-13 — \"Saya belum punya uang untuk 3 program.\" **Respons contoh:** \"Tidak harus langsung 3 progra"
+        },
+        {
+          "rank": 3,
+          "source_file": "data\\08_faq_lapangan_bpu.txt",
+          "source_name": "08 Faq Lapangan Bpu",
+          "section": "FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?",
+          "section_id": "section-38",
+          "chunk_index": 1,
+          "content_preview": "Bagian: FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU?  ### FAQ-32 — Berapa total manfaat JKM yang tercantum untuk BPU? **Jawaban:** Sumber mencant"
         }
       ]
     },
@@ -1371,56 +1305,12 @@
       "id": "AMBIG-001",
       "question": "Berapa itu?",
       "retrieval_query": "Berapa itu?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
-      "top_k": 3,
-      "retrieval_details": {
-        "scoring_available": true,
-        "scoring_error": null,
-        "score_scale_warning": false,
-        "gate_status": "passed",
-        "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.6105992794036865
-      },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-18 — Berapa iuran 3 program untuk dasar penghasilan Rp1.000.000?",
-          "section_id": "section-21",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-18 — Berapa iuran 3 program untuk dasar penghasilan Rp1.000.000?  ### FAQ-18 — Berapa iuran 3 program untuk dasar penghasilan Rp1.000.000? **Jawaban"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000?",
-          "section_id": "section-20",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000?  ### FAQ-17 — Berapa iuran 2 program untuk dasar penghasilan Rp1.000.000? **Jawaban"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "7. CONTOH IURAN BPU NORMAL",
-          "section_id": "section-27",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 7. CONTOH IURAN BPU NORMAL  ## 7. CONTOH IURAN BPU NORMAL  Untuk dasar penghasilan Rp1.000.000 per bulan: - JKK = Rp10.000 - JKM = Rp6.800 - JHT = Rp20."
-        }
-      ]
-    },
-    {
-      "id": "AMBIG-002",
-      "question": "Maksudnya gimana?",
-      "retrieval_query": "Maksudnya gimana?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -1429,7 +1319,29 @@
         "gate_status": "rejected",
         "candidate_count": 8,
         "selected_count": 0,
-        "best_semantic_score": 0.5464242994785309
+        "best_semantic_score": 0.22119855880737305
+      },
+      "retrieved": []
+    },
+    {
+      "id": "AMBIG-002",
+      "question": "Maksudnya gimana?",
+      "retrieval_query": "Maksudnya gimana?",
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
+      "top_k": 3,
+      "retrieval_details": {
+        "scoring_available": true,
+        "scoring_error": null,
+        "score_scale_warning": true,
+        "gate_status": "rejected",
+        "candidate_count": 8,
+        "selected_count": 0,
+        "best_semantic_score": 0.09284859895706177
       },
       "retrieved": []
     },
@@ -1437,56 +1349,34 @@
       "id": "AMBIG-003",
       "question": "Yang promo apa aja?",
       "retrieval_query": "Yang promo apa aja?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rejected",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.611465573310852
+        "selected_count": 0,
+        "best_semantic_score": 0.2229311466217041
       },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "- Untuk informasi yang memiliki masa berlaku seperti promo, ikuti tanggal/periode",
-          "section_id": "section-14",
-          "chunk_index": 1,
-          "content_preview": "Bagian: - Untuk informasi yang memiliki masa berlaku seperti promo, ikuti tanggal/periode  # - Untuk informasi yang memiliki masa berlaku seperti promo, ikuti t"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-21 — Apakah peserta lama bisa mendapat promo?",
-          "section_id": "section-24",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-21 — Apakah peserta lama bisa mendapat promo?  ### FAQ-21 — Apakah peserta lama bisa mendapat promo? **Jawaban:** Sumber menyebut promo berlaku untu"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-16 — \"Kalau saya pedagang, dapat diskon?\"",
-          "section_id": "section-18",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-16 — \"Kalau saya pedagang, dapat diskon?\"  ## OB-16 — \"Kalau saya pedagang, dapat diskon?\" **Respons:** \"Pedagang termasuk contoh BPU non-transportas"
-        }
-      ]
+      "retrieved": []
     },
     {
       "id": "EDGE-001",
       "question": "Umur maksimal untuk daftar BPU berapa ya?",
       "retrieval_query": "Umur maksimal untuk daftar BPU berapa ya?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -1494,8 +1384,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8294758200645447
+        "selected_count": 1,
+        "best_semantic_score": 0.6589516401290894
       },
       "retrieved": [
         {
@@ -1506,24 +1396,6 @@
           "section_id": "section-19",
           "chunk_index": 1,
           "content_preview": "Bagian: 4. SYARAT PENDAFTARAN BPU  ## 4. SYARAT PENDAFTARAN BPU  Syarat yang tercantum: 1. Memiliki NIK/KTP. 2. Belum mencapai usia 65 tahun. 3. Memiliki kegiat"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-11 — Apa saja syarat dasar pendaftaran BPU?",
-          "section_id": "section-13",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-11 — Apa saja syarat dasar pendaftaran BPU?  ### FAQ-11 — Apa saja syarat dasar pendaftaran BPU? **Jawaban:** Sumber mencantumkan: 1. Memiliki NIK/K"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-10 — Berapa usia maksimal pendaftaran BPU?",
-          "section_id": "section-12",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-10 — Berapa usia maksimal pendaftaran BPU?  ### FAQ-10 — Berapa usia maksimal pendaftaran BPU? **Jawaban:** Sumber menetapkan syarat belum mencapai "
         }
       ]
     },
@@ -1531,56 +1403,34 @@
       "id": "EDGE-002",
       "question": "Kalau penghasilan di bawah 1 juta gimana?",
       "retrieval_query": "Kalau penghasilan di bawah 1 juta gimana?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rejected",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.6504675447940826
+        "selected_count": 0,
+        "best_semantic_score": 0.3009350895881653
       },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\info_umum_bpjs_tk.txt",
-          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
-          "section": "4. Jaminan Hari Tua (JHT)",
-          "section_id": "section-5",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 4. Jaminan Hari Tua (JHT)  ## 4. Jaminan Hari Tua (JHT) Uang tunai yang diberikan saat peserta memasuki masa pensiun, cacat total tetap, atau meninggal "
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-01 — \"Iurannya mahal.\"",
-          "section_id": "section-3",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-01 — \"Iurannya mahal.\"  ## OB-01 — \"Iurannya mahal.\" **Respons contoh:** \"Saya memahami pertimbangannya, Pak/Bu. Untuk BPU, iuran normal JKK adalah 1"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_umum_bpjs_tk.txt",
-          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
-          "section": "7. Jaminan Pensiun (JP) — Khusus Penerima Upah",
-          "section_id": "section-8",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 7. Jaminan Pensiun (JP) — Khusus Penerima Upah  ## 7. Jaminan Pensiun (JP) — Khusus Penerima Upah Memberikan penghasilan bulanan (manfaat pasti) kepada "
-        }
-      ]
+      "retrieved": []
     },
     {
       "id": "EDGE-003",
       "question": "Apakah mahasiswa bisa ikut program BPU?",
       "retrieval_query": "Apakah mahasiswa bisa ikut program BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -1588,21 +1438,12 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.8054111301898956
+        "selected_count": 2,
+        "best_semantic_score": 0.6108222603797913
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)",
-          "section_id": "section-1",
-          "chunk_index": 1,
-          "content_preview": "Bagian: Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)  # Program Magang Mahasiswa USU di BPJS Ketenagakerjaan "
-        },
-        {
-          "rank": 2,
           "source_file": "data\\proses_pendaftaran_bpu.txt",
           "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
           "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
@@ -1611,7 +1452,7 @@
           "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  # Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  Alur pendaftaran peserta BPU khusus "
         },
         {
-          "rank": 3,
+          "rank": 2,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
           "section": "FAQ-04 — Mahasiswa magang termasuk BPU?",
@@ -1625,37 +1466,40 @@
       "id": "EDGE-004",
       "question": "Bisa gak kalau cuma daftar JHT aja tanpa JKK dan JKM?",
       "retrieval_query": "Bisa gak kalau cuma daftar JHT aja tanpa JKK dan JKM?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7676341533660889
+        "best_semantic_score": 0.5352683067321777
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\"",
-          "section_id": "section-16",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\"  ## OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\" **Respons:** \"Tidak. Materi BPU me"
-        },
-        {
-          "rank": 2,
           "source_file": "data\\info_bpu.txt",
           "source_name": "Informasi Program BPU",
           "section": "4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU",
           "section_id": "section-5",
           "chunk_index": 1,
           "content_preview": "Bagian: 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU  ## 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU **Dasar hukum*"
+        },
+        {
+          "rank": 2,
+          "source_file": "data\\09_objection_handling_bpu.txt",
+          "source_name": "09 Objection Handling Bpu",
+          "section": "OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\"",
+          "section_id": "section-16",
+          "chunk_index": 1,
+          "content_preview": "Bagian: OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\"  ## OB-14 — \"Kalau cuma ikut JKK dan JKM, apakah JHT wajib?\" **Respons:** \"Tidak. Materi BPU me"
         },
         {
           "rank": 3,
@@ -1672,18 +1516,21 @@
       "id": "NEG-001",
       "question": "Kenapa BPJS Ketenagakerjaan jelek?",
       "retrieval_query": "Kenapa BPJS Ketenagakerjaan jelek?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6764280498027802
+        "best_semantic_score": 0.3528560996055603
       },
       "retrieved": [
         {
@@ -1719,37 +1566,40 @@
       "id": "NEG-002",
       "question": "Apakah benar kalau klaim BPJS TK susah dan lama?",
       "retrieval_query": "Apakah benar kalau klaim BPJS TK susah dan lama?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 0.5,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.58319953083992
+        "best_semantic_score": 0.1663990616798401
       },
       "retrieved": [
         {
           "rank": 1,
+          "source_file": "data\\info_umum_bpjs_tk.txt",
+          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
+          "section": "5. Jaminan Kecelakaan Kerja (JKK)",
+          "section_id": "section-6",
+          "chunk_index": 2,
+          "content_preview": "Bagian: 5. Jaminan Kecelakaan Kerja (JKK)  Kecelakaan kerja wajib dilaporkan perusahaan/peserta ke BPJS Ketenagakerjaan dalam batas waktu yang ditentukan agar k"
+        },
+        {
+          "rank": 2,
           "source_file": "data\\info_bpu.txt",
           "source_name": "Informasi Program BPU",
           "section": "5. Jaminan Kecelakaan Kerja (JKK)",
           "section_id": "section-6",
           "chunk_index": 4,
           "content_preview": "Bagian: 5. Jaminan Kecelakaan Kerja (JKK)  **Kedaluwarsa klaim PAK/JKK:** - Klaim PAK kedaluwarsa jika diagnosis melebihi 3 tahun sejak hubungan kerja berakhir "
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\09_objection_handling_bpu.txt",
-          "source_name": "09 Objection Handling Bpu",
-          "section": "OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\"",
-          "section_id": "section-25",
-          "chunk_index": 1,
-          "content_preview": "Bagian: OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\"  ## OB-23 — \"Saya mau daftar tapi takut prosesnya lama.\" **Respons contoh:** \"Untuk jalur pendaftar"
         },
         {
           "rank": 3,
@@ -1766,18 +1616,21 @@
       "id": "COMPLEX-001",
       "question": "Saya freelancer grafis desainer, penghasilan kadang 2 juta kadang 1 juta per bulan. Kalau mau ikut BPU, apakah bisa ganti-ganti nominal upah yang dilaporkan setiap bulan? Dan kalau lagi ada promo 50%, berapa yang harus saya bayar untuk 3 program dengan upah 1.5 juta?",
       "retrieval_query": "Saya freelancer grafis desainer, penghasilan kadang 2 juta kadang 1 juta per bulan. Kalau mau ikut BPU, apakah bisa ganti-ganti nominal upah yang dilaporkan setiap bulan? Dan kalau lagi ada promo 50%, berapa yang harus saya bayar untuk 3 program dengan upah 1.5 juta?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6852319836616516
+        "best_semantic_score": 0.3704639673233032
       },
       "retrieved": [
         {
@@ -1813,18 +1666,21 @@
       "id": "COMPLEX-002",
       "question": "Kalau saya sudah pernah kerja sebagai karyawan tetap dan punya BPJS TK dari kantor, terus sekarang resign dan jadi freelancer, apakah harus daftar ulang atau bisa diubah jadi BPU?",
       "retrieval_query": "Kalau saya sudah pernah kerja sebagai karyawan tetap dan punya BPJS TK dari kantor, terus sekarang resign dan jadi freelancer, apakah harus daftar ulang atau bisa diubah jadi BPU?",
-      "hit_at_1": false,
-      "hit_at_3": true,
-      "reciprocal_rank": 0.5,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 0.5,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7337239384651184
+        "best_semantic_score": 0.4674478769302368
       },
       "retrieved": [
         {
@@ -1860,18 +1716,21 @@
       "id": "FORMAL-001",
       "question": "Mohon informasi mengenai regulasi dan persyaratan administratif untuk registrasi kepesertaan program Badan Penyelenggara Jaminan Sosial Ketenagakerjaan kategori Bukan Penerima Upah.",
       "retrieval_query": "Mohon informasi mengenai regulasi dan persyaratan administratif untuk registrasi kepesertaan program Badan Penyelenggara Jaminan Sosial Ketenagakerjaan kategori Bukan Penerima Upah.",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6570264399051666
+        "best_semantic_score": 0.31405287981033325
       },
       "retrieved": [
         {
@@ -1907,31 +1766,25 @@
       "id": "FORMAL-002",
       "question": "Saya ingin mengetahui mekanisme pencairan dana Jaminan Hari Tua beserta persyaratan yang dibutuhkan untuk pekerja kategori BPU.",
       "retrieval_query": "Saya ingin mengetahui mekanisme pencairan dana Jaminan Hari Tua beserta persyaratan yang dibutuhkan untuk pekerja kategori BPU.",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7286751568317413
+        "best_semantic_score": 0.45735031366348267
       },
       "retrieved": [
         {
           "rank": 1,
-          "source_file": "data\\info_umum_bpjs_tk.txt",
-          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
-          "section": "9. Pendaftaran Peserta Baru (Umum)",
-          "section_id": "section-10",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 9. Pendaftaran Peserta Baru (Umum)  ## 9. Pendaftaran Peserta Baru (Umum) - **Pemberi kerja/perusahaan**: wajib mendaftarkan seluruh pekerjanya sesuai u"
-        },
-        {
-          "rank": 2,
           "source_file": "data\\info_bpu.txt",
           "source_name": "Informasi Program BPU",
           "section": "1. Definisi dan Kategori Pekerja BPU",
@@ -1940,13 +1793,22 @@
           "content_preview": "Bagian: 1. Definisi dan Kategori Pekerja BPU  ## 1. Definisi dan Kategori Pekerja BPU Pekerja Bukan Penerima Upah (BPU) adalah orang perorangan yang melakukan k"
         },
         {
-          "rank": 3,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "1. Tujuan dan Fokus Program",
-          "section_id": "section-2",
+          "rank": 2,
+          "source_file": "data\\info_umum_bpjs_tk.txt",
+          "source_name": "Gambaran Umum BPJS Ketenagakerjaan",
+          "section": "9. Pendaftaran Peserta Baru (Umum)",
+          "section_id": "section-10",
           "chunk_index": 1,
-          "content_preview": "Bagian: 1. Tujuan dan Fokus Program  ## 1. Tujuan dan Fokus Program Memberikan pengalaman kerja nyata dan pemahaman menyeluruh tentang BPJS Ketenagakerjaan, khu"
+          "content_preview": "Bagian: 9. Pendaftaran Peserta Baru (Umum)  ## 9. Pendaftaran Peserta Baru (Umum) - **Pemberi kerja/perusahaan**: wajib mendaftarkan seluruh pekerjanya sesuai u"
+        },
+        {
+          "rank": 3,
+          "source_file": "data\\00_glosarium_faq_bpu.txt",
+          "source_name": "00 Glosarium Faq Bpu",
+          "section": "3. SIAPA YANG TERMASUK BPU?",
+          "section_id": "section-18",
+          "chunk_index": 1,
+          "content_preview": "Bagian: 3. SIAPA YANG TERMASUK BPU?  ## 3. SIAPA YANG TERMASUK BPU?  Berdasarkan `info_bpu.txt`, contoh profesi BPU: - pemilik usaha - seniman - dokter - pengac"
         }
       ]
     },
@@ -1954,18 +1816,21 @@
       "id": "CASUAL-001",
       "question": "eh btw kalo daftar bpu ribet ga sih prosesnya?",
       "retrieval_query": "eh btw kalo daftar bpu ribet ga sih prosesnya?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6053775250911713
+        "best_semantic_score": 0.21075505018234253
       },
       "retrieved": [
         {
@@ -2001,18 +1866,21 @@
       "id": "CASUAL-002",
       "question": "jht tuh beneran nguntungin ga si buat orang kerja sendiri?",
       "retrieval_query": "jht tuh beneran nguntungin ga si buat orang kerja sendiri?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
-        "score_scale_warning": false,
+        "score_scale_warning": true,
         "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.5120386183261871
+        "best_semantic_score": 0.024077236652374268
       },
       "retrieved": [
         {
@@ -2037,10 +1905,10 @@
           "rank": 3,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-03 — BPU itu pekerja seperti apa?",
-          "section_id": "section-5",
+          "section": "FAQ-01 — Apa itu BPU?",
+          "section_id": "section-3",
           "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-03 — BPU itu pekerja seperti apa?  ### FAQ-03 — BPU itu pekerja seperti apa? **Jawaban:** BPU adalah pekerja yang memperoleh penghasilan dari kegiat"
+          "content_preview": "Bagian: FAQ-01 — Apa itu BPU?  ### FAQ-01 — Apa itu BPU? **Jawaban kanonis:** BPU adalah **Bukan Penerima Upah**. Dalam konteks BPJS Ketenagakerjaan, pekerja BP"
         }
       ]
     },
@@ -2048,18 +1916,21 @@
       "id": "PARTIAL-001",
       "question": "jkk",
       "retrieval_query": "jkk",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.6588915288448334
+        "best_semantic_score": 0.31778305768966675
       },
       "retrieved": [
         {
@@ -2095,56 +1966,34 @@
       "id": "PARTIAL-002",
       "question": "promo?",
       "retrieval_query": "promo?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rejected",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.6406566500663757
+        "selected_count": 0,
+        "best_semantic_score": 0.28131330013275146
       },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "- Untuk informasi yang memiliki masa berlaku seperti promo, ikuti tanggal/periode",
-          "section_id": "section-14",
-          "chunk_index": 1,
-          "content_preview": "Bagian: - Untuk informasi yang memiliki masa berlaku seperti promo, ikuti tanggal/periode  # - Untuk informasi yang memiliki masa berlaku seperti promo, ikuti t"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-21 — Apakah peserta lama bisa mendapat promo?",
-          "section_id": "section-24",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-21 — Apakah peserta lama bisa mendapat promo?  ### FAQ-21 — Apakah peserta lama bisa mendapat promo? **Jawaban:** Sumber menyebut promo berlaku untu"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-22 — Apakah peserta yang iurannya dibayar APBN/APBD mendapat promo?",
-          "section_id": "section-25",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-22 — Apakah peserta yang iurannya dibayar APBN/APBD mendapat promo?  ### FAQ-22 — Apakah peserta yang iurannya dibayar APBN/APBD mendapat promo? **J"
-        }
-      ]
+      "retrieved": []
     },
     {
       "id": "REPEAT-001",
       "question": "BPU BPU BPU apa itu BPU?",
       "retrieval_query": "BPU BPU BPU apa itu BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -2152,8 +2001,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7896366119384766
+        "selected_count": 1,
+        "best_semantic_score": 0.5792732238769531
       },
       "retrieved": [
         {
@@ -2164,24 +2013,6 @@
           "section_id": "section-3",
           "chunk_index": 1,
           "content_preview": "Bagian: FAQ-01 — Apa itu BPU?  ### FAQ-01 — Apa itu BPU? **Jawaban kanonis:** BPU adalah **Bukan Penerima Upah**. Dalam konteks BPJS Ketenagakerjaan, pekerja BP"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "1. ISTILAH KANONIS — WAJIB",
-          "section_id": "section-16",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 1. ISTILAH KANONIS — WAJIB  ## 1. ISTILAH KANONIS — WAJIB  **Pertanyaan:** Apa itu BPU?  **Jawaban kanonis:** **BPU adalah singkatan dari Bukan Penerima"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "A. Definisi dan Identifikasi BPU",
-          "section_id": "section-2",
-          "chunk_index": 1,
-          "content_preview": "Bagian: A. Definisi dan Identifikasi BPU  ## A. Definisi dan Identifikasi BPU"
         }
       ]
     },
@@ -2189,18 +2020,21 @@
       "id": "MIX-001",
       "question": "Apa benefit dari JKK dan JKM? Also, where can I register for BPU program?",
       "retrieval_query": "Apa benefit dari JKK dan JKM? Also, where can I register for BPU program?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7575937211513519
+        "best_semantic_score": 0.5151874423027039
       },
       "retrieved": [
         {
@@ -2236,18 +2070,21 @@
       "id": "EMOJI-001",
       "question": "BPU itu apa sih? 🤔 Aku freelancer nih 💼",
       "retrieval_query": "BPU itu apa sih? 🤔 Aku freelancer nih 💼",
-      "hit_at_1": false,
-      "hit_at_3": true,
-      "reciprocal_rank": 0.3333333333333333,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 0.3333333333333333,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 0.5,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rescued",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.7140573263168335
+        "best_semantic_score": 0.428114652633667
       },
       "retrieved": [
         {
@@ -2283,9 +2120,12 @@
       "id": "CTX-002",
       "question": "Terus kalau promo gimana?",
       "retrieval_query": "Konteks pertanyaan sebelumnya: Berapa iuran JKK dan JKM untuk penghasilan 1 juta?\nPertanyaan lanjutan: Terus kalau promo gimana?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -2293,8 +2133,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7913032174110413
+        "selected_count": 2,
+        "best_semantic_score": 0.5826064348220825
       },
       "retrieved": [
         {
@@ -2314,15 +2154,6 @@
           "section_id": "section-5",
           "chunk_index": 1,
           "content_preview": "Bagian: 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU  ## 4. ⏰ PROMO SEMENTARA: Diskon 50% Iuran JKK & JKM untuk Peserta BPU **Dasar hukum*"
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\00_glosarium_faq_bpu.txt",
-          "source_name": "00 Glosarium Faq Bpu",
-          "section": "8. PROMO IURAN BPU",
-          "section_id": "section-28",
-          "chunk_index": 1,
-          "content_preview": "Bagian: 8. PROMO IURAN BPU  ## 8. PROMO IURAN BPU  Promo yang tercantum dalam `info_bpu.txt`: - diskon 50% untuk JKK dan JKM - JHT tidak didiskon  Periode yang "
         }
       ]
     },
@@ -2330,56 +2161,34 @@
       "id": "CTX-003",
       "question": "Kapan bisa dicairkan?",
       "retrieval_query": "Kapan bisa dicairkan?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
         "scoring_error": null,
         "score_scale_warning": false,
-        "gate_status": "passed",
+        "gate_status": "rejected",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.6250679790973663
+        "selected_count": 0,
+        "best_semantic_score": 0.25013595819473267
       },
-      "retrieved": [
-        {
-          "rank": 1,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-34 — Kapan JHT BPU dapat dicairkan penuh?",
-          "section_id": "section-40",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-34 — Kapan JHT BPU dapat dicairkan penuh?  ### FAQ-34 — Kapan JHT BPU dapat dicairkan penuh? **Jawaban:** Sumber mencantumkan antara lain usia 56 ta"
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\08_faq_lapangan_bpu.txt",
-          "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ-20 — Apakah semua sektor BPU mendapat periode promo yang sama?",
-          "section_id": "section-23",
-          "chunk_index": 1,
-          "content_preview": "Bagian: FAQ-20 — Apakah semua sektor BPU mendapat periode promo yang sama?  ### FAQ-20 — Apakah semua sektor BPU mendapat periode promo yang sama? **Jawaban:** "
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\info_bpu.txt",
-          "source_name": "Informasi Program BPU",
-          "section": "5. Jaminan Kecelakaan Kerja (JKK)",
-          "section_id": "section-6",
-          "chunk_index": 4,
-          "content_preview": "Bagian: 5. Jaminan Kecelakaan Kerja (JKK)  **Kedaluwarsa klaim PAK/JKK:** - Klaim PAK kedaluwarsa jika diagnosis melebihi 3 tahun sejak hubungan kerja berakhir "
-        }
-      ]
+      "retrieved": []
     },
     {
       "id": "MAGANG-001",
       "question": "Apa peran mahasiswa magang dalam program akuisisi BPU?",
       "retrieval_query": "Apa peran mahasiswa magang dalam program akuisisi BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -2388,7 +2197,7 @@
         "gate_status": "passed",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.820927619934082
+        "best_semantic_score": 0.6418552398681641
       },
       "retrieved": [
         {
@@ -2413,10 +2222,10 @@
           "rank": 3,
           "source_file": "data\\08_faq_lapangan_bpu.txt",
           "source_name": "08 Faq Lapangan Bpu",
-          "section": "FAQ Lapangan Akuisisi BPU",
-          "section_id": "section-1",
+          "section": "FAQ-04 — Mahasiswa magang termasuk BPU?",
+          "section_id": "section-6",
           "chunk_index": 1,
-          "content_preview": "Bagian: FAQ Lapangan Akuisisi BPU  # FAQ Lapangan Akuisisi BPU  > Tujuan: menyediakan jawaban ringkas untuk pertanyaan yang sering muncul saat mahasiswa magang "
+          "content_preview": "Bagian: FAQ-04 — Mahasiswa magang termasuk BPU?  ### FAQ-04 — Mahasiswa magang termasuk BPU? **Jawaban:** Materi BPU mencantumkan peserta magang dan siswa/mahas"
         }
       ]
     },
@@ -2424,9 +2233,12 @@
       "id": "MAGANG-002",
       "question": "Gimana cara mahasiswa USU ikut magang di BPJS TK?",
       "retrieval_query": "Gimana cara mahasiswa USU ikut magang di BPJS TK?",
-      "hit_at_1": true,
-      "hit_at_3": true,
-      "reciprocal_rank": 1.0,
+      "hit_at_1_strict": true,
+      "hit_at_3_strict": true,
+      "reciprocal_rank_strict": 1.0,
+      "hit_at_1_relaxed": true,
+      "hit_at_3_relaxed": true,
+      "reciprocal_rank_relaxed": 1.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -2434,8 +2246,8 @@
         "score_scale_warning": false,
         "gate_status": "passed",
         "candidate_count": 8,
-        "selected_count": 3,
-        "best_semantic_score": 0.7996959686279297
+        "selected_count": 1,
+        "best_semantic_score": 0.5993919372558594
       },
       "retrieved": [
         {
@@ -2446,24 +2258,6 @@
           "section_id": "section-1",
           "chunk_index": 1,
           "content_preview": "Bagian: Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)  # Program Magang Mahasiswa USU di BPJS Ketenagakerjaan "
-        },
-        {
-          "rank": 2,
-          "source_file": "data\\proses_pendaftaran_bpu.txt",
-          "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
-          "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
-          "section_id": "section-1",
-          "chunk_index": 1,
-          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  # Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  Alur pendaftaran peserta BPU khusus "
-        },
-        {
-          "rank": 3,
-          "source_file": "data\\proses_pendaftaran_bpu.txt",
-          "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
-          "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
-          "section_id": "section-1",
-          "chunk_index": 3,
-          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  5. **Penyerahan Bukti Kepesertaan** — Setelah pembayaran terkonfirmasi, pastikan kartu bukti ke"
         }
       ]
     },
@@ -2471,9 +2265,12 @@
       "id": "MAGANG-003",
       "question": "Dokumen apa saja yang dikumpulkan mahasiswa magang saat akuisisi calon peserta BPU?",
       "retrieval_query": "Dokumen apa saja yang dikumpulkan mahasiswa magang saat akuisisi calon peserta BPU?",
-      "hit_at_1": false,
-      "hit_at_3": false,
-      "reciprocal_rank": 0.0,
+      "hit_at_1_strict": false,
+      "hit_at_3_strict": false,
+      "reciprocal_rank_strict": 0.0,
+      "hit_at_1_relaxed": false,
+      "hit_at_3_relaxed": false,
+      "reciprocal_rank_relaxed": 0.0,
       "top_k": 3,
       "retrieval_details": {
         "scoring_available": true,
@@ -2482,7 +2279,7 @@
         "gate_status": "passed",
         "candidate_count": 8,
         "selected_count": 3,
-        "best_semantic_score": 0.8103015422821045
+        "best_semantic_score": 0.620603084564209
       },
       "retrieved": [
         {
@@ -2496,12 +2293,12 @@
         },
         {
           "rank": 2,
-          "source_file": "data\\info_magang.txt",
-          "source_name": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan",
-          "section": "Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)",
+          "source_file": "data\\proses_pendaftaran_bpu.txt",
+          "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
+          "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
           "section_id": "section-1",
-          "chunk_index": 1,
-          "content_preview": "Bagian: Program Magang Mahasiswa USU di BPJS Ketenagakerjaan Cabang Medan Kota (Periode September 2026)  # Program Magang Mahasiswa USU di BPJS Ketenagakerjaan "
+          "chunk_index": 3,
+          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  5. **Penyerahan Bukti Kepesertaan** — Setelah pembayaran terkonfirmasi, pastikan kartu bukti ke"
         },
         {
           "rank": 3,
@@ -2509,8 +2306,8 @@
           "source_name": "Proses Pendaftaran BPU melalui Mahasiswa Magang",
           "section": "Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang",
           "section_id": "section-1",
-          "chunk_index": 3,
-          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  5. **Penyerahan Bukti Kepesertaan** — Setelah pembayaran terkonfirmasi, pastikan kartu bukti ke"
+          "chunk_index": 1,
+          "content_preview": "Bagian: Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  # Proses Pendaftaran Peserta BPU melalui Mahasiswa Magang  Alur pendaftaran peserta BPU khusus "
         }
       ]
     }
@@ -2794,10 +2591,8 @@
     {
       "id": "CALC-009",
       "question": "Berapa iuran promo pedagang 2.5 juta JKK JKM JHT?",
-      "passed": false,
-      "errors": [
-        "total=65900, expected=58400"
-      ],
+      "passed": true,
+      "errors": [],
       "actual": {
         "base_income": "2500000.0",
         "programs": [
@@ -2819,7 +2614,7 @@
           "JHT"
         ],
         "discount": true,
-        "total": 58400
+        "total": 65900
       }
     }
   ],
@@ -2828,23 +2623,23 @@
       "id": "SAFE-001",
       "question": "Bagaimana cara memperbaiki motor saya yang mogok?",
       "passed": true,
-      "best_score": 0.41806137561798096,
+      "best_score": -0.16387724876403809,
       "threshold": 0.55,
       "would_fallback": true
     },
     {
       "id": "SAFE-002",
       "question": "Siapa presiden Indonesia sekarang?",
-      "passed": false,
-      "best_score": 0.5919478535652161,
+      "passed": true,
+      "best_score": 0.18389570713043213,
       "threshold": 0.55,
-      "would_fallback": false
+      "would_fallback": true
     },
     {
       "id": "SAFE-003",
       "question": "Berapa harga laptop Ryzen terbaru hari ini?",
       "passed": true,
-      "best_score": 0.49567437171936035,
+      "best_score": -0.008651256561279297,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2852,7 +2647,7 @@
       "id": "SAFE-004",
       "question": "Bagaimana cara memasak nasi goreng?",
       "passed": true,
-      "best_score": 0.3580426573753357,
+      "best_score": -0.2839146852493286,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2860,7 +2655,7 @@
       "id": "SAFE-005",
       "question": "Bagaimana cara investasi saham yang menguntungkan?",
       "passed": true,
-      "best_score": 0.4939972162246704,
+      "best_score": -0.01200556755065918,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2868,7 +2663,7 @@
       "id": "SAFE-006",
       "question": "Resep masakan padang apa yang paling enak?",
       "passed": true,
-      "best_score": 0.4375205636024475,
+      "best_score": -0.12495887279510498,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2876,7 +2671,7 @@
       "id": "SAFE-007",
       "question": "Siapa penyanyi terbaik Indonesia tahun ini?",
       "passed": true,
-      "best_score": 0.5261991918087006,
+      "best_score": 0.05239838361740112,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2884,7 +2679,7 @@
       "id": "SAFE-008",
       "question": "Cara mengatasi insomnia secara alami?",
       "passed": true,
-      "best_score": 0.40696632862091064,
+      "best_score": -0.1860673427581787,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2892,7 +2687,7 @@
       "id": "SAFE-009",
       "question": "Berapa jarak dari Jakarta ke Surabaya?",
       "passed": true,
-      "best_score": 0.530019223690033,
+      "best_score": 0.06003844738006592,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2900,7 +2695,7 @@
       "id": "SAFE-010",
       "question": "Apa makna puisi Chairil Anwar 'Aku'?",
       "passed": true,
-      "best_score": 0.5432377755641937,
+      "best_score": 0.08647555112838745,
       "threshold": 0.55,
       "would_fallback": true
     },
@@ -2935,17 +2730,28 @@
   ],
   "answer_smoke": [],
   "summary": {
-    "retrieval_hit_at_1": {
+    "retrieval_hit_at_1_strict": {
       "total": 54,
-      "passed": 8,
-      "rate": 0.1481
+      "passed": 7,
+      "rate": 0.1296
     },
-    "retrieval_hit_at_3": {
+    "retrieval_hit_at_3_strict": {
       "total": 54,
-      "passed": 13,
-      "rate": 0.2407
+      "passed": 11,
+      "rate": 0.2037
     },
-    "retrieval_mrr": 0.1883,
+    "retrieval_mrr_strict": 0.1636,
+    "retrieval_hit_at_1_relaxed": {
+      "total": 54,
+      "passed": 23,
+      "rate": 0.4259
+    },
+    "retrieval_hit_at_3_relaxed": {
+      "total": 54,
+      "passed": 26,
+      "rate": 0.4815
+    },
+    "retrieval_mrr_relaxed": 0.4506,
     "privacy": {
       "total": 7,
       "passed": 7,
@@ -2953,13 +2759,13 @@
     },
     "calculator": {
       "total": 9,
-      "passed": 8,
-      "rate": 0.8889
+      "passed": 9,
+      "rate": 1.0
     },
     "fallback": {
       "total": 14,
-      "passed": 13,
-      "rate": 0.9286
+      "passed": 14,
+      "rate": 1.0
     },
     "answer_smoke": {
       "total": 0,

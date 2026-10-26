@@ -64,6 +64,14 @@ def _metadata_matches(doc: Any, expected: dict[str, str]) -> bool:
     return file_ok and section_ok and bool(source_name or filename or section)
 
 
+def _content_matches_keywords(doc: Any, keywords: list[str]) -> bool:
+    """Check if document content contains all expected keywords (relaxed match)."""
+    if not keywords:
+        return False
+    content = str(getattr(doc, "page_content", "")).lower()
+    return all(kw.lower() in content for kw in keywords)
+
+
 def retrieval_test_case(case: dict[str, Any], retriever: Any, top_k: int) -> dict[str, Any]:
     from chatbot import retrieve_documents
 
@@ -76,27 +84,46 @@ def retrieval_test_case(case: dict[str, Any], retriever: Any, top_k: int) -> dic
     )
 
     expected_sources = case.get("expected_sources", [])
+    expected_keywords = case.get("expected_keywords", [])
 
-    def matches(doc: Any) -> bool:
+    def matches_strict(doc: Any) -> bool:
+        """Strict: file + section exact match."""
         return any(_metadata_matches(doc, expected) for expected in expected_sources) if expected_sources else True
 
-    # Evaluasi dilakukan pada dokumen yang benar-benar akan dipakai chatbot, bukan retriever mentah.
-    hit_at_1 = bool(docs and matches(docs[0]))
-    hit_at_3 = any(matches(doc) for doc in docs[:3])
+    def matches_relaxed(doc: Any) -> bool:
+        """Relaxed: (file + section match) OR (all keywords present)."""
+        strict_match = matches_strict(doc)
+        keywords_match = _content_matches_keywords(doc, expected_keywords) if expected_keywords else False
+        return strict_match or keywords_match
 
-    reciprocal_rank = 0.0
+    # Strict evaluation
+    hit_at_1_strict = bool(docs and matches_strict(docs[0]))
+    hit_at_3_strict = any(matches_strict(doc) for doc in docs[:3])
+    reciprocal_rank_strict = 0.0
     for index, doc in enumerate(docs, start=1):
-        if matches(doc):
-            reciprocal_rank = 1.0 / index
+        if matches_strict(doc):
+            reciprocal_rank_strict = 1.0 / index
+            break
+
+    # Relaxed evaluation
+    hit_at_1_relaxed = bool(docs and matches_relaxed(docs[0]))
+    hit_at_3_relaxed = any(matches_relaxed(doc) for doc in docs[:3])
+    reciprocal_rank_relaxed = 0.0
+    for index, doc in enumerate(docs, start=1):
+        if matches_relaxed(doc):
+            reciprocal_rank_relaxed = 1.0 / index
             break
 
     return {
         "id": case["id"],
         "question": question,
         "retrieval_query": retrieval_query,
-        "hit_at_1": hit_at_1,
-        "hit_at_3": hit_at_3,
-        "reciprocal_rank": reciprocal_rank,
+        "hit_at_1_strict": hit_at_1_strict,
+        "hit_at_3_strict": hit_at_3_strict,
+        "reciprocal_rank_strict": reciprocal_rank_strict,
+        "hit_at_1_relaxed": hit_at_1_relaxed,
+        "hit_at_3_relaxed": hit_at_3_relaxed,
+        "reciprocal_rank_relaxed": reciprocal_rank_relaxed,
         "top_k": top_k,
         "retrieval_details": retrieval_details,
         "retrieved": [
@@ -211,15 +238,9 @@ def fallback_test_case(case: dict[str, Any], retriever: Any, min_score: float) -
             "reason": f"Gagal memanggil similarity_search_with_relevance_scores: {exc}",
         }
 
-    # Import remap helper dari chatbot untuk konsistensi dengan production code
-    from chatbot import _remap_cosine_similarity_to_unit_range
-    
-    # Remap raw FAISS scores [-1, 1] → [0, 1] sebelum compare dengan min_score
-    remapped = [
-        (doc, _remap_cosine_similarity_to_unit_range(score))
-        for doc, score in scored
-    ]
-    normalized = [(doc, float(score)) for doc, score in remapped if score is not None and not math.isnan(float(score))]
+    # LangChain FAISS dengan metric L2 mengembalikan relevance score = 1 - (distance / sqrt(2))
+    # Score sudah dalam range [0, 1] (1 = identik, 0 = ambang, <0 = sangat berbeda)
+    normalized = [(doc, float(score)) for doc, score in scored if score is not None and not math.isnan(float(score))]
     best_score = max((score for _, score in normalized), default=None)
     would_fallback = best_score is None or best_score < min_score
 
@@ -329,10 +350,16 @@ def main() -> int:
                 results["llm_error"] = f"Tidak dapat menjalankan LLM smoke test: {exc}"
 
     results["summary"] = {
-        "retrieval_hit_at_1": summarize(results["retrieval"], "hit_at_1"),
-        "retrieval_hit_at_3": summarize(results["retrieval"], "hit_at_3"),
-        "retrieval_mrr": (
-            round(sum(item["reciprocal_rank"] for item in results["retrieval"]) / len(results["retrieval"]), 4)
+        "retrieval_hit_at_1_strict": summarize(results["retrieval"], "hit_at_1_strict"),
+        "retrieval_hit_at_3_strict": summarize(results["retrieval"], "hit_at_3_strict"),
+        "retrieval_mrr_strict": (
+            round(sum(item["reciprocal_rank_strict"] for item in results["retrieval"]) / len(results["retrieval"]), 4)
+            if results["retrieval"] else None
+        ),
+        "retrieval_hit_at_1_relaxed": summarize(results["retrieval"], "hit_at_1_relaxed"),
+        "retrieval_hit_at_3_relaxed": summarize(results["retrieval"], "hit_at_3_relaxed"),
+        "retrieval_mrr_relaxed": (
+            round(sum(item["reciprocal_rank_relaxed"] for item in results["retrieval"]) / len(results["retrieval"]), 4)
             if results["retrieval"] else None
         ),
         "privacy": summarize(results["privacy"], "passed"),

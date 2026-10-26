@@ -92,10 +92,9 @@ RETRIEVAL_K = 8
 # jumlah kandidat yang dicari lebih dulu sebelum dilakukan pemeriksaan relevansi
 
 MIN_RELEVANCE_SCORE = float(os.getenv("MIN_RELEVANCE_SCORE", "0.55"))
-# Ambang minimum skor relevansi (0-1) setelah remap dari cosine similarity [-1, 1].
-# Dengan normalize_embeddings=True, FAISS inner product di-remap ke [0, 1] via (score+1)/2.
-# Baseline measurement: in-domain median ~0.71, off-domain median ~0.44.
-# Threshold 0.55 memisahkan in-domain dari off-domain dengan safety margin.
+# Ambang minimum skor relevansi (0-1) dari FAISS L2 distance.
+# LangChain FAISS mengkonversi L2 distance ke relevance score: 1 - (distance / sqrt(2)).
+# Score 1.0 = dokumen identik, 0.0 = ambang, <0 = sangat berbeda.
 # Nilai ini configurable lewat environment variable untuk kalibrasi dengan evaluation dataset.
 
 RESCUE_MIN_LEXICAL = float(os.getenv("RESCUE_MIN_LEXICAL", "0.20"))
@@ -593,37 +592,6 @@ def get_intent_instruction(intent_name):
     return FIELD_INTENTS.get(intent_name, FIELD_INTENTS["umum"])["instruction"]
 
 
-def _remap_cosine_similarity_to_unit_range(score: float | None) -> float | None:
-    """
-    Remap FAISS inner product score (cosine similarity) dari range [-1, 1] ke [0, 1].
-    
-    Dengan normalize_embeddings=True, FAISS METRIC_INNER_PRODUCT mengembalikan cosine similarity
-    di range [-1, 1]. Fungsi ini transform ke [0, 1] untuk kompatibilitas dengan MIN_RELEVANCE_SCORE
-    dan scoring threshold yang menganggap range [0, 1].
-    
-    Formula: normalized = (score + 1) / 2
-    - score = -1 (berlawanan) → 0 (tidak relevan)
-    - score = 0 (ortogonal) → 0.5 (netral)
-    - score = 1 (identik) → 1 (sangat relevan)
-    
-    Args:
-        score: Raw FAISS inner product score [-1, 1], atau None
-        
-    Returns:
-        Remapped score [0, 1] clamped, atau None jika input None
-    """
-    if score is None:
-        return None
-    
-    try:
-        float_score = float(score)
-        normalized_score = (float_score + 1) / 2.0
-        # Clamp ke [0, 1] untuk numeric stability
-        return max(0.0, min(1.0, normalized_score))
-    except (TypeError, ValueError):
-        return None
-
-
 def _retrieve_with_confidence(retriever, query):
     """
     Mengambil kandidat dokumen sekaligus skor relevansinya.
@@ -645,24 +613,10 @@ def _retrieve_with_confidence(retriever, query):
                 query,
                 k=RETRIEVAL_K,
             )
-            # Remap FAISS inner product (cosine similarity) [-1, 1] → [0, 1] karena normalize_embeddings=True
-            remapped_docs = [
-                (doc, _remap_cosine_similarity_to_unit_range(score))
-                for doc, score in scored_documents
-            ]
-            
-            # Log warning jika ada skor mentah di luar range expected [-1.5, 1.5]
-            raw_scores = [score for _, score in scored_documents if isinstance(score, (int, float))]
-            if raw_scores:
-                min_raw, max_raw = min(raw_scores), max(raw_scores)
-                if min_raw < -1.5 or max_raw > 1.5:
-                    _log_retrieval_issue(
-                        "score-range-unexpected",
-                        "Skor mentah FAISS di luar range cosine similarity expected [-1, 1]: min=%f, max=%f",
-                        min_raw, max_raw,
-                    )
-            
-            return remapped_docs, True, None
+            # LangChain FAISS dengan metric L2 mengembalikan relevance score = 1 - (distance / sqrt(2))
+            # Score sudah dalam range [0, 1] (1 = identik, 0 = ambang, <0 = sangat berbeda)
+            # Tidak perlu remap karena FAISS menggunakan IndexFlatL2.
+            return scored_documents, True, None
         except Exception as exc:
             scoring_error = f"{type(exc).__name__}: {exc}"
             _log_retrieval_issue(
