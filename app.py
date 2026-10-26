@@ -3,6 +3,7 @@ import html
 import itertools
 import json
 import math
+import os
 import re
 import time
 from pathlib import Path
@@ -58,13 +59,19 @@ def load_page_icon(fallback: str = "💬"):
 
 # Tautan penting (popup "Tautan Penting"). Ganti url/label/ikon sesuai kebutuhan; ikon memakai
 # nama Material Symbols (https://fonts.google.com/icons). Jumlah item bebas (daftar bisa di-scroll).
+# BROSUR_URL dibaca dari environment variable atau Streamlit secrets; jika kosong, item dihapus.
+_brosur_url = os.getenv("BROSUR_URL") or st.secrets.get("BROSUR_URL", "")
+
 important_links = [
     {"label": "Materi pembekalan", "icon": "school", "url": "https://drive.google.com/drive/folders/1ga-Tx8eh8TEEmxPK7NWmHVLm7faoIoNC"},
     {"label": "Form pendaftaran BPU", "icon": "app_registration", "url": "https://docs.google.com/forms/d/e/1FAIpQLScFsjR2-C8eAuQ_Hir8GzZn5T6h15OhNBV16WxC_xPXq4kzPA/viewform"},
     {"label": "Penempatan mahasiswa magang", "icon": "assignment_ind", "url": "https://docs.google.com/spreadsheets/d/1j2cfGONrIl83nCFcxeAb9UrlFrIwVEgTFOSwcaYhGOc/edit?gid=333284338#gid=333284338"},
     {"label": "Kanal pembayaran", "icon": "account_balance_wallet", "url": "https://www.bpjsketenagakerjaan.go.id/kanal-pembayaran.html"},
-    {"label": "Brosur BPU", "icon": "description", "url": "https://example.com/pusat-bantuan"},
 ]
+
+# Tambahkan link brosur hanya jika URL tersedia (tidak kosong)
+if _brosur_url:
+    important_links.append({"label": "Brosur BPU", "icon": "description", "url": _brosur_url})
 
 
 st.set_page_config(

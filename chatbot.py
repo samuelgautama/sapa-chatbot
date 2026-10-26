@@ -380,7 +380,13 @@ def sanitize_assistant_output(text: str) -> str:
 # dan aturan fallback-nya. Isinya SELALU SAMA di setiap pertanyaan (tidak berisi
 # {context}/{question} karena keduanya nanti dikirim terpisah lewat HumanMessage
 # di dalam fungsi ask()).
-SYSTEM_PROMPT = """Kamu adalah **Asisten Akuisisi BPU** yang mendampingi mahasiswa magang
+#
+# Bagian FALLBACK (daftar kontak) dibangun dinamis dari contacts_config.py agar
+# tidak ada duplikasi hardcode saat kontak berubah.
+
+from contacts_config import build_fallback_section
+
+_SYSTEM_PROMPT_CORE = """Kamu adalah **Asisten Akuisisi BPU** yang mendampingi mahasiswa magang
 BPJS Ketenagakerjaan saat bekerja di lapangan. Tujuanmu bukan sekadar menjawab FAQ, tetapi
 membantu mahasiswa menjalankan proses akuisisi secara runtut: **identifikasi → pendekatan →
 edukasi → akuisisi → follow-up → pelaporan**, sesuai informasi yang tersedia di dokumen.
@@ -454,23 +460,10 @@ selalu ikuti KONTEKS DOKUMEN terbaru.
 - Arahkan pengguna untuk memasukkan data tersebut hanya melalui formulir atau kanal resmi yang disebutkan
   dalam dokumen bila memang diperlukan.
 
-=== FALLBACK ===
-Jika jawaban tidak ditemukan pada KONTEKS DOKUMEN:
-1. Katakan dengan ramah bahwa informasi tersebut belum tersedia di sistem saat ini.
-2. Jangan mengarang jawaban atau angka.
-3. Arahkan ke kontak yang paling relevan di bawah ini.
+"""
 
-- 🗂️ **Operasional Magang** (kegiatan umum & administrasi magang):
-  Samuel (+62 856-6820-6081), Nabilariza (+62 823-6370-3956)
-- 📄 **Pengambilan Brosur BPJS TK**:
-  Grace (+62 822-7143-8378)
-- 📝 **Pendaftaran BPU hingga Pencetakan Kartu**:
-  Zahra (+62 852-7812-4901)
-- 🗓️ **Absensi & Logbook Aktivitas**:
-  Elvan (+62 813-9617-3602), Jeremy (+62 813-1505-4991)
-
-Kejujuran lebih penting daripada terlihat serba tahu, terutama karena informasi ini menyangkut hak
-dan kewajiban peserta jaminan sosial."""
+# Build SYSTEM_PROMPT lengkap dengan bagian fallback dinamis
+SYSTEM_PROMPT = _SYSTEM_PROMPT_CORE + build_fallback_section()
 
 
 # --- BAGIAN 3: FUNGSI-FUNGSI UTAMA ---
@@ -792,15 +785,11 @@ def _fallback_response(intent_name, domain_relevant=True):
     if not domain_relevant:
         return _off_domain_response()
 
-    contact = {
-        "pendaftaran": "Zahra (+62 852-7812-4901)",
-        "follow_up": "Zahra (+62 852-7812-4901)",
-        "umum": "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)",
-        "identifikasi": "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)",
-        "edukasi": "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)",
-        "simulasi": "Zahra (+62 852-7812-4901)",
-        "keberatan": "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)",
-    }.get(intent_name, "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)")
+    # Import lokal untuk menghindari circular dependency
+    from contacts_config import INTENT_TO_CONTACT, format_contacts
+    
+    category = INTENT_TO_CONTACT.get(intent_name, "operasional_magang")
+    contact = format_contacts(category)
 
     return (
         "Maaf, saya belum menemukan sumber yang cukup relevan untuk menjawab pertanyaan ini "
