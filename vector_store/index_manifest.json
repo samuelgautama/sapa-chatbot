@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-10-26T16:33:07.152401",
+  "docs": {
+    "00_glosarium_faq_bpu.txt": {
+      "mtime": 1790518716.4588275,
+      "size": 8231,
+      "hash": "36f79186b28d54a65a58043a14cabd03ebae4f52c9e6ee81cb4860b041058ed1"
+    },
+    "08_faq_lapangan_bpu.txt": {
+      "mtime": 1790521083.3848567,
+      "size": 10379,
+      "hash": "b8a7fae98ef4380f74ddfbd0aee09a25b46edb4e1086c4595b8b88364e88b291"
+    },
+    "09_objection_handling_bpu.txt": {
+      "mtime": 1790521087.9936762,
+      "size": 8696,
+      "hash": "8e5a2b55ca426fe442cc5e4826f99ecc37e9061c0f72d255d3f35ee08d5ffd50"
+    },
+    "info_bpu.txt": {
+      "mtime": 1790244586.3455667,
+      "size": 10304,
+      "hash": "f1c462b9f0dfb05f731e16445b215eab1e0a06ec7de853ea6151b112ac0c196c"
+    },
+    "info_magang.txt": {
+      "mtime": 1790244591.2739196,
+      "size": 5248,
+      "hash": "abdf0f4b89321a8d1b8a039b5a22b3041f4c34f033666a869a60b55bef63b2d0"
+    },
+    "info_umum_bpjs_tk.txt": {
+      "mtime": 1790244588.7477152,
+      "size": 7790,
+      "hash": "11b6e882b7169f70022957e8929233f02b4cc176e966981f5eee8b818bd802ad"
+    },
+    "proses_pendaftaran_bpu.txt": {
+      "mtime": 1790558916.4846497,
+      "size": 1002,
+      "hash": "1ea1d15725fd85430c9defe9e1368e06d8a08fa5a92cb45cfb9f9c19ea2f2e73"
+    }
+  }
+}

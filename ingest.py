@@ -198,6 +198,11 @@ def main():
     chunks = split_documents(documents)           # langkah 2: pecah dokumen jadi chunk-chunk kecil
     build_vector_store(chunks)                    # langkah 3: ubah chunk jadi embedding & simpan sebagai vector store
 
+    # Langkah 4: record metadata dokumen untuk deteksi index stale
+    from check_index_fresh import record_index_metadata
+    record_index_metadata()
+    print("[INFO] Index metadata berhasil dicatat untuk monitoring freshness")
+
 
 if __name__ == "__main__":
     # Blok ini hanya dijalankan kalau file ini dieksekusi langsung (python ingest.py),
