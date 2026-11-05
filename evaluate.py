@@ -364,8 +364,28 @@ def main() -> int:
     print(f"\nHasil lengkap: {RESULTS_PATH}")
 
     if "environment_error" in results:
-        print("\nPERINGATAN:", results["environment_error"])
-        print("Jalankan `python ingest.py` terlebih dahulu untuk membuat vector_store.")
+        print("\n❌ ENVIRONMENT ERROR:")
+        print(f"   {results['environment_error']}")
+        print("   Jalankan `python ingest.py` terlebih dahulu untuk membuat vector_store.")
+        return 1
+
+    if "llm_error" in results:
+        print("\n⚠️  LLM TEST INCOMPLETE:")
+        print(f"   {results['llm_error']}")
+
+    # Check untuk INCOMPLETE state jika test diharapkan tapi tidak dijalankan
+    retrieval_incomplete = retrieval_cases and not results["retrieval"]
+    fallback_incomplete = fallback_cases and not results["fallback"]
+    llm_incomplete = args.with_llm and not results["answer_smoke"]
+
+    if retrieval_incomplete or fallback_incomplete or llm_incomplete:
+        print("\n⚠️  INCOMPLETE EVALUATION:")
+        if retrieval_incomplete:
+            print("   - Retrieval test tidak dapat dijalankan (missing retriever)")
+        if fallback_incomplete:
+            print("   - Fallback test tidak dapat dijalankan (missing retriever)")
+        if llm_incomplete:
+            print("   - LLM smoke test tidak dijalankan (missing LLM)")
         return 1
 
     # Exit non-zero jika deterministic unit tests (privacy/calculator) gagal.
