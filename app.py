@@ -60,7 +60,11 @@ def load_page_icon(fallback: str = "💬"):
 # Tautan penting (popup "Tautan Penting"). Ganti url/label/ikon sesuai kebutuhan; ikon memakai
 # nama Material Symbols (https://fonts.google.com/icons). Jumlah item bebas (daftar bisa di-scroll).
 # BROSUR_URL dibaca dari environment variable atau Streamlit secrets; jika kosong, item dihapus.
-_brosur_url = os.getenv("BROSUR_URL") or st.secrets.get("BROSUR_URL", "")
+try:
+    _brosur_url = os.getenv("BROSUR_URL") or st.secrets.get("BROSUR_URL", "")
+except (KeyError, AttributeError):
+    # Streamlit secrets tidak tersedia atau format invalid
+    _brosur_url = os.getenv("BROSUR_URL", "")
 
 important_links = [
     {"label": "Materi pembekalan", "icon": "school", "url": "https://drive.google.com/drive/folders/1ga-Tx8eh8TEEmxPK7NWmHVLm7faoIoNC"},

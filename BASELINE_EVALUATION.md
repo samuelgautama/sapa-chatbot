@@ -3,7 +3,7 @@
 **Tanggal**: 2026-10-26
 **Index Version**: Normalized embeddings (normalize_embeddings=True)
 **Embedding Model**: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
-**Score Mapping**: FAISS INNER_PRODUCT cosine similarity [-1, 1] → [0, 1] via (score+1)/2
+**Score Mapping**: FAISS L2 distance → relevance score via 1 - (distance / sqrt(2)), range [0, 1]
 
 ---
 
@@ -22,13 +22,13 @@
 
 ## Key Changes from Previous Configuration
 
-### 1. Score Remapping Implementation
-**Problem**: FAISS INNER_PRODUCT dengan normalized embeddings menghasilkan cosine similarity [-1, 1], bukan [0, 1]. MIN_RELEVANCE_SCORE = 0.15 dirancang untuk [0, 1] range, causing threshold mismatch.
+### 1. Score Mapping Implementation
+**Problem**: FAISS IndexFlatL2 menghasilkan L2 distance, bukan cosine similarity. LangChain mengkonversi distance ke relevance score dengan formula 1 - (distance / sqrt(2)), menghasilkan range [0, 1] untuk dokumen serupa dan <0 untuk sangat berbeda.
 
 **Solution**: 
-- Implementasi `_remap_cosine_similarity_to_unit_range()` helper di `chatbot.py`
-- Formula: `(score + 1) / 2` untuk remap [-1, 1] → [0, 1]
-- Digunakan di production code (retrieval gate) dan evaluation code
+- Threshold MIN_RELEVANCE_SCORE = 0.55 dikalibrasi untuk L2 relevance score
+- Tidak ada remap tambahan karena LangChain sudah menangani konversi
+- Score 1.0 = dokumen identik, 0.0 = ambang, <0 = sangat berbeda
 
 ### 2. Threshold Adjustment
 **From**: MIN_RELEVANCE_SCORE = 0.15  
@@ -40,13 +40,14 @@
 - Threshold 0.55 memisahkan in-domain dari off-domain dengan safety margin
 - Gap sebelum remap: in-domain 0.4251, off-domain -0.1116
 
-### 3. Injection Detection
-**Problem**: Prompt injection queries (INJECT-001 to INJECT-004) memiliki score 0.60-0.69, di atas threshold 0.55, karena menggunakan domain language.
+### 3. Prompt Injection Detection
+**Problem**: Prompt injection queries (INJECT-001 to INJECT-004) memiliki skor semantik tinggi karena menggunakan bahasa domain yang valid, di atas threshold 0.55.
 
-**Solution**: Pattern-based injection detection di `fallback_test_case()`:
-- Regex patterns: "abaikan instruksi", "override", "SYSTEM:", "mode developer", dll
-- Injection queries auto-trigger fallback sebelum score check
-- 4/4 injection tests pass dengan approach ini
+**Solution**: 
+- Deteksi injection dengan pattern matching deterministik di `chatbot.py` (`_detect_prompt_injection`)
+- Pattern dicek sebelum retrieval: "abaikan instruksi", "ignore previous", "SYSTEM:", "mode developer", dll
+- Injection queries langsung reject tanpa retrieval
+- Fallback test memanggil jalur produksi (`retrieve_documents`) untuk validasi
 
 ### 4. Retriever Access Fix
 **Problem**: `load_retriever()` return LangChain `VectorStoreRetriever` wrapper, bukan FAISS vector_store. Wrapper tidak punya method `similarity_search_with_relevance_scores()`.

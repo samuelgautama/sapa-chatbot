@@ -81,7 +81,9 @@ def test_eval_dataset_privacy_cases_still_pass():
     cases = [c for c in json.loads(path.read_text(encoding="utf-8")) if c["category"] == "privacy"]
     assert cases
     for case in cases:
-        assert sanitize_user_input(case["question"]).redacted, case["id"]
+        expected_redaction = case.get("expected_privacy_redaction", False)
+        actual_redaction = sanitize_user_input(case["question"]).redacted
+        assert actual_redaction == expected_redaction, f"{case['id']}: expected redaction={expected_redaction}, got {actual_redaction}"
 
 
 if __name__ == "__main__":

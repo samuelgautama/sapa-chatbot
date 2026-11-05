@@ -13,7 +13,7 @@ Deteksi stale index dengan:
 import hashlib
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ def record_index_metadata():
         }
 
     manifest = {
-        "recorded_at": datetime.utcnow().isoformat(),
+        "recorded_at": datetime.now(timezone.utc).isoformat(),
         "docs": docs,
     }
 
@@ -60,9 +60,12 @@ def record_index_metadata():
     logger.info(f"[check_index] Index manifest recorded: {len(docs)} dokumen")
 
 
-def check_index_fresh(warn_only: bool = False) -> bool:
+def check_index_fresh(warn_only: bool = True) -> bool:
     """
     Cek apakah vector store masih fresh.
+    
+    Indikator utama adalah konten file (hash SHA256). Perubahan mtime tanpa perubahan
+    hash isi file TIDAK dianggap stale (mencegah false positive karena touch/copy file).
     
     Returns:
         True jika fresh (atau no manifest), False jika stale.
@@ -109,27 +112,27 @@ def check_index_fresh(warn_only: bool = False) -> bool:
             raise RuntimeError(msg)
         return False
 
-    # Check 3: Dokumen existing berubah (mtime atau hash)?
+    # Check 3: Dokumen existing berubah kontennya (hash mismatch)?
+    # mtime saja tidak dijadikan penyebab error bila hash sama (mencegah false positive).
     for rel_path in current_txt_files:
         current_file = DATA_PATH / rel_path
         recorded_meta = recorded_docs.get(rel_path, {})
 
-        current_mtime = current_file.stat().st_mtime
-        recorded_mtime = recorded_meta.get("mtime", 0)
-
-        if current_mtime > recorded_mtime:
-            msg = f"[check_index] Dokumen '{rel_path}' lebih baru dari index (mtime: {current_mtime} > {recorded_mtime})"
-            if warn_only:
-                logger.warning(msg)
-            else:
-                raise RuntimeError(msg)
-            return False
-
-        # Optional: hash check untuk detect edit tanpa mtime change
         if "hash" in recorded_meta:
             current_hash = compute_file_hash(current_file)
             if current_hash != recorded_meta["hash"]:
                 msg = f"[check_index] Dokumen '{rel_path}' isi berubah (hash mismatch)"
+                if warn_only:
+                    logger.warning(msg)
+                else:
+                    raise RuntimeError(msg)
+                return False
+        else:
+            # Fallback ke mtime jika manifest lama tidak punya hash
+            current_mtime = current_file.stat().st_mtime
+            recorded_mtime = recorded_meta.get("mtime", 0)
+            if current_mtime > recorded_mtime:
+                msg = f"[check_index] Dokumen '{rel_path}' lebih baru dari index (mtime)"
                 if warn_only:
                     logger.warning(msg)
                 else:

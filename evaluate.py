@@ -191,66 +191,52 @@ def calculator_test_case(case: dict[str, Any]) -> dict[str, Any]:
 
 
 def fallback_test_case(case: dict[str, Any], retriever: Any, min_score: float) -> dict[str, Any]:
-    # Menguji behavior yang sama seperti tahap 4 tanpa memanggil LLM.
-    # Retriever adalah LangChain wrapper; akses vector_store langsung via .vectorstore
-    vector_store = getattr(retriever, "vectorstore", None)
+    """
+    Test fallback behavior menggunakan jalur produksi retrieve_documents.
     
-    if vector_store is None or not hasattr(vector_store, "similarity_search_with_relevance_scores"):
-        return {
-            "id": case["id"],
-            "question": case["question"],
-            "passed": False,
-            "reason": "Vector store tidak tersedia atau tidak menyediakan similarity_search_with_relevance_scores.",
-        }
-    
-    # Pattern-based injection detection sebelum score check.
-    # Injection queries punya recognizable patterns: "abaikan", "override", "SYSTEM:", "instruction", dll.
-    injection_patterns = [
-        r"abaikan\s+instruksi",
-        r"override\s+\w+",
-        r"SYSTEM\s*:",
-        r"instruction\s+override",
-        r"mode\s+developer",
-        r"tanpa\s+batasan",
-        r"protokol\s+keamanan",
-        r"<!--.*override",
-        r"jangan\s+mengikuti",
-    ]
-    question_lower = case["question"].lower()
-    is_injection = any(re.search(pattern, question_lower, re.IGNORECASE) for pattern in injection_patterns)
-    
-    if is_injection:
-        return {
-            "id": case["id"],
-            "question": case["question"],
-            "passed": True,  # Injection HARUS trigger fallback
-            "reason": "Terdeteksi pola injection; harus trigger fallback",
-            "is_injection_detected": True,
-        }
+    Injection detection dan confidence gate akan dijalankan sesuai production code.
+    Test ini memverifikasi bahwa query off-domain atau injection akan menghasilkan
+    dokumen kosong atau gate_status="rejected".
+    """
+    from chatbot import retrieve_documents
     
     try:
-        scored = vector_store.similarity_search_with_relevance_scores(case["question"], k=5)
-    except (AttributeError, TypeError) as exc:
+        docs, retrieval_query, details = retrieve_documents(
+            case["question"],
+            retriever,
+            history=None,
+            top_k=3,
+        )
+    except Exception as exc:
         return {
             "id": case["id"],
             "question": case["question"],
             "passed": False,
-            "reason": f"Gagal memanggil similarity_search_with_relevance_scores: {exc}",
+            "reason": f"retrieve_documents gagal: {exc}",
         }
-
-    # LangChain FAISS dengan metric L2 mengembalikan relevance score = 1 - (distance / sqrt(2))
-    # Score sudah dalam range [0, 1] (1 = identik, 0 = ambang, <0 = sangat berbeda)
-    normalized = [(doc, float(score)) for doc, score in scored if score is not None and not math.isnan(float(score))]
-    best_score = max((score for _, score in normalized), default=None)
-    would_fallback = best_score is None or best_score < min_score
-
+    
+    # Injection detection di production code: details["injection_detected"] = True
+    injection_detected = details.get("injection_detected", False)
+    
+    # Fallback harus trigger jika:
+    # 1. Injection terdeteksi, ATAU
+    # 2. Gate status "rejected" (skor rendah, tidak ada kandidat, dll), ATAU
+    # 3. Tidak ada dokumen yang dikembalikan
+    gate_rejected = details.get("gate_status") == "rejected"
+    no_docs = len(docs) == 0
+    
+    would_fallback = injection_detected or gate_rejected or no_docs
+    
     return {
         "id": case["id"],
         "question": case["question"],
         "passed": would_fallback,
-        "best_score": best_score,
+        "injection_detected": injection_detected,
+        "gate_status": details.get("gate_status"),
+        "best_score": details.get("best_semantic_score"),
         "threshold": min_score,
         "would_fallback": would_fallback,
+        "doc_count": len(docs),
     }
 
 

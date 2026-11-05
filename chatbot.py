@@ -478,6 +478,15 @@ def _log_promo_maintenance():
 def load_retriever():
     """Memuat kembali vector store dari disk dan membungkusnya sebagai retriever."""
     _log_promo_maintenance()
+    
+    # Cek fresh index dengan warning log (bukan exception)
+    try:
+        from check_index_fresh import check_index_fresh
+        check_index_fresh(warn_only=True)
+    except Exception as exc:
+        # Jika check_index_fresh gagal, log warning tapi lanjutkan
+        logging.getLogger(__name__).warning(f"[load_retriever] check_index_fresh error: {exc}")
+
     embeddings = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
         encode_kwargs={"normalize_embeddings": True}  # harus sama dengan ingest.py untuk konsistensi skor similarity
@@ -660,9 +669,65 @@ def _prepare_question_and_history(question: str, history: list[dict] | None) -> 
     return clean_question, clean_history
 
 
+def _detect_prompt_injection(question: str) -> bool:
+    """
+    Deteksi prompt injection dengan pattern matching deterministik.
+    
+    Mengembalikan True jika pertanyaan mengandung pola injection yang jelas.
+    False positive: lebih baik reject pertanyaan sah daripada membiarkan injection.
+    
+    Pattern yang dicek:
+    - "abaikan instruksi" (case-insensitive)
+    - "ignore previous", "ignore instruction"
+    - "SYSTEM:", "instruction override"
+    - "mode developer", "tanpa batasan"
+    - "override", "protocol", "jangan mengikuti"
+    - HTML/XML comment dengan "override"
+    """
+    question_lower = question.lower()
+    
+    # Pattern injection yang jelas
+    injection_patterns = [
+        "abaikan instruksi",
+        "ignore previous",
+        "ignore instruction",
+        "system:",
+        "instruction override",
+        "mode developer",
+        "tanpa batasan",
+        "override safety",
+        "override protocol",
+        "protokol keamanan",
+        "jangan mengikuti",
+        "<!-- override",
+        "<!--instruction",
+    ]
+    
+    return any(pattern in question_lower for pattern in injection_patterns)
+
+
 def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
     """Menjalankan retrieval lengkap yang dipakai chatbot dan evaluation benchmark."""
     clean_question, clean_history = _prepare_question_and_history(question, history)
+    
+    # Injection guard: deteksi pola prompt injection sebelum retrieval
+    if _detect_prompt_injection(clean_question):
+        _log_retrieval_issue(
+            "injection-detected",
+            "Prompt injection terdeteksi, retrieval dilewati: %s",
+            clean_question[:100],
+        )
+        details = {
+            "scoring_available": False,
+            "scoring_error": "injection_detected",
+            "score_scale_warning": False,
+            "gate_status": "rejected",
+            "candidate_count": 0,
+            "selected_count": 0,
+            "best_semantic_score": None,
+            "injection_detected": True,
+        }
+        return [], clean_question, details
 
     retrieval_query = build_retrieval_query(
         clean_question,
