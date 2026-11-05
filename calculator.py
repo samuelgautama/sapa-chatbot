@@ -116,9 +116,16 @@ _MONEY_PARSE_PATTERN = re.compile(r"^([0-9]+(?:[\.,][0-9]+)?)\s*(?:(juta|jt)|(ri
 
 
 def _parse_money(raw: str) -> Decimal:
-    """Parse format nominal Indonesia: 1.000.000 / 1000000 / 1 juta / 1,5jt / 800 ribu."""
+    """Parse format nominal Indonesia termasuk majemuk: 1.000.000 / 1 juta / 1 juta 500 ribu / 1,5jt."""
     text = raw.lower().strip()
     text = text.replace("rp", "").replace("idr", "").strip()
+
+    # Cek apakah format majemuk (mis. "1 juta 500 ribu" atau "1jt 500rb")
+    compound_match = re.search(r"([0-9]+(?:[\.,][0-9]+)?)\s*(?:juta|jt)\s*([0-9]+(?:[\.,][0-9]+)?)\s*(?:ribu|rb)", text)
+    if compound_match:
+        juta_part = Decimal(compound_match.group(1).replace(",", ".")) * Decimal("1000000")
+        ribu_part = Decimal(compound_match.group(2).replace(",", ".")) * Decimal("1000")
+        return juta_part + ribu_part
 
     # Single regex match untuk juta/jt/ribu/rb dengan named groups
     match = _MONEY_PARSE_PATTERN.match(text)
