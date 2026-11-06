@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-10-26T16:33:07.152401",
+  "recorded_at": "2026-11-06T05:16:10.241576+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
       "mtime": 1790518716.4588275,
@@ -22,9 +22,9 @@
       "hash": "f1c462b9f0dfb05f731e16445b215eab1e0a06ec7de853ea6151b112ac0c196c"
     },
     "info_magang.txt": {
-      "mtime": 1790244591.2739196,
-      "size": 5248,
-      "hash": "abdf0f4b89321a8d1b8a039b5a22b3041f4c34f033666a869a60b55bef63b2d0"
+      "mtime": 1793942011.9190507,
+      "size": 5418,
+      "hash": "e14a72ff5099f5a1a58ab0671438540e72fb357509000111476f2bac36da12ab"
     },
     "info_umum_bpjs_tk.txt": {
       "mtime": 1790244588.7477152,
