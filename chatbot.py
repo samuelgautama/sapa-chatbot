@@ -793,6 +793,10 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
 
     domain_ok = is_domain_relevant(query)
 
+    # Off-domain check: query tanpa istilah domain langsung ditolak tanpa skor
+    if not domain_ok:
+        return [], _best_score(scored_documents), "rejected"
+
     if not scoring_available:
         # Tanpa skor semantik, confidence gate diganti gate leksikal: query harus memuat istilah
         # domain, atau overlap leksikalnya kuat. Dulu jalur ini selalu meloloskan semuanya.
