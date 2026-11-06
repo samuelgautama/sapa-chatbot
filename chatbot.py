@@ -252,7 +252,7 @@ FIELD_INTENTS = {
 
 SMALL_TALK_RESPONSES = {
     "greeting": (
-        "Halo! 👋 Saya **Asisten Akuisisi BPU**.\n\n"
+        "Halo! 👋 Saya **SAPA** — **Sistem Asisten Pendamping Aktivitas** (Teman Magang, Siap Membantu).\n\n"
         "Saya bisa membantu kamu saat kegiatan magang, misalnya **menjelaskan program BPU**, "
         "**menghitung iuran**, **menangani keberatan calon peserta**, serta **memandu pendaftaran dan follow-up**.\n\n"
         "Coba tanyakan, misalnya: *\"Berapa iuran JKK + JKM untuk penghasilan Rp1 juta?\"*"
@@ -387,7 +387,7 @@ def sanitize_assistant_output(text: str) -> str:
 
 from contacts_config import build_fallback_section
 
-_SYSTEM_PROMPT_CORE = """Kamu adalah **Asisten Akuisisi BPU** yang mendampingi mahasiswa magang
+_SYSTEM_PROMPT_CORE = """Kamu adalah **SAPA** — **Sistem Asisten Pendamping Aktivitas** (Teman Magang, Siap Membantu) yang mendampingi mahasiswa magang
 BPJS Ketenagakerjaan saat bekerja di lapangan. Tujuanmu bukan sekadar menjawab FAQ, tetapi
 membantu mahasiswa menjalankan proses akuisisi secara runtut: **identifikasi → pendekatan →
 edukasi → akuisisi → follow-up → pelaporan**, sesuai informasi yang tersedia di dokumen.
