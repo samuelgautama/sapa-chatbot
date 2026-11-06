@@ -150,7 +150,9 @@ _MONEY_MARKER = re.compile(
 )
 _INCOME_CONTEXT = re.compile(
     r"(?:penghasilan|pendapatan|dasar\s+penghasilan|gaji)[^0-9]{0,30}"
-    r"((?:rp\s*)?[0-9][0-9\.,]*(?:\s*(?:juta|jt|ribu|rb))?)"
+    r"((?:rp\s*)?[0-9][0-9\.,]*\s*(?:juta|jt)\s*[0-9]+(?:[\.,][0-9]+)?\s*(?:ribu|rb)|"  # Compound: 1 juta 500 ribu
+    r"(?:rp\s*)?[0-9][0-9\.,]*(?:\s*(?:juta|jt|ribu|rb))?"  # Single: 1 juta, 800 ribu, 1.000.000
+    r")"
 )
 _INCOME_PATTERNS = (
     r"(?:rp\s*)?[0-9][0-9\.,]*\s*(?:juta|jt)\b",
@@ -194,6 +196,18 @@ def extract_base_income(question: str, *, enforce_minimum: bool = True) -> Optio
         try:
             value = _parse_money(contextual.group(1))
             if value >= MIN_INCOME or (not enforce_minimum and value > 0):
+                return value
+        except ValueError:
+            pass
+
+    # Coba compound pattern (mis. "1 juta 500 ribu") sebelum pattern standar
+    compound_match = re.search(r"penghasilan[^0-9]{0,30}([0-9]+(?:[\.,][0-9]+)?)\s*(?:juta|jt)\s*([0-9]+(?:[\.,][0-9]+)?)\s*(?:ribu|rb)", text)
+    if compound_match:
+        try:
+            juta_part = Decimal(compound_match.group(1).replace(",", ".")) * Decimal("1000000")
+            ribu_part = Decimal(compound_match.group(2).replace(",", ".")) * Decimal("1000")
+            value = juta_part + ribu_part
+            if value >= MIN_INCOME:
                 return value
         except ValueError:
             pass
