@@ -825,8 +825,8 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
     )
 
     if has_relevant:
-        # Semua kandidat sudah di-rerank dan di-diversifikasi di _retrieve_with_confidence
-        # Ambil TOP_K dari seluruh kandidat (bukan hanya yang di atas threshold)
+        # Ambil TOP_K dari SELURUH kandidat yang sudah di-rerank,
+        # bukan hanya dari yang di atas threshold MIN_RELEVANCE_SCORE
         reranked = rerank_scored_documents(
             query,
             scored_documents,
@@ -835,19 +835,7 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
         )
         if reranked:
             selected = [document for document, _c, _l, _s in reranked]
-            best_score = _best_score(reranked)
-            return selected, best_score, "passed"
-        # Jika rerank menghasilkan kosong (misal karena diversifikasi terlalu ketat),
-        # ambil TOP_K dari scored_documents yang sudah di-rerank awal
-        reranked = rerank_scored_documents(
-            query,
-            scored_documents,
-            top_k=TOP_K,
-            max_chunks_per_section=TOP_K,
-        )
-        if reranked:
-            selected = [document for document, _c, _l, _s in reranked]
-            best_score = _best_score(reranked)
+            best_score = max(float(score) for _, score in scored_documents if score is not None)
             return selected, best_score, "passed"
 
     # Tahap penyelamatan: ambang bisa terlalu ketat bila skala skor berubah antar-versi/metrik.
@@ -990,7 +978,8 @@ def _try_deterministic_calculation(
             base_income, ("JKK", "JKM", "JHT"), discount_jkk_jkm=discount
         )
         response = (
-            f"**Dasar penghasilan: {format_rupiah(two_programs.base_income)}**\n\n"
+            "## Simulasi Iuran BPU\n\n"
+            f"Dasar penghasilan: **{format_rupiah(two_programs.base_income)}**\n\n"
             "**2 program — JKK + JKM**\n\n"
             + build_calculation_response(two_programs)
             + "\n\n**3 program — JKK + JKM + JHT**\n\n"
