@@ -817,23 +817,38 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
             return [], None, "rejected"
         return [document for document, _c, _l, _s in reranked], None, "unscored"
 
-    # Confidence gate tetap menggunakan semantic score mentah. Reranking lexical hanya
-    # menentukan urutan kandidat yang sudah lolos gate, bukan mengubah definisi confidence.
-    relevant = [
-        (document, score)
-        for document, score in scored_documents
-        if score is not None and float(score) >= MIN_RELEVANCE_SCORE
-    ]
+    # Confidence gate: cek apakah ada kandidat yang skornya >= MIN_RELEVANCE_SCORE
+    # Jika tidak ada, lanjut ke tahap penyelamatan.
+    has_relevant = any(
+        score is not None and float(score) >= MIN_RELEVANCE_SCORE
+        for _, score in scored_documents
+    )
 
-    if relevant:
+    if has_relevant:
+        # Semua kandidat sudah di-rerank dan di-diversifikasi di _retrieve_with_confidence
+        # Ambil TOP_K dari seluruh kandidat (bukan hanya yang di atas threshold)
         reranked = rerank_scored_documents(
             query,
-            relevant,
+            scored_documents,
             top_k=TOP_K,
             max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
         )
-        selected = [document for document, _c, _l, _s in reranked]
-        return selected, max(float(score) for _doc, score in relevant), "passed"
+        if reranked:
+            selected = [document for document, _c, _l, _s in reranked]
+            best_score = _best_score(reranked)
+            return selected, best_score, "passed"
+        # Jika rerank menghasilkan kosong (misal karena diversifikasi terlalu ketat),
+        # ambil TOP_K dari scored_documents yang sudah di-rerank awal
+        reranked = rerank_scored_documents(
+            query,
+            scored_documents,
+            top_k=TOP_K,
+            max_chunks_per_section=TOP_K,
+        )
+        if reranked:
+            selected = [document for document, _c, _l, _s in reranked]
+            best_score = _best_score(reranked)
+            return selected, best_score, "passed"
 
     # Tahap penyelamatan: ambang bisa terlalu ketat bila skala skor berubah antar-versi/metrik.
     # Hanya untuk query berdomain; query tanpa istilah domain langsung ditolak.
