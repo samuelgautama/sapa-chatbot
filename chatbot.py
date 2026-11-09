@@ -975,8 +975,7 @@ def _try_deterministic_calculation(
             base_income, ("JKK", "JKM", "JHT"), discount_jkk_jkm=discount
         )
         response = (
-            "## Simulasi Iuran BPU\n\n"
-            f"Dasar penghasilan: **{format_rupiah(two_programs.base_income)}**\n\n"
+            f"**Dasar penghasilan: {format_rupiah(two_programs.base_income)}**\n\n"
             "**2 program — JKK + JKM**\n\n"
             + build_calculation_response(two_programs)
             + "\n\n**3 program — JKK + JKM + JHT**\n\n"

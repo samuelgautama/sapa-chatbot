@@ -310,10 +310,9 @@ _PROGRAM_COUNT = re.compile(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b")
 def detect_calculation_request(question: str, *, has_income_context: bool = False) -> bool:
     """Cek apakah pertanyaan cukup jelas merupakan permintaan hitung iuran BPU.
 
-    Pertanyaan informasional ("berapa iuran JHT?", "berapa iuran JKK untuk penerima upah?")
-    TIDAK dianggap simulasi kecuali ada nominal penghasilan, penyebutan jumlah program, atau
-    kata kerja hitung/simulasi yang eksplisit. `has_income_context=True` berarti percakapan
-    sudah punya dasar penghasilan, sehingga follow-up seperti "kalau 3 program?" cukup.
+    Pola pemicu: nominal + (iuran | JKK | JKM | JHT | hitung | simulasi | "N program").
+    Pertanyaan informasional tanpa nominal ("berapa iuran JKK untuk penerima upah?")
+    TIDAK dianggap simulasi.
     """
     text = question.lower()
 
@@ -327,17 +326,22 @@ def detect_calculation_request(question: str, *, has_income_context: bool = Fals
     has_money = bool(_MONEY_MARKER.search(text))
     has_amount = has_money or bool(re.search(r"\b(?:penghasilan|pendapatan)\b", text))
     has_program = bool(re.search(r"\b(?:jkk|jkm|jht)\b", text))
+    has_calc_word = bool(re.search(r"\b(?:iuran|hitung|simulasi)\b", text))
     asks_value = "berapa" in text or "total" in text
+
+    # Pola baru: nominal + (iuran | JKK | JKM | JHT | hitung | simulasi | N program)
+    # Tanpa harus ada kata "berapa" (mis. "Iuran JKK & JKM penghasilan 2,5 juta?", "Pedagang 500 ribu iuran?")
+    if has_money and (has_program or has_calc_word or has_count):
+        return True
 
     if explicit:
         return has_amount or has_count or has_program or "per bulan" in text
-    # "Berapa total 3 program untuk penghasilan Rp1.000.000?", "Rp2 juta, berapa JKK dan JKM?"
     if asks_value and has_money and (has_program or has_count or "iuran" in text or "total" in text):
         return True
     if question_form:
         return has_amount or has_count
     # Follow-up pendek di percakapan yang sudah punya penghasilan: "kalau 3 program?"
-    return has_income_context and has_count
+    return has_income_context and (has_count or has_program or has_calc_word)
 
 
 def build_calculation_response(
