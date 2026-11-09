@@ -126,6 +126,10 @@ DOMAIN_KEYWORDS = (
     "bpjs", "bpu", "jkk", "jkm", "jht", "jamsostek", "peserta",
     "iuran", "pendaftaran", "akuisisi", "magang", "jaminan", "kepesertaan",
     "kartu", "klaim", "ketenagakerjaan", "calon peserta", "follow up", "follow-up",
+    # Kata spesifik untuk in-domain (HANYA jika ada konteks domain atau kata pengindah)
+    "penghasilan", "pendapatan", "diskon", "promo", "potongan",
+    "pedagang", "petani", "nelayan", "ojol", "ojek", "kurir", "sopir",
+    "freelancer", "umkm",
 )
 
 logger = logging.getLogger(__name__)
