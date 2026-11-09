@@ -1122,6 +1122,7 @@ class _AskPlan:
     sources: list
     static_answer: Optional[str] = None
     messages: Optional[list] = None
+    pii_warning: str = ""
 
 
 def _prepare_ask(question, retriever, history=None) -> _AskPlan:
@@ -1131,13 +1132,24 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     dan penyusunan prompt. Urutan & isinya sama persis dengan ask() versi sebelumnya,
     supaya perilaku (dan hasil evaluation) tidak berubah.
     """
+    raw_question = question
     question, history = _prepare_question_and_history(question, history)
     
+    # Cek data pribadi (PII) pada pertanyaan mentah sebelum sanitasi penuh
+    pii_check = sanitize_user_input(raw_question)
+    pii_warning = ""
+    if pii_check.redacted or pii_check.flagged:
+        pii_warning = (
+            "⚠️ *Catatan SAPA: Mohon jangan mengetik atau menempelkan NIK, nomor KTP, KK, rekening, "
+            "atau data identitas pribadi ke dalam chat. Gunakan formulir atau kanal resmi.*\\n\\n"
+        )
+
     # Percakapan ringan tidak perlu melalui RAG. Ini mencegah input seperti "halo"
     # gagal melewati confidence gate dan mendapatkan fallback yang kaku.
     small_talk = detect_small_talk(question)
     if small_talk is not None:
-        return _AskPlan(sources=[], static_answer=SMALL_TALK_RESPONSES[small_talk])
+        ans = SMALL_TALK_RESPONSES[small_talk]
+        return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
 
     # Slot-filling: jika hanya isi satu slot (penghasilan/sektor/program), jawab singkat tanpa LLM
     conversation_context = build_conversation_context(question, history)
@@ -1186,9 +1198,12 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         context=conversation_context,
     )
     if deterministic_calculation is not None:
+        ans = sanitize_assistant_output(deterministic_calculation)
+        if pii_warning:
+            ans = pii_warning + ans
         return _AskPlan(
             sources=relevant_docs,
-            static_answer=sanitize_assistant_output(deterministic_calculation),
+            static_answer=ans,
         )
 
     # Jika tidak ada dokumen yang lolos retrieval/confidence gate, jangan panggil LLM.
@@ -1197,11 +1212,14 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         # Pakai query retrieval (sudah memuat pertanyaan sebelumnya untuk follow-up) agar
         # lanjutan seperti "kalau 3 program?" tetap dikenali sebagai pertanyaan domain.
         is_domain = is_domain_relevant(retrieval_query)
+        ans = sanitize_assistant_output(
+            _fallback_response(intent_name, domain_relevant=is_domain)
+        )
+        if pii_warning:
+            ans = pii_warning + ans
         return _AskPlan(
             sources=[],
-            static_answer=sanitize_assistant_output(
-                _fallback_response(intent_name, domain_relevant=is_domain)
-            ),
+            static_answer=ans,
         )
 
     context = format_context(relevant_docs)
@@ -1237,7 +1255,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
             messages.append(AIMessage(content=message["content"]))
 
     messages.append(HumanMessage(content=human_content))
-    return _AskPlan(sources=relevant_docs, messages=messages)
+    return _AskPlan(sources=relevant_docs, messages=messages, pii_warning=pii_warning)
 
 
 def _llm_error_message(exc: Exception) -> str:
@@ -1300,23 +1318,19 @@ class AnswerStream:
     - iterasi  : menghasilkan potongan teks (delta) yang SUDAH disanitasi.
     - .emitted : gabungan semua delta yang sudah dikirim ke UI.
     - .text    : jawaban final (sanitasi penuh); valid setelah iterasi selesai.
-
-    Sanitasi tetap aman saat streaming: teks mentah dari LLM hanya "dilepas" ke UI
-    per BARIS LENGKAP, lalu disanitasi dengan sanitize_assistant_output() yang sama.
-    Semua aturan sanitasi bekerja di dalam satu baris, jadi referensi internal
-    (FAQ-xx, nama file .txt, [SUMBER n], catatan meta) tidak sempat tampil sebagian.
-    Di akhir stream, sanitasi penuh dijalankan sekali lagi sebagai versi otoritatif.
-
-    Objek ini sekali pakai (satu kali iterasi).
     """
 
-    def __init__(self, sources, static_answer=None, llm=None, messages=None):
+    def __init__(self, sources, static_answer=None, llm=None, messages=None, pii_warning=""):
         self.sources = sources
         self._static_answer = static_answer
         self._llm = llm
         self._messages = messages
+        self._pii_warning = pii_warning
         self.emitted = ""
         self.text = static_answer if static_answer is not None else ""
+        if pii_warning and self._static_answer is not None and not self.text.startswith(pii_warning):
+            self.text = pii_warning + self.text
+            self.emitted = self.text
 
     def _delta(self, candidate_raw: str) -> str:
         """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten)."""
@@ -1332,10 +1346,14 @@ class AnswerStream:
     def __iter__(self):
         # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik)
         if self._static_answer is not None:
-            self.emitted = self._static_answer
-            self.text = self._static_answer
-            yield self._static_answer
+            self.emitted = self.text
+            yield self.text
             return
+
+        # Kirim peringatan PII sebagai potongan pertama jika ada
+        if self._pii_warning:
+            self.emitted = self._pii_warning
+            yield self._pii_warning
 
         raw = ""
         committed = 0   # panjang raw yang sudah berupa baris-baris lengkap
@@ -1388,4 +1406,5 @@ def ask_stream(question, retriever, llm, history=None) -> AnswerStream:
         static_answer=plan.static_answer,
         llm=llm,
         messages=plan.messages,
+        pii_warning=plan.pii_warning,
     )
