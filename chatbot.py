@@ -1151,7 +1151,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         ans = SMALL_TALK_RESPONSES[small_talk]
         return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
 
-    # Slot-filling: jika hanya isi satu slot (penghasilan/sektor/program), jawab singkat tanpa LLM
+    # Slot-filling: jika hanya isi satu slot (penghasilan/sektor/program) TANPA kata tanya, jawab singkat tanpa LLM
     conversation_context = build_conversation_context(question, history)
     has_inherited = conversation_context.inherited_slots
     new_slot_count = sum([
@@ -1159,9 +1159,12 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         1 if conversation_context.sector is not None else 0,
         1 if conversation_context.programs else 0,
     ])
+    
+    question_words = ("apakah", "berapa", "ada", "bagaimana", "gimana", "kapan", "siapa", "mengapa", "kenapa", "?")
+    is_question = any(w in question.lower() for w in question_words)
 
-    # Jika hanya satu slot baru (tidak ada yang diwarisi), tampilkan konfirmasi + tanya slot berikutnya
-    if new_slot_count == 1 and not has_inherited:
+    # Jika hanya satu slot baru (tidak ada yang diwarisi) DAN bukan kalimat tanya
+    if new_slot_count == 1 and not has_inherited and not is_question:
         slot_label = "dasar penghasilan" if conversation_context.base_income is not None else (
             "sektor" if conversation_context.sector else "program"
         )
