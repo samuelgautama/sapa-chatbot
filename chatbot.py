@@ -316,6 +316,49 @@ def _off_domain_response():
     )
 
 
+def _short_question_clarification(text: str) -> Optional[str]:
+    """
+    Tanggapan klarsifikasi untuk pertanyaan pendek (<=3 kata) tanpa konteks domain.
+    """
+    if not text:
+        return None
+    words = text.lower().split()
+    if len(words) > 3:
+        return None
+
+    clarifications = {
+        ("berapa", "iuran"): (
+            "Tarif iuran BPU: **JKK 1%**, **JKM Rp6.800**, **JHT 2%** dari dasar penghasilan.\\n\\n"
+            "Sebutkan **dasar penghasilan per bulan** untuk saya hitung."
+        ),
+        ("syarat",): (
+            "Berikut syarat-syarat umum BPU:\\n"
+            "- Warga negara Indonesia\\n"
+            "- Usia 17-65 tahun\\n"
+            "- Masa tunggu 1 bulan setelah berhenti kerja (jika PU)\\n"
+            "- Penghasilan minimal Rp1.000.000/bulan\\n\\n"
+            "Mau tahu syarat **pendaftaran BPU**, **klaim JHT**, atau **magang**?"
+        ),
+        ("cara",): (
+            "Berikut cara-cara umum:\\n"
+            "- Daftar: JMO/website/kantor cabang/Agen Perisai\\n"
+            "- Bayar: BNI, BCA mobile, Alfamart, Gojek, QRIS\\n"
+            "- Klaim: Portal BPJS Ketenagakerjaan\\n\\n"
+            "Mau tahu cara **pendaftaran BPU**, **pembayaran**, atau **klaim**?"
+        ),
+        ("berapa", "biaya"): (
+            "Tarif iuran BPU: **JKK 1%**, **JKM Rp6.800**, **JHT 2%** dari dasar penghasilan.\\n\\n"
+            "Sebutkan **dasar penghasilan per bulan** untuk saya hitung."
+        ),
+    }
+
+    for keys, response in clarifications.items():
+        if any(k in words for k in keys):
+            return response
+
+    return None
+
+
 # --- PRE-COMPILED REGEX UNTUK OPTIMASI SANITASI ---
 _INTERNAL_REF = re.compile(
     r"\bfaq\b|\.txt\b|\.md\b|\bsumber\s*\d+|konteks dokumen|knowledge base|basis pengetahuan"
@@ -1096,9 +1139,37 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     if small_talk is not None:
         return _AskPlan(sources=[], static_answer=SMALL_TALK_RESPONSES[small_talk])
 
+    # Slot-filling: jika hanya isi satu slot (penghasilan/sektor/program), jawab singkat tanpa LLM
+    conversation_context = build_conversation_context(question, history)
+    has_inherited = conversation_context.inherited_slots
+    new_slot_count = sum([
+        1 if conversation_context.base_income is not None else 0,
+        1 if conversation_context.sector is not None else 0,
+        1 if conversation_context.programs else 0,
+    ])
+
+    # Jika hanya satu slot baru (tidak ada yang diwarisi), tampilkan konfirmasi + tanya slot berikutnya
+    if new_slot_count == 1 and not has_inherited:
+        slot_label = "dasar penghasilan" if conversation_context.base_income is not None else (
+            "sektor" if conversation_context.sector else "program"
+        )
+        slot_value = format_rupiah(conversation_context.base_income) if conversation_context.base_income is not None else (
+            conversation_context.sector.replace("_", " ") if conversation_context.sector else ", ".join(conversation_context.programs)
+        )
+        return _AskPlan(
+            sources=[],
+            static_answer=f"Siap, {slot_label} **{slot_value}** tercatat. Mau dihitung untuk 2 program (JKK+JKM) atau 3 program (JKK+JKM+JHT)?",
+        )
+
+    # Pertanyaan pendek <=3 kata tanpa konteks domain → klarifikasi
+    words = question.lower().split()
+    if len(words) <= 3:
+        clarification = _short_question_clarification(question)
+        if clarification:
+            return _AskPlan(sources=[], static_answer=clarification)
+
     intent_name = detect_intent(question)
     intent_instruction = get_intent_instruction(intent_name)
-    conversation_context = build_conversation_context(question, history)
 
     relevant_docs, retrieval_query, retrieval_details = retrieve_documents(
         question,
