@@ -316,46 +316,85 @@ def _off_domain_response():
     )
 
 
-def _short_question_clarification(text: str) -> Optional[str]:
+def _short_question_clarification(text: str, history=None) -> Optional[str]:
     """
-    Tanggapan klarsifikasi untuk pertanyaan pendek (<=3 kata) tanpa konteks domain.
+    Tanggapan klarifikasi untuk pertanyaan pendek ambigu tanpa konteks domain.
+    
+    Hanya berlaku jika 4 pesan terakhir tidak memuat konteks domain.
+    Normalisasi pesan (huruf kecil, buang tanda baca) lalu cocokkan dengan
+    himpunan kecil bentuk ambigu eksak.
     """
     if not text:
         return None
-    words = text.lower().split()
-    if len(words) > 3:
-        return None
-
-    clarifications = {
-        ("berapa", "iuran"): (
-            "Tarif iuran BPU: **JKK 1%**, **JKM Rp6.800**, **JHT 2%** dari dasar penghasilan.\\n\\n"
-            "Sebutkan **dasar penghasilan per bulan** untuk saya hitung."
-        ),
-        ("syarat",): (
-            "Berikut syarat-syarat umum BPU:\\n"
-            "- Warga negara Indonesia\\n"
-            "- Usia 17-65 tahun\\n"
-            "- Masa tunggu 1 bulan setelah berhenti kerja (jika PU)\\n"
-            "- Penghasilan minimal Rp1.000.000/bulan\\n\\n"
-            "Mau tahu syarat **pendaftaran BPU**, **klaim JHT**, atau **magang**?"
-        ),
-        ("cara",): (
-            "Berikut cara-cara umum:\\n"
-            "- Daftar: JMO/website/kantor cabang/Agen Perisai\\n"
-            "- Bayar: BNI, BCA mobile, Alfamart, Gojek, QRIS\\n"
-            "- Klaim: Portal BPJS Ketenagakerjaan\\n\\n"
-            "Mau tahu cara **pendaftaran BPU**, **pembayaran**, atau **klaim**?"
-        ),
-        ("berapa", "biaya"): (
-            "Tarif iuran BPU: **JKK 1%**, **JKM Rp6.800**, **JHT 2%** dari dasar penghasilan.\\n\\n"
-            "Sebutkan **dasar penghasilan per bulan** untuk saya hitung."
-        ),
+    
+    # Cek apakah ada konteks domain dalam 4 pesan terakhir
+    if history:
+        recent = history[-4:] if len(history) > 4 else history
+        for msg in recent:
+            content = msg.get("content", "").lower()
+            # Kata-kata domain yang menunjukkan konteks BPU
+            if any(kw in content for kw in [
+                "bpu", "jkk", "jkm", "jht", "iuran", "program", "peserta",
+                "pendaftaran", "daftar bpu", "penghasilan", "dasar penghasilan",
+                "magang", "akuisisi", "bpjs ketenagakerjaan",
+                "pedagang", "ojek", "kurir", "transportasi", "petani", "nelayan", "umkm"
+            ]):
+                return None  # Ada konteks domain, jangan klarifikasi
+    
+    # Normalisasi: huruf kecil, buang tanda baca
+    import string
+    normalized = text.lower().strip()
+    normalized = normalized.translate(str.maketrans('', '', string.punctuation))
+    normalized = normalized.strip()
+    
+    # Himpunan bentuk ambigu eksak
+    ambiguous_forms = {
+        "syarat", "syaratnya", "syaratnya apa", "syarat apa",
+        "cara", "caranya", "caranya gimana", "caranya bagaimana", "cara apa",
+        "berapa biayanya", "biayanya berapa", "berapa biaya",
+        "berapa iurannya", "iurannya berapa",
     }
-
-    for keys, response in clarifications.items():
-        if any(k in words for k in keys):
-            return response
-
+    
+    # Pengecualian: "berapa iurannya/iurannya berapa" dijawab dari konstanta
+    if normalized in ("berapa iurannya", "iurannya berapa"):
+        from calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
+        jkk_pct = int(JKK_RATE * 100)
+        jht_pct = int(JHT_RATE * 100)
+        return (
+            f"Tarif iuran BPU:\n"
+            f"- **JKK**: {jkk_pct}% dari dasar penghasilan\n"
+            f"- **JKM**: {format_rupiah(JKM_FLAT)}/bulan (nominal tetap)\n"
+            f"- **JHT**: {jht_pct}% dari dasar penghasilan\n\n"
+            f"Sebutkan **dasar penghasilan per bulan** untuk saya simulasikan iurannya."
+        )
+    
+    # Klarifikasi tanpa fakta (hanya bertanya)
+    if normalized in ("syarat", "syaratnya", "syaratnya apa", "syarat apa"):
+        return (
+            "Mau tahu syarat untuk:\n"
+            "- **Pendaftaran BPU**\n"
+            "- **Klaim JHT**\n"
+            "- **Magang**\n\n"
+            "Sebutkan yang mana?"
+        )
+    
+    if normalized in ("cara", "caranya", "caranya gimana", "caranya bagaimana", "cara apa"):
+        return (
+            "Mau tahu cara untuk:\n"
+            "- **Pendaftaran BPU**\n"
+            "- **Pembayaran iuran**\n"
+            "- **Klaim manfaat**\n\n"
+            "Sebutkan yang mana?"
+        )
+    
+    if normalized in ("berapa biayanya", "biayanya berapa", "berapa biaya"):
+        return (
+            "Biaya untuk:\n"
+            "- **Iuran BPU** (per bulan)\n"
+            "- **Biaya lain**?\n\n"
+            "Tolong sebutkan lebih spesifik."
+        )
+    
     return None
 
 
@@ -1141,7 +1180,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     if pii_check.redacted or pii_check.flagged:
         pii_warning = (
             "⚠️ *Catatan SAPA: Mohon jangan mengetik atau menempelkan NIK, nomor KTP, KK, rekening, "
-            "atau data identitas pribadi ke dalam chat. Gunakan formulir atau kanal resmi.*\\n\\n"
+            "atau data identitas pribadi ke dalam chat. Gunakan formulir atau kanal resmi.*\n\n"
         )
 
     # Percakapan ringan tidak perlu melalui RAG. Ini mencegah input seperti "halo"
@@ -1151,8 +1190,36 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         ans = SMALL_TALK_RESPONSES[small_talk]
         return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
 
-    # Slot-filling: jika hanya isi satu slot (penghasilan/sektor/program) TANPA kata tanya, jawab singkat tanpa LLM
+    # Slot-filling: cek apakah ada slot baru tanpa kata tanya
     conversation_context = build_conversation_context(question, history)
+    
+    # Validasi slot penghasilan: nominal berdiri sendiri ("Harga motor 15 juta") tidak diterima
+    # kecuali ada penanda penghasilan (penghasilan, pendapatan, gaji, omzet) ATAU riwayat memuat konteks domain/kalkulasi
+    if conversation_context.base_income is not None:
+        # Cek apakah penanda penghasilan ada di pesan saat ini
+        income_markers = ("penghasilan", "pendapatan", "gaji", "omzet", "upah")
+        has_income_marker = any(m in question.lower() for m in income_markers)
+        
+        # Cek apakah riwayat memuat konteks domain atau kalkulasi
+        has_domain_history = False
+        if history:
+            for h in history:
+                hc = h.get("content", "").lower()
+                if any(kw in hc for kw in ["bpu", "jkk", "jkm", "jht", "iuran", "program", "pedagang", "ojek", "kurir", "penghasilan"]):
+                    has_domain_history = True
+                    break
+                    
+        # Jika tidak ada penanda penghasilan DAN tidak ada riwayat domain, batalkan base_income
+        if not has_income_marker and not has_domain_history:
+            # Buat ulang context tanpa base_income
+            from conversation_context import ConversationContext
+            conversation_context = ConversationContext(
+                base_income=None,
+                programs=conversation_context.programs,
+                sector=conversation_context.sector,
+                inherited_slots=conversation_context.inherited_slots
+            )
+
     has_inherited = conversation_context.inherited_slots
     new_slot_count = sum([
         1 if conversation_context.base_income is not None else 0,
@@ -1160,28 +1227,46 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         1 if conversation_context.programs else 0,
     ])
     
-    question_words = ("apakah", "berapa", "ada", "bagaimana", "gimana", "kapan", "siapa", "mengapa", "kenapa", "?")
-    is_question = any(w in question.lower() for w in question_words)
+    # Ganti pengecekan is_question berbasis substring dengan regex batas kata atau tanda tanya
+    is_question = bool(re.search(r'\b(apa|apakah|berapa|bagaimana|gimana|kapan|siapa|kenapa|mengapa)\b', question.lower()) or '?' in question)
 
-    # Jika hanya satu slot baru (tidak ada yang diwarisi) DAN bukan kalimat tanya
-    if new_slot_count == 1 and not has_inherited and not is_question:
-        slot_label = "dasar penghasilan" if conversation_context.base_income is not None else (
-            "sektor" if conversation_context.sector else "program"
-        )
-        slot_value = format_rupiah(conversation_context.base_income) if conversation_context.base_income is not None else (
-            conversation_context.sector.replace("_", " ") if conversation_context.sector else ", ".join(conversation_context.programs)
-        )
-        return _AskPlan(
-            sources=[],
-            static_answer=f"Siap, {slot_label} **{slot_value}** tercatat. Mau dihitung untuk 2 program (JKK+JKM) atau 3 program (JKK+JKM+JHT)?",
-        )
+    # Jika ada slot baru DAN bukan kalimat tanya
+    if new_slot_count > 0 and not is_question:
+        # Cek apakah ini sapaan + sektor ("Halo, saya ojek online")
+        has_greeting = any(g in question.lower() for g in ("halo", "hai", "selamat", "pagi", "siang", "sore", "malam"))
+        
+        if has_greeting and conversation_context.sector is not None and conversation_context.base_income is None and not conversation_context.programs:
+            sector_label = conversation_context.sector.replace("_", " ")
+            ans = f"Halo! Sektor **{sector_label}** tercatat. Berapa dasar penghasilan per bulan?"
+            if pii_warning:
+                ans = pii_warning + ans
+            return _AskPlan(sources=[], static_answer=ans)
+            
+        # Jika hanya satu slot baru atau beberapa slot tapi ada yang belum terisi
+        if new_slot_count == 1 and not has_inherited:
+            slot_label = "dasar penghasilan" if conversation_context.base_income is not None else (
+                "sektor" if conversation_context.sector else "program"
+            )
+            slot_value = format_rupiah(conversation_context.base_income) if conversation_context.base_income is not None else (
+                conversation_context.sector.replace("_", " ") if conversation_context.sector else ", ".join(conversation_context.programs)
+            )
+            
+            # Tanya slot yang BELUM terisi
+            if conversation_context.base_income is not None:
+                ans = f"Siap, dasar penghasilan **{slot_value}** tercatat. Mau dihitung untuk 2 program (JKK+JKM) atau 3 program (JKK+JKM+JHT)?"
+            elif conversation_context.sector is not None:
+                ans = f"Siap, sektor **{slot_value}** tercatat. Berapa dasar penghasilan per bulan?"
+            else:
+                ans = f"Siap, program **{slot_value}** tercatat. Berapa dasar penghasilan per bulan?"
+                
+            if pii_warning:
+                ans = pii_warning + ans
+            return _AskPlan(sources=[], static_answer=ans)
 
-    # Pertanyaan pendek <=3 kata tanpa konteks domain → klarifikasi
-    words = question.lower().split()
-    if len(words) <= 3:
-        clarification = _short_question_clarification(question)
-        if clarification:
-            return _AskPlan(sources=[], static_answer=clarification)
+    # Pertanyaan pendek ambigu tanpa konteks domain → klarifikasi
+    clarification = _short_question_clarification(question, history)
+    if clarification:
+        return _AskPlan(sources=[], static_answer=clarification)
 
     intent_name = detect_intent(question)
     intent_instruction = get_intent_instruction(intent_name)
@@ -1330,13 +1415,19 @@ class AnswerStream:
         self._messages = messages
         self._pii_warning = pii_warning
         self.emitted = ""
-        self.text = static_answer if static_answer is not None else ""
-        if pii_warning and self._static_answer is not None and not self.text.startswith(pii_warning):
-            self.text = pii_warning + self.text
-            self.emitted = self.text
+        self.text = ""
+        
+        # Untuk jawaban statis, tambahkan peringatan PII di depan
+        if static_answer is not None:
+            self.text = (pii_warning + static_answer) if pii_warning else static_answer
+            # emitted akan diset saat iterasi dimulai
 
     def _delta(self, candidate_raw: str) -> str:
-        """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten)."""
+        """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten).
+        
+        Untuk LLM stream: emitted hanya berisi body LLM (tanpa peringatan), sehingga
+        delta dapat dihitung dengan benar. Peringatan sudah dikirim terpisah di awal.
+        """
         cleaned = sanitize_assistant_output(candidate_raw)
         if cleaned.startswith(self.emitted):
             delta = cleaned[len(self.emitted):]
@@ -1347,7 +1438,7 @@ class AnswerStream:
         return ""
 
     def __iter__(self):
-        # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik)
+        # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik, slot-filling, klarifikasi)
         if self._static_answer is not None:
             self.emitted = self.text
             yield self.text
@@ -1355,8 +1446,8 @@ class AnswerStream:
 
         # Kirim peringatan PII sebagai potongan pertama jika ada
         if self._pii_warning:
-            self.emitted = self._pii_warning
             yield self._pii_warning
+            # emitted tetap kosong (hanya track body LLM), text akan digabung di akhir
 
         raw = ""
         committed = 0   # panjang raw yang sudah berupa baris-baris lengkap
@@ -1379,16 +1470,26 @@ class AnswerStream:
             logger.exception("Streaming LLM gagal")
             notice = _llm_error_message(exc)
             partial = sanitize_assistant_output(raw)
-            self.text = f"{partial}\n\n{notice}" if partial else notice
-            if self.text.startswith(self.emitted):
-                tail = self.text[len(self.emitted):]
-                self.emitted = self.text
+            body = f"{partial}\n\n{notice}" if partial else notice
+            
+            # Gabungkan peringatan + body untuk .text final
+            self.text = (self._pii_warning + body) if self._pii_warning else body
+            
+            # Kirim tail yang belum terkirim
+            if body.startswith(self.emitted):
+                tail = body[len(self.emitted):]
+                self.emitted = body  # emitted = body saja (tanpa peringatan)
                 if tail:
                     yield tail
             return
 
         # Akhir stream: sanitasi penuh = versi final yang disimpan ke riwayat
-        self.text = sanitize_assistant_output(raw)
+        body = sanitize_assistant_output(raw)
+        
+        # Gabungkan peringatan + body untuk .text final
+        self.text = (self._pii_warning + body) if self._pii_warning else body
+        
+        # Kirim tail yang belum terkirim
         tail = self._delta(raw)
         if tail:
             yield tail
