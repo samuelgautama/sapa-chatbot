@@ -7,7 +7,7 @@ from unittest.mock import patch
 def sanitize_phone(text):
     return re.sub(r'\+62\s*8\d{2}[-.\s]?\d{3,4}[-.\s]?\d{3,5}', '+62 8xx-xxxx-xxxx', text)
 
-# 15 skenario
+# 15 skenario + skenario baru untuk Bug 1-4
 SCENARIOS = [
     ("S01", "Ojol + Promo Transportasi", [], ["Halo, saya ojek online", "Berapa iuran 3 program?", "Penghasilan Rp5 juta"]),
     ("S02", "Pedagang + Promo", [], ["Saya pedagang toko", "Iuran JKK & JKM penghasilan 2,5 juta?", "Ada diskon?"]),
@@ -23,7 +23,18 @@ SCENARIOS = [
     ("S12", "Off-Domain: BPJS Kesehatan", [], ["Beda BPJS Kesehatan dan Ketenagakerjaan?"]),
     ("S13", "PII: NIK", [], ["NIK 1234567890123456 iuran?"]),
     ("S14", "Promo Basi (2027-01-05)", [], ["Ada promo diskon non-transport?"], date(2027, 1, 5)),
-    ("S15", "Target Magang Basi", [], ["Target akuisisi mahasiswa magang?"])
+    ("S15", "Target Magang Basi", [], ["Target akuisisi mahasiswa magang?"]),
+    # Skenario baru untuk Bug 1-4
+    ("S16", "Bug1: Syarat dengan konteks", [{"role":"user","content":"Saya pedagang"}, {"role":"assistant","content":"Baik"}], ["Syarat?"]),
+    ("S17", "Bug1: Syarat daftar BPU spesifik", [], ["Syarat daftar BPU"]),
+    ("S18", "Bug1: Cara daftar BPU spesifik", [], ["Cara daftar BPU?"]),
+    ("S19", "Bug1: Berapa iuran JHT spesifik", [], ["Berapa iuran JHT?"]),
+    ("S20", "Bug1: Berapa iurannya tanpa konteks", [], ["Berapa iurannya?"]),
+    ("S21", "Bug1: Off-domain berapa harga", [], ["Berapa harga bitcoin?"]),
+    ("S22", "Bug1: Off-domain cara masak", [], ["Cara masak nasi"]),
+    ("S23", "Bug2: Harga motor off-domain", [], ["Harga motor 15 juta"]),
+    ("S24", "Bug2: Halo saya ojek online", [], ["Halo, saya ojek online"]),
+    ("S25", "Bug2: Presiden di tengah BPU", [{"role":"user","content":"Saya pedagang"}, {"role":"assistant","content":"Baik"}, {"role":"user","content":"Penghasilan 2 juta"}, {"role":"assistant","content":"Tercatat"}], ["Siapa presiden Indonesia?"]),
 ]
 
 def run_scenario(id, title, history, questions, mock_today=None):
@@ -53,12 +64,12 @@ def main():
         f.write(f"# Quality Review — {phase.upper()}\n**Timestamp**: {datetime.now(timezone.utc).isoformat()}\n\n")
         for i, s in enumerate(SCENARIOS, 1):
             try:
-                print(f"[{i}/15] {s[0]}: {s[1]}")
+                print(f"[{i}/{len(SCENARIOS)}] {s[0]}: {s[1]}")
                 mock = s[5] if len(s) > 5 else None
                 id, title, res = run_scenario(s[0], s[1], s[2], s[3], mock)
                 f.write(f"## {id}: {title}\n\n")
                 for q, a in res:
-                    f.write(f"**Q**: {q}\n\n**A**: {a[:300]}...\n\n---\n\n")
+                    f.write(f"**Q**: {q}\n\n**A**: {a}\n\n---\n\n")
             except Exception as e:
                 print(f"  ERROR: {e}")
                 f.write(f"## {s[0]}: {s[1]} — ERROR\n{e}\n\n")
