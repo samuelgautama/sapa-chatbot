@@ -525,6 +525,7 @@ Semua fakta, angka, syarat, manfaat, periode, dan prosedur harus berasal dari KO
 === ATURAN SUMBER FAKTA ===
 Jawablah hanya berdasarkan **KONTEKS DOKUMEN** yang diberikan pada pesan terbaru.
 DILARANG mengarang, menebak, atau menambahkan informasi yang tidak ada di konteks.
+DILARANG mengarang jalur, alur, atau prosedur pendaftaran/klaim yang tidak ada di konteks dokumen (misalnya jalur khusus mahasiswa magang via kampus). Jangan membuat kategori pendaftaran baru selain kanal resmi yang tercantum di dokumen (website resmi, JMO, kantor cabang, Agen Perisai).
 Jika informasi belum tersedia di konteks, katakan bahwa informasi tersebut belum tersedia.
 
 Riwayat percakapan hanya dipakai untuk memahami maksud pertanyaan lanjutan seperti "yang tadi",
@@ -793,6 +794,27 @@ def _detect_prompt_injection(question: str) -> bool:
     return any(pattern in question_lower for pattern in injection_patterns)
 
 
+def _clean_retrieval_query(query: str) -> str:
+    """C3-4: Buang token disensor dan label NIK/KTP dari query retrieval.
+    
+    Contoh:
+    - "NIK [NIK DISENSOR] iuran?" → "iuran?"
+    - "[NOMOR IDENTITAS DISENSOR] berapa iuran" → "berapa iuran"
+    - "KTP [KTP DISENSOR] daftar" → "daftar"
+    """
+    # Buang semua token [... DISENSOR]
+    cleaned = re.sub(r'\[(?:NIK|KTP|KK|EMAIL|NOMOR TELEPON|NOMOR IDENTITAS)(?:\s+)?DISENSOR\]', '', query)
+    
+    # Buang label NIK/KTP/KK yang muncul sendirian (tanpa argumen)
+    # Pola: NIK/KTP/KK sebagai kata berdiri, bukan sebagai bagian dari kata lain
+    cleaned = re.sub(r'\bNIK\b|\bKTP\b|\bKK\b', '', cleaned, flags=re.IGNORECASE)
+    
+    # Bersihkan whitespace berlebih
+    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+    
+    return cleaned
+
+
 def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
     """Menjalankan retrieval lengkap yang dipakai chatbot dan evaluation benchmark."""
     clean_question, clean_history = _prepare_question_and_history(question, history)
@@ -821,6 +843,10 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
         clean_history,
         max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
     )
+    
+    # C3-4: Bersihkan token disensor dari retrieval query
+    retrieval_query = _clean_retrieval_query(retrieval_query)
+    
     scored_documents, scoring_available, scoring_error = _retrieve_with_confidence(
         retriever,
         retrieval_query,
@@ -947,6 +973,9 @@ def _fallback_response(intent_name, domain_relevant=True):
 
     Untuk pertanyaan domain BPJS/magang, arahkan ke narahubung yang relevan.
     Untuk input yang jelas di luar domain, jangan langsung memberikan nomor kontak internal.
+    
+    C3-5: Fallback hanya menampilkan kontak yang relevan dengan intent.
+    Jika intent tidak dikenali, tampilkan satu kontak umum saja.
     """
     if not domain_relevant:
         return _off_domain_response()
@@ -955,7 +984,10 @@ def _fallback_response(intent_name, domain_relevant=True):
     from contacts_config import INTENT_TO_CONTACT, format_contacts
     
     category = INTENT_TO_CONTACT.get(intent_name, "operasional_magang")
-    contact = format_contacts(category)
+    
+    # C3-5: Untuk intent umum atau tidak dikenali, tampilkan kontak tunggal
+    use_single = (intent_name == "umum" or intent_name not in INTENT_TO_CONTACT)
+    contact = format_contacts(category, single=use_single)
 
     return (
         "Maaf, saya belum menemukan sumber yang cukup relevan untuk menjawab pertanyaan ini "
