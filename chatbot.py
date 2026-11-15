@@ -43,6 +43,7 @@ from conversation_context import ConversationContext, build_conversation_context
 from calculator import (
     build_calculation_response,
     calculate_bpu_contribution,
+    detect_ambiguous_nominal,
     detect_calculation_request,
     detect_discount_request,
     detect_sector,
@@ -998,14 +999,20 @@ def _inherited_note(context: ConversationContext, discount_requested: bool) -> s
 def _try_deterministic_calculation(
     question: str,
     context: Optional[ConversationContext] = None,
+    history=None,
 ):
     """Mengembalikan jawaban numerik tanpa LLM dengan mewarisi slot percakapan."""
     context = context or ConversationContext()
 
     if not detect_calculation_request(
-        question, has_income_context=context.base_income is not None
+        question, has_income_context=context.base_income is not None, history=history
     ):
         return None
+
+    # C3-2: Deteksi nominal ambigu "1 juta 500" (tanpa satuan akhir)
+    ambiguous_clarification = detect_ambiguous_nominal(question)
+    if ambiguous_clarification:
+        return ambiguous_clarification
 
     # Nominal di bawah minimum yang disebut pada pertanyaan INI harus ditolak secara eksplisit,
     # bukan diam-diam diganti penghasilan lama dari percakapan.
@@ -1284,6 +1291,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     deterministic_calculation = _try_deterministic_calculation(
         question,
         context=conversation_context,
+        history=history,
     )
     if deterministic_calculation is not None:
         ans = sanitize_assistant_output(deterministic_calculation)
