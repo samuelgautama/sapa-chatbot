@@ -37,6 +37,7 @@ from privacy_guard import sanitize_user_input
 from retrieval_utils import (
     build_canonical_query,
     build_retrieval_query,
+    needs_history_for_retrieval,
     rerank_scored_documents,
 )
 from conversation_context import ConversationContext, build_conversation_context
@@ -857,7 +858,20 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
                 has_domain_context = True
                 break
         if has_domain_context:
+            # Ganti query retrieval dengan canonical (bukan jahit lagi)
+            # Canonical query sudah mencakup pertanyaan sebelumnya dari history
             retrieval_query = canonical
+    elif canonical:
+        # Tidak ada konteks domain, query canonical bukan untuk ini (mis. "Syarat?" tanpa konteks)
+        retrieval_query = canonical
+    elif needs_history_for_retrieval(clean_question):
+        # Jika tidak ada query canonical, pertanyaan pendek dengan konteks domain
+        # harus tetap dijahit dengan history
+        retrieval_query = build_retrieval_query(
+            clean_question,
+            clean_history,
+            max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
+        )
     
     # C3-4: Bersihkan token disensor dari retrieval query
     retrieval_query = _clean_retrieval_query(retrieval_query)
