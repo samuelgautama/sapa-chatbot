@@ -35,6 +35,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 from privacy_guard import sanitize_user_input
 from retrieval_utils import (
+    build_canonical_query,
     build_retrieval_query,
     rerank_scored_documents,
 )
@@ -843,6 +844,19 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
         clean_history,
         max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
     )
+    
+    # C4-2: Untuk pertanyaan pendek eksak dengan konteks domain, gunakan query canonical
+    canonical = build_canonical_query(clean_question)
+    if canonical and clean_history:
+        # Cek apakah ada konteks domain dalam 4 pesan terakhir
+        has_domain_context = False
+        for msg in clean_history[-4:]:
+            content = msg.get("content", "").lower()
+            if any(kw in content for kw in ["bpu", "jkk", "jkm", "jht", "iuran", "program", "peserta", "pedagang", "ojek"]):
+                has_domain_context = True
+                break
+        if has_domain_context:
+            retrieval_query = canonical
     
     # C3-4: Bersihkan token disensor dari retrieval query
     retrieval_query = _clean_retrieval_query(retrieval_query)
