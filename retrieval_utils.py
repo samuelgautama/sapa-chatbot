@@ -53,7 +53,7 @@ CONTEXT_DEPENDENT_PATTERNS = (
     r"\bselanjutnya\b",
     r"\b3 program\b",
     r"\b2 program\b",
-    r"\b(?:syaratnya|syarat|apa syarat|caranya|cara|iurannya|iuran|biayanya|prosesnya|langkahnya)\b",
+    r"\b(?:syaratnya|caranya|iurannya|biayanya|prosesnya|langkahnya)\b",
 )
 # Pola longgar ("kalau", "lalu", "apa saja") dulu ada di daftar di atas sehingga pertanyaan mandiri seperti
 # "Kalau saya tidak punya KTP bagaimana?" atau "apa saja syarat daftar BPU?" ikut dijahit dengan
