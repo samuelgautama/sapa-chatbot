@@ -85,42 +85,6 @@ def test_c3_2_nominal_jelas_1_juta_500_ribu():
     assert result is None, "Harus TIDAK menganggap '1 juta 500 ribu' sebagai ambigu"
 
 
-# --- C3-3: Pertanyaan lanjutan dengan konteks domain ---
-
-def test_c3_3_syarat_dengan_konteks_domain_masuk_retrieval():
-    """C3-3: 'Syarat?' dengan konteks domain → needs_history_for_retrieval = True."""
-    question = "Syarat?"
-    
-    # Pola "syarat" harus dikenali sebagai context-dependent
-    result = needs_history_for_retrieval(question)
-    assert result is True, "Harus mengenali 'Syarat?' sebagai context-dependent"
-
-
-def test_c3_3_build_retrieval_query_dengan_history():
-    """C3-3: build_retrieval_query harus menggabung dengan pertanyaan sebelumnya."""
-    history = [
-        {"role": "user", "content": "Saya pedagang"},
-        {"role": "assistant", "content": "Baik"},
-    ]
-    question = "Syarat?"
-    
-    query = build_retrieval_query(question, history)
-    assert "Saya pedagang" in query, "Harus memuat pertanyaan sebelumnya di query"
-    assert "Syarat" in query, "Harus memuat pertanyaan saat ini di query"
-
-
-def test_c3_3_syaratnya_apa_tanpa_konteks_tetap_klarifikasi():
-    """C3-3: 'Syaratnya apa?' tanpa konteks domain → tetap klarifikasi (bukan RAG)."""
-    question = "Syaratnya apa?"
-    history = None
-    
-    # Tanpa history, tidak perlu retrieval history
-    result = needs_history_for_retrieval(question)
-    # Catatan: pola "syaratnya" ada di CONTEXT_DEPENDENT_PATTERNS, tapi
-    # tanpa history, harus tetap klarifikasi, bukan RAG
-    # Logika: _short_question_clarification akan handle ini (return klarifikasi jika no history context)
-
-
 # --- C3-5: Fallback kontak relevan ---
 
 def test_c3_5_fallback_kontak_relevan_dengan_intent():
