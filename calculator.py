@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from datetime import date
 from dataclasses import dataclass
-from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from decimal import Decimal, ROUND_HALF_UP
 from typing import Iterable, Optional
 
 JKK_RATE = Decimal("0.01")
@@ -178,44 +178,7 @@ def _first_money(text: str, patterns, *, require_marker: bool) -> Optional[Decim
     return None
 
 
-def detect_ambiguous_nominal(question: str) -> Optional[str]:
-    """Deteksi nominal ambigu seperti "1 juta 500" (tanpa satuan akhir).
-    
-    Mengembalikan pesan klarifikasi jika ditemukan pola "N juta M" tanpa "ribu/rb".
-    Pola yang jelas seperti "1 juta 500 ribu" atau "1 juta" tidak dianggap ambigu.
-    """
-    text = question.lower()
-    
-    # Pola ambigu: "1 juta 500" TANPA "ribu/rb" setelah angka kedua
-    # Negative lookahead untuk memastikan tidak ada "ribu" atau "rb" setelah angka M
-    ambiguous_pattern = r"(?:penghasilan|pendapatan|gaji)?[^0-9]*([0-9]+(?:[.,][0-9]+)?)\s*(?:juta|jt)\s+([0-9]+(?:[.,][0-9]+)?)\s*(?!ribu|rb)"
-    
-    match = re.search(ambiguous_pattern, text)
-    if match:
-        # Pastikan tidak ada "ribu" atau "rb" dalam 10 karakter setelah match
-        match_end = match.end()
-        suffix = text[match_end:match_end+10]
-        if "ribu" in suffix or "rb" in suffix:
-            return None  # Bukan ambigu, ada "ribu" setelahnya
-        
-        # Hitung kedua kemungkinan
-        try:
-            juta_val = Decimal(match.group(1).replace(",", "."))
-            m_val = Decimal(match.group(2).replace(",", "."))
-            
-            option1 = juta_val * Decimal("1000000") + m_val  # 1 juta 500 = 1.000.500
-            option2 = juta_val * Decimal("1000000") + m_val * Decimal("1000")  # 1 juta 500 ribu = 1.500.000
-            
-            return (
-                f"Maksudnya **{format_rupiah(option1)}** (1 juta 500) "
-                f"atau **{format_rupiah(option2)}** (1 juta 500 ribu)? "
-                f"Tolong tulis angka yang lengkap beserta satuannya."
-            )
-        except (ValueError, InvalidOperation):
-            pass
-    
-    return None
-
+def extract_base_income(question: str, *, enforce_minimum: bool = True) -> Optional[Decimal]:
     """Mencoba menemukan nominal dasar penghasilan dari pertanyaan user.
 
     enforce_minimum=True (default, perilaku lama): hanya nominal >= MIN_INCOME yang
@@ -257,6 +220,46 @@ def detect_ambiguous_nominal(question: str) -> Optional[str]:
                 continue
             if value >= MIN_INCOME:
                 return value
+
+    return None
+
+
+def detect_ambiguous_nominal(question: str) -> Optional[str]:
+    """Deteksi nominal ambigu seperti \"1 juta 500\" (tanpa satuan akhir).
+
+    Mengembalikan pesan klarifikasi jika ditemukan pola \"N juta M\" tanpa \"ribu/rb\".
+    Pola yang jelas seperti \"1 juta 500 ribu\" atau \"1 juta\" tidak dianggap ambigu.
+    """
+    text = question.lower()
+
+    # Pola ambigu: "1 juta 500" TANPA "ribu/rb" setelah angka kedua
+    # Negative lookahead untuk memastikan tidak ada "ribu" atau "rb" setelah angka M
+    ambiguous_pattern = r"(?:penghasilan|pendapatan|gaji)?[^0-9]*([0-9]+(?:[.,][0-9]+)?)\s*(?:juta|jt)\s+([0-9]+(?:[.,][0-9]+)?)\s*(?!ribu|rb)"
+
+    match = re.search(ambiguous_pattern, text)
+    if match:
+        # Pastikan tidak ada "ribu" atau "rb" dalam 10 karakter setelah match
+        match_end = match.end()
+        suffix = text[match_end:match_end+10]
+        if "ribu" in suffix or "rb" in suffix:
+            return None  # Bukan ambigu, ada "ribu" setelahnya
+
+        # Hitung kedua kemungkinan
+        try:
+            from decimal import InvalidOperation
+            juta_val = Decimal(match.group(1).replace(",", "."))
+            m_val = Decimal(match.group(2).replace(",", "."))
+
+            option1 = juta_val * Decimal("1000000") + m_val  # 1 juta 500 = 1.000.500
+            option2 = juta_val * Decimal("1000000") + m_val * Decimal("1000")  # 1 juta 500 ribu = 1.500.000
+
+            return (
+                f"Maksudnya **{format_rupiah(option1)}** (1 juta 500) "
+                f"atau **{format_rupiah(option2)}** (1 juta 500 ribu)? "
+                f"Tolong tulis angka yang lengkap beserta satuannya."
+            )
+        except (ValueError, InvalidOperation):
+            pass
 
     return None
 
@@ -351,7 +354,7 @@ def detect_calculation_request(question: str, *, has_income_context: bool = Fals
     Pertanyaan informasional tanpa nominal ("berapa iuran JKK untuk penerima upah?")
     TIDAK dianggap simulasi.
     
-    History: untuk deteksi konteks (mis. "Berapa iuran 3 program?" lalu "Penghasilan 5 juta").
+    history: untuk deteksi konteks (mis. "Berapa iuran 3 program?" lalu "Penghasilan 5 juta").
     """
     text = question.lower()
 
