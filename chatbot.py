@@ -848,6 +848,7 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
     )
     
     # C4-2: Untuk pertanyaan pendek eksak dengan konteks domain, gunakan query canonical
+    # yang sudah mencakup pertanyaan sebelumnya dari history
     canonical = build_canonical_query(clean_question)
     if canonical and clean_history:
         # Cek apakah ada konteks domain dalam 4 pesan terakhir
@@ -859,10 +860,9 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
                 break
         if has_domain_context:
             # Ganti query retrieval dengan canonical (bukan jahit lagi)
-            # Canonical query sudah mencakup pertanyaan sebelumnya dari history
             retrieval_query = canonical
     elif canonical:
-        # Tidak ada konteks domain, query canonical bukan untuk ini (mis. "Syarat?" tanpa konteks)
+        # Tidak ada konteks domain, query canonical bukan untuk ini
         retrieval_query = canonical
     elif needs_history_for_retrieval(clean_question):
         # Jika tidak ada query canonical, pertanyaan pendek dengan konteks domain
