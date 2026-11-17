@@ -37,18 +37,23 @@ INTENT_TO_CONTACT = {
 }
 
 
-def format_contacts(category: str) -> str:
+def format_contacts(category: str, single: bool = False) -> str:
     """Return kontak terformat: 'Nama (+62...)' atau 'Nama1 (+62...) atau Nama2 (+62...)'
+    
+    Jika single=True, kembalikan hanya kontak pertama (untuk fallback generic).
     
     Contoh output:
     - "Grace (+62 822-7143-8378)"
-    - "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)"
+    - "Samuel (+62 856-6820-6081) atau Nabilariza (+62 823-6370-3956)" (jika single=False)
+    - "Samuel (+62 856-6820-6081)" (jika single=True)
     """
     if category not in CONTACTS:
         # Default fallback ke operasional magang
         category = "operasional_magang"
     
     contacts = CONTACTS[category]
+    if single and contacts:
+        return f"{contacts[0]['name']} ({contacts[0]['phone']})"
     return " atau ".join(f"{c['name']} ({c['phone']})" for c in contacts)
 
 

@@ -35,7 +35,9 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 from privacy_guard import sanitize_user_input
 from retrieval_utils import (
+    build_canonical_query,
     build_retrieval_query,
+    needs_history_for_retrieval,
     rerank_scored_documents,
 )
 from conversation_context import ConversationContext, build_conversation_context
@@ -43,6 +45,7 @@ from conversation_context import ConversationContext, build_conversation_context
 from calculator import (
     build_calculation_response,
     calculate_bpu_contribution,
+    detect_ambiguous_nominal,
     detect_calculation_request,
     detect_discount_request,
     detect_sector,
@@ -126,6 +129,10 @@ DOMAIN_KEYWORDS = (
     "bpjs", "bpu", "jkk", "jkm", "jht", "jamsostek", "peserta",
     "iuran", "pendaftaran", "akuisisi", "magang", "jaminan", "kepesertaan",
     "kartu", "klaim", "ketenagakerjaan", "calon peserta", "follow up", "follow-up",
+    # Kata spesifik untuk in-domain (HANYA jika ada konteks domain atau kata pengindah)
+    "penghasilan", "pendapatan", "diskon", "promo", "potongan",
+    "pedagang", "petani", "nelayan", "ojol", "ojek", "kurir", "sopir",
+    "freelancer", "umkm",
 )
 
 logger = logging.getLogger(__name__)
@@ -312,6 +319,88 @@ def _off_domain_response():
     )
 
 
+def _short_question_clarification(text: str, history=None) -> Optional[str]:
+    """
+    Tanggapan klarifikasi untuk pertanyaan pendek ambigu tanpa konteks domain.
+    
+    Hanya berlaku jika 4 pesan terakhir tidak memuat konteks domain.
+    Normalisasi pesan (huruf kecil, buang tanda baca) lalu cocokkan dengan
+    himpunan kecil bentuk ambigu eksak.
+    """
+    if not text:
+        return None
+    
+    # Cek apakah ada konteks domain dalam 4 pesan terakhir
+    if history:
+        recent = history[-4:] if len(history) > 4 else history
+        for msg in recent:
+            content = msg.get("content", "").lower()
+            # Kata-kata domain yang menunjukkan konteks BPU
+            if any(kw in content for kw in [
+                "bpu", "jkk", "jkm", "jht", "iuran", "program", "peserta",
+                "pendaftaran", "daftar bpu", "penghasilan", "dasar penghasilan",
+                "magang", "akuisisi", "bpjs ketenagakerjaan",
+                "pedagang", "ojek", "kurir", "transportasi", "petani", "nelayan", "umkm"
+            ]):
+                return None  # Ada konteks domain, jangan klarifikasi
+    
+    # Normalisasi: huruf kecil, buang tanda baca
+    import string
+    normalized = text.lower().strip()
+    normalized = normalized.translate(str.maketrans('', '', string.punctuation))
+    normalized = normalized.strip()
+    
+    # Himpunan bentuk ambigu eksak
+    ambiguous_forms = {
+        "syarat", "syaratnya", "syaratnya apa", "syarat apa",
+        "cara", "caranya", "caranya gimana", "caranya bagaimana", "cara apa",
+        "berapa biayanya", "biayanya berapa", "berapa biaya",
+        "berapa iurannya", "iurannya berapa",
+    }
+    
+    # Pengecualian: "berapa iurannya/iurannya berapa" dijawab dari konstanta
+    if normalized in ("berapa iurannya", "iurannya berapa"):
+        from calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
+        jkk_pct = int(JKK_RATE * 100)
+        jht_pct = int(JHT_RATE * 100)
+        return (
+            f"Tarif iuran BPU:\n"
+            f"- **JKK**: {jkk_pct}% dari dasar penghasilan\n"
+            f"- **JKM**: {format_rupiah(JKM_FLAT)}/bulan (nominal tetap)\n"
+            f"- **JHT**: {jht_pct}% dari dasar penghasilan\n\n"
+            f"Sebutkan **dasar penghasilan per bulan** untuk saya simulasikan iurannya."
+        )
+    
+    # Klarifikasi tanpa fakta (hanya bertanya)
+    if normalized in ("syarat", "syaratnya", "syaratnya apa", "syarat apa"):
+        return (
+            "Mau tahu syarat untuk:\n"
+            "- **Pendaftaran BPU**\n"
+            "- **Klaim JHT**\n"
+            "- **Magang**\n\n"
+            "Sebutkan yang mana?"
+        )
+    
+    if normalized in ("cara", "caranya", "caranya gimana", "caranya bagaimana", "cara apa"):
+        return (
+            "Mau tahu cara untuk:\n"
+            "- **Pendaftaran BPU**\n"
+            "- **Pembayaran iuran**\n"
+            "- **Klaim manfaat**\n\n"
+            "Sebutkan yang mana?"
+        )
+    
+    if normalized in ("berapa biayanya", "biayanya berapa", "berapa biaya"):
+        return (
+            "Biaya untuk:\n"
+            "- **Iuran BPU** (per bulan)\n"
+            "- **Biaya lain**?\n\n"
+            "Tolong sebutkan lebih spesifik."
+        )
+    
+    return None
+
+
 # --- PRE-COMPILED REGEX UNTUK OPTIMASI SANITASI ---
 _INTERNAL_REF = re.compile(
     r"\bfaq\b|\.txt\b|\.md\b|\bsumber\s*\d+|konteks dokumen|knowledge base|basis pengetahuan"
@@ -438,7 +527,9 @@ Semua fakta, angka, syarat, manfaat, periode, dan prosedur harus berasal dari KO
 === ATURAN SUMBER FAKTA ===
 Jawablah hanya berdasarkan **KONTEKS DOKUMEN** yang diberikan pada pesan terbaru.
 DILARANG mengarang, menebak, atau menambahkan informasi yang tidak ada di konteks.
-Jika informasi belum tersedia di konteks, katakan bahwa informasi tersebut belum tersedia.
+DILARANG mengarang jalur, alur, dokumen, atau prosedur pendaftaran/klaim yang tidak ada di konteks dokumen (misalnya jalur khusus mahasiswa magang via kampus, NPWP, atau cetak kartu). Jangan membuat kategori pendaftaran baru selain kanal resmi yang tercantum di dokumen (website resmi, JMO, kantor cabang, Agen Perisai).
+DILARANG membuat tabel perbandingan atau memberikan penjelasan tentang program jaminan sosial di luar dokumen (seperti BPJS Kesehatan, JKP, atau JP). Jika pengguna menanyakan perbandingan dengan BPJS Kesehatan, katakan bahwa informasi tersebut belum tersedia dan arahkan ke kontak resmi.
+Jika informasi belum tersedia di konteks, katakan bahwa informasi tersebut belum tersedia dan arahkan ke SATU kontak yang relevan.
 
 Riwayat percakapan hanya dipakai untuk memahami maksud pertanyaan lanjutan seperti "yang tadi",
 "kalau 3 program", atau "setelah itu". Riwayat bukan sumber fakta. Jika ada perbedaan,
@@ -706,6 +797,27 @@ def _detect_prompt_injection(question: str) -> bool:
     return any(pattern in question_lower for pattern in injection_patterns)
 
 
+def _clean_retrieval_query(query: str) -> str:
+    """C3-4: Buang token disensor dan label NIK/KTP dari query retrieval.
+    
+    Contoh:
+    - "NIK [NIK DISENSOR] iuran?" → "iuran?"
+    - "[NOMOR IDENTITAS DISENSOR] berapa iuran" → "berapa iuran"
+    - "KTP [KTP DISENSOR] daftar" → "daftar"
+    """
+    # Buang semua token [... DISENSOR]
+    cleaned = re.sub(r'\[(?:NIK|KTP|KK|EMAIL|NOMOR TELEPON|NOMOR IDENTITAS)(?:\s+)?DISENSOR\]', '', query)
+    
+    # Buang label NIK/KTP/KK yang muncul sendirian (tanpa argumen)
+    # Pola: NIK/KTP/KK sebagai kata berdiri, bukan sebagai bagian dari kata lain
+    cleaned = re.sub(r'\bNIK\b|\bKTP\b|\bKK\b', '', cleaned, flags=re.IGNORECASE)
+    
+    # Bersihkan whitespace berlebih
+    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+    
+    return cleaned
+
+
 def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
     """Menjalankan retrieval lengkap yang dipakai chatbot dan evaluation benchmark."""
     clean_question, clean_history = _prepare_question_and_history(question, history)
@@ -734,6 +846,36 @@ def retrieve_documents(question, retriever, history=None, top_k=TOP_K):
         clean_history,
         max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
     )
+    
+    # C4-2: Untuk pertanyaan pendek eksak dengan konteks domain, gunakan query canonical
+    # yang sudah mencakup pertanyaan sebelumnya dari history
+    canonical = build_canonical_query(clean_question)
+    if canonical and clean_history:
+        # Cek apakah ada konteks domain dalam 4 pesan terakhir
+        has_domain_context = False
+        for msg in clean_history[-4:]:
+            content = msg.get("content", "").lower()
+            if any(kw in content for kw in ["bpu", "jkk", "jkm", "jht", "iuran", "program", "peserta", "pedagang", "ojek"]):
+                has_domain_context = True
+                break
+        if has_domain_context:
+            # Ganti query retrieval dengan canonical (bukan jahit lagi)
+            retrieval_query = canonical
+    elif canonical:
+        # Tidak ada konteks domain, query canonical bukan untuk ini
+        retrieval_query = canonical
+    elif needs_history_for_retrieval(clean_question):
+        # Jika tidak ada query canonical, pertanyaan pendek dengan konteks domain
+        # harus tetap dijahit dengan history
+        retrieval_query = build_retrieval_query(
+            clean_question,
+            clean_history,
+            max_history_messages=MAX_HISTORY_MESSAGES_FOR_RETRIEVAL,
+        )
+    
+    # C3-4: Bersihkan token disensor dari retrieval query
+    retrieval_query = _clean_retrieval_query(retrieval_query)
+    
     scored_documents, scoring_available, scoring_error = _retrieve_with_confidence(
         retriever,
         retrieval_query,
@@ -813,23 +955,26 @@ def _select_relevant_documents(scored_documents, scoring_available, query):
             return [], None, "rejected"
         return [document for document, _c, _l, _s in reranked], None, "unscored"
 
-    # Confidence gate tetap menggunakan semantic score mentah. Reranking lexical hanya
-    # menentukan urutan kandidat yang sudah lolos gate, bukan mengubah definisi confidence.
-    relevant = [
-        (document, score)
-        for document, score in scored_documents
-        if score is not None and float(score) >= MIN_RELEVANCE_SCORE
-    ]
+    # Confidence gate: cek apakah ada kandidat yang skornya >= MIN_RELEVANCE_SCORE
+    # Jika tidak ada, lanjut ke tahap penyelamatan.
+    has_relevant = any(
+        score is not None and float(score) >= MIN_RELEVANCE_SCORE
+        for _, score in scored_documents
+    )
 
-    if relevant:
+    if has_relevant:
+        # Ambil TOP_K dari SELURUH kandidat yang sudah di-rerank,
+        # bukan hanya dari yang di atas threshold MIN_RELEVANCE_SCORE
         reranked = rerank_scored_documents(
             query,
-            relevant,
+            scored_documents,
             top_k=TOP_K,
             max_chunks_per_section=MAX_CHUNKS_PER_SECTION,
         )
-        selected = [document for document, _c, _l, _s in reranked]
-        return selected, max(float(score) for _doc, score in relevant), "passed"
+        if reranked:
+            selected = [document for document, _c, _l, _s in reranked]
+            best_score = max(float(score) for _, score in scored_documents if score is not None)
+            return selected, best_score, "passed"
 
     # Tahap penyelamatan: ambang bisa terlalu ketat bila skala skor berubah antar-versi/metrik.
     # Hanya untuk query berdomain; query tanpa istilah domain langsung ditolak.
@@ -857,6 +1002,9 @@ def _fallback_response(intent_name, domain_relevant=True):
 
     Untuk pertanyaan domain BPJS/magang, arahkan ke narahubung yang relevan.
     Untuk input yang jelas di luar domain, jangan langsung memberikan nomor kontak internal.
+    
+    C3-5: Fallback hanya menampilkan kontak yang relevan dengan intent.
+    Jika intent tidak dikenali, tampilkan satu kontak umum saja.
     """
     if not domain_relevant:
         return _off_domain_response()
@@ -865,7 +1013,10 @@ def _fallback_response(intent_name, domain_relevant=True):
     from contacts_config import INTENT_TO_CONTACT, format_contacts
     
     category = INTENT_TO_CONTACT.get(intent_name, "operasional_magang")
-    contact = format_contacts(category)
+    
+    # C3-5: Untuk intent umum atau tidak dikenali, tampilkan kontak tunggal
+    use_single = (intent_name == "umum" or intent_name not in INTENT_TO_CONTACT)
+    contact = format_contacts(category, single=use_single)
 
     return (
         "Maaf, saya belum menemukan sumber yang cukup relevan untuk menjawab pertanyaan ini "
@@ -909,14 +1060,20 @@ def _inherited_note(context: ConversationContext, discount_requested: bool) -> s
 def _try_deterministic_calculation(
     question: str,
     context: Optional[ConversationContext] = None,
+    history=None,
 ):
     """Mengembalikan jawaban numerik tanpa LLM dengan mewarisi slot percakapan."""
     context = context or ConversationContext()
 
     if not detect_calculation_request(
-        question, has_income_context=context.base_income is not None
+        question, has_income_context=context.base_income is not None, history=history
     ):
         return None
+
+    # C3-2: Deteksi nominal ambigu "1 juta 500" (tanpa satuan akhir)
+    ambiguous_clarification = detect_ambiguous_nominal(question)
+    if ambiguous_clarification:
+        return ambiguous_clarification
 
     # Nominal di bawah minimum yang disebut pada pertanyaan INI harus ditolak secara eksplisit,
     # bukan diam-diam diganti penghasilan lama dari percakapan.
@@ -1072,6 +1229,7 @@ class _AskPlan:
     sources: list
     static_answer: Optional[str] = None
     messages: Optional[list] = None
+    pii_warning: str = ""
 
 
 def _prepare_ask(question, retriever, history=None) -> _AskPlan:
@@ -1081,17 +1239,105 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     dan penyusunan prompt. Urutan & isinya sama persis dengan ask() versi sebelumnya,
     supaya perilaku (dan hasil evaluation) tidak berubah.
     """
+    raw_question = question
     question, history = _prepare_question_and_history(question, history)
     
+    # Cek data pribadi (PII) pada pertanyaan mentah sebelum sanitasi penuh
+    pii_check = sanitize_user_input(raw_question)
+    pii_warning = ""
+    if pii_check.redacted or pii_check.flagged:
+        pii_warning = (
+            "⚠️ *Catatan SAPA: Mohon jangan mengetik atau menempelkan NIK, nomor KTP, KK, rekening, "
+            "atau data identitas pribadi ke dalam chat. Gunakan formulir atau kanal resmi.*\n\n"
+        )
+
     # Percakapan ringan tidak perlu melalui RAG. Ini mencegah input seperti "halo"
     # gagal melewati confidence gate dan mendapatkan fallback yang kaku.
     small_talk = detect_small_talk(question)
     if small_talk is not None:
-        return _AskPlan(sources=[], static_answer=SMALL_TALK_RESPONSES[small_talk])
+        ans = SMALL_TALK_RESPONSES[small_talk]
+        return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
+
+    # Slot-filling: cek apakah ada slot baru tanpa kata tanya
+    conversation_context = build_conversation_context(question, history)
+    
+    # Validasi slot penghasilan: nominal berdiri sendiri ("Harga motor 15 juta") tidak diterima
+    # kecuali ada penanda penghasilan (penghasilan, pendapatan, gaji, omzet) ATAU riwayat memuat konteks domain/kalkulasi
+    if conversation_context.base_income is not None:
+        # Cek apakah penanda penghasilan ada di pesan saat ini
+        income_markers = ("penghasilan", "pendapatan", "gaji", "omzet", "upah")
+        has_income_marker = any(m in question.lower() for m in income_markers)
+        
+        # Cek apakah riwayat memuat konteks domain atau kalkulasi
+        has_domain_history = False
+        if history:
+            for h in history:
+                hc = h.get("content", "").lower()
+                if any(kw in hc for kw in ["bpu", "jkk", "jkm", "jht", "iuran", "program", "pedagang", "ojek", "kurir", "penghasilan"]):
+                    has_domain_history = True
+                    break
+                    
+        # Jika tidak ada penanda penghasilan DAN tidak ada riwayat domain, batalkan base_income
+        if not has_income_marker and not has_domain_history:
+            # Buat ulang context tanpa base_income
+            from conversation_context import ConversationContext
+            conversation_context = ConversationContext(
+                base_income=None,
+                programs=conversation_context.programs,
+                sector=conversation_context.sector,
+                inherited_slots=conversation_context.inherited_slots
+            )
+
+    has_inherited = conversation_context.inherited_slots
+    new_slot_count = sum([
+        1 if conversation_context.base_income is not None else 0,
+        1 if conversation_context.sector is not None else 0,
+        1 if conversation_context.programs else 0,
+    ])
+    
+    # Ganti pengecekan is_question berbasis substring dengan regex batas kata atau tanda tanya
+    is_question = bool(re.search(r'\b(apa|apakah|berapa|bagaimana|gimana|kapan|siapa|kenapa|mengapa)\b', question.lower()) or '?' in question)
+
+    # Jika ada slot baru DAN bukan kalimat tanya
+    if new_slot_count > 0 and not is_question:
+        # Cek apakah ini sapaan + sektor ("Halo, saya ojek online")
+        has_greeting = any(g in question.lower() for g in ("halo", "hai", "selamat", "pagi", "siang", "sore", "malam"))
+        
+        if has_greeting and conversation_context.sector is not None and conversation_context.base_income is None and not conversation_context.programs:
+            sector_label = conversation_context.sector.replace("_", " ")
+            ans = f"Halo! Sektor **{sector_label}** tercatat. Berapa dasar penghasilan per bulan?"
+            if pii_warning:
+                ans = pii_warning + ans
+            return _AskPlan(sources=[], static_answer=ans)
+            
+        # Jika hanya satu slot baru atau beberapa slot tapi ada yang belum terisi
+        if new_slot_count == 1 and not has_inherited:
+            slot_label = "dasar penghasilan" if conversation_context.base_income is not None else (
+                "sektor" if conversation_context.sector else "program"
+            )
+            slot_value = format_rupiah(conversation_context.base_income) if conversation_context.base_income is not None else (
+                conversation_context.sector.replace("_", " ") if conversation_context.sector else ", ".join(conversation_context.programs)
+            )
+            
+            # Tanya slot yang BELUM terisi
+            if conversation_context.base_income is not None:
+                ans = f"Siap, dasar penghasilan **{slot_value}** tercatat. Mau dihitung untuk 2 program (JKK+JKM) atau 3 program (JKK+JKM+JHT)?"
+            elif conversation_context.sector is not None:
+                ans = f"Siap, sektor **{slot_value}** tercatat. Berapa dasar penghasilan per bulan?"
+            else:
+                ans = f"Siap, program **{slot_value}** tercatat. Berapa dasar penghasilan per bulan?"
+                
+            if pii_warning:
+                ans = pii_warning + ans
+            return _AskPlan(sources=[], static_answer=ans)
+
+    # Pertanyaan pendek ambigu tanpa konteks domain → klarifikasi
+    clarification = _short_question_clarification(question, history)
+    if clarification:
+        return _AskPlan(sources=[], static_answer=clarification)
 
     intent_name = detect_intent(question)
     intent_instruction = get_intent_instruction(intent_name)
-    conversation_context = build_conversation_context(question, history)
 
     relevant_docs, retrieval_query, retrieval_details = retrieve_documents(
         question,
@@ -1106,11 +1352,15 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     deterministic_calculation = _try_deterministic_calculation(
         question,
         context=conversation_context,
+        history=history,
     )
     if deterministic_calculation is not None:
+        ans = sanitize_assistant_output(deterministic_calculation)
+        if pii_warning:
+            ans = pii_warning + ans
         return _AskPlan(
             sources=relevant_docs,
-            static_answer=sanitize_assistant_output(deterministic_calculation),
+            static_answer=ans,
         )
 
     # Jika tidak ada dokumen yang lolos retrieval/confidence gate, jangan panggil LLM.
@@ -1119,11 +1369,14 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         # Pakai query retrieval (sudah memuat pertanyaan sebelumnya untuk follow-up) agar
         # lanjutan seperti "kalau 3 program?" tetap dikenali sebagai pertanyaan domain.
         is_domain = is_domain_relevant(retrieval_query)
+        ans = sanitize_assistant_output(
+            _fallback_response(intent_name, domain_relevant=is_domain)
+        )
+        if pii_warning:
+            ans = pii_warning + ans
         return _AskPlan(
             sources=[],
-            static_answer=sanitize_assistant_output(
-                _fallback_response(intent_name, domain_relevant=is_domain)
-            ),
+            static_answer=ans,
         )
 
     context = format_context(relevant_docs)
@@ -1159,7 +1412,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
             messages.append(AIMessage(content=message["content"]))
 
     messages.append(HumanMessage(content=human_content))
-    return _AskPlan(sources=relevant_docs, messages=messages)
+    return _AskPlan(sources=relevant_docs, messages=messages, pii_warning=pii_warning)
 
 
 def _llm_error_message(exc: Exception) -> str:
@@ -1222,26 +1475,28 @@ class AnswerStream:
     - iterasi  : menghasilkan potongan teks (delta) yang SUDAH disanitasi.
     - .emitted : gabungan semua delta yang sudah dikirim ke UI.
     - .text    : jawaban final (sanitasi penuh); valid setelah iterasi selesai.
-
-    Sanitasi tetap aman saat streaming: teks mentah dari LLM hanya "dilepas" ke UI
-    per BARIS LENGKAP, lalu disanitasi dengan sanitize_assistant_output() yang sama.
-    Semua aturan sanitasi bekerja di dalam satu baris, jadi referensi internal
-    (FAQ-xx, nama file .txt, [SUMBER n], catatan meta) tidak sempat tampil sebagian.
-    Di akhir stream, sanitasi penuh dijalankan sekali lagi sebagai versi otoritatif.
-
-    Objek ini sekali pakai (satu kali iterasi).
     """
 
-    def __init__(self, sources, static_answer=None, llm=None, messages=None):
+    def __init__(self, sources, static_answer=None, llm=None, messages=None, pii_warning=""):
         self.sources = sources
         self._static_answer = static_answer
         self._llm = llm
         self._messages = messages
+        self._pii_warning = pii_warning
         self.emitted = ""
-        self.text = static_answer if static_answer is not None else ""
+        self.text = ""
+        
+        # Untuk jawaban statis, tambahkan peringatan PII di depan
+        if static_answer is not None:
+            self.text = (pii_warning + static_answer) if pii_warning else static_answer
+            # emitted akan diset saat iterasi dimulai
 
     def _delta(self, candidate_raw: str) -> str:
-        """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten)."""
+        """Sanitasi kandidat lalu kembalikan hanya bagian barunya (kalau konsisten).
+        
+        Untuk LLM stream: emitted hanya berisi body LLM (tanpa peringatan), sehingga
+        delta dapat dihitung dengan benar. Peringatan sudah dikirim terpisah di awal.
+        """
         cleaned = sanitize_assistant_output(candidate_raw)
         if cleaned.startswith(self.emitted):
             delta = cleaned[len(self.emitted):]
@@ -1252,12 +1507,16 @@ class AnswerStream:
         return ""
 
     def __iter__(self):
-        # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik)
+        # Jawaban tanpa LLM (small talk, fallback, kalkulator deterministik, slot-filling, klarifikasi)
         if self._static_answer is not None:
-            self.emitted = self._static_answer
-            self.text = self._static_answer
-            yield self._static_answer
+            self.emitted = self.text
+            yield self.text
             return
+
+        # Kirim peringatan PII sebagai potongan pertama jika ada
+        if self._pii_warning:
+            yield self._pii_warning
+            # emitted tetap kosong (hanya track body LLM), text akan digabung di akhir
 
         raw = ""
         committed = 0   # panjang raw yang sudah berupa baris-baris lengkap
@@ -1280,16 +1539,26 @@ class AnswerStream:
             logger.exception("Streaming LLM gagal")
             notice = _llm_error_message(exc)
             partial = sanitize_assistant_output(raw)
-            self.text = f"{partial}\n\n{notice}" if partial else notice
-            if self.text.startswith(self.emitted):
-                tail = self.text[len(self.emitted):]
-                self.emitted = self.text
+            body = f"{partial}\n\n{notice}" if partial else notice
+            
+            # Gabungkan peringatan + body untuk .text final
+            self.text = (self._pii_warning + body) if self._pii_warning else body
+            
+            # Kirim tail yang belum terkirim
+            if body.startswith(self.emitted):
+                tail = body[len(self.emitted):]
+                self.emitted = body  # emitted = body saja (tanpa peringatan)
                 if tail:
                     yield tail
             return
 
         # Akhir stream: sanitasi penuh = versi final yang disimpan ke riwayat
-        self.text = sanitize_assistant_output(raw)
+        body = sanitize_assistant_output(raw)
+        
+        # Gabungkan peringatan + body untuk .text final
+        self.text = (self._pii_warning + body) if self._pii_warning else body
+        
+        # Kirim tail yang belum terkirim
         tail = self._delta(raw)
         if tail:
             yield tail
@@ -1310,4 +1579,5 @@ def ask_stream(question, retriever, llm, history=None) -> AnswerStream:
         static_answer=plan.static_answer,
         llm=llm,
         messages=plan.messages,
+        pii_warning=plan.pii_warning,
     )

@@ -93,6 +93,57 @@ def needs_history_for_retrieval(question: str) -> bool:
     return bool(FOLLOW_UP_OPENERS.match(normalized)) and len(normalized.split()) <= FOLLOW_UP_MAX_WORDS
 
 
+def build_canonical_query(question: str) -> str:
+    """C4-2: Bangun query retrieval KANONIK untuk pertanyaan pendek eksak.
+    
+    Untuk pesan pendek eksak (syarat, syaratnya, syaratnya apa, caranya, cara daftar,
+    biayanya, iurannya) dengan konteks domain, bangun query spesifik:
+    - syarat* → "syarat pendaftaran peserta BPU"
+    - cara*/caranya → "cara kanal pendaftaran BPU"
+    - iuran*/biaya* → "iuran BPU tarif JKK JKM JHT"
+    
+    Tanpa konteks domain, kembalikan None (akan diproses klarifikasi biasa).
+    """
+    text = (question or "").lower().strip()
+    
+    # Hapus tanda baca untuk matching yang lebih robust
+    import string
+    normalized = text.translate(str.maketrans('', '', string.punctuation)).strip()
+    
+    # Pola untuk pertanyaan pendek eksak
+    patterns = {
+        # Syarat
+        "syarat": "syarat pendaftaran peserta BPU",
+        "syaratnya": "syarat pendaftaran peserta BPU",
+        "syaratnya apa": "syarat pendaftaran peserta BPU",
+        "syarat apa": "syarat pendaftaran peserta BPU",
+        "apa syarat": "syarat pendaftaran peserta BPU",
+        # Cara
+        "cara": "cara kanal pendaftaran BPU",
+        "caranya": "cara kanal pendaftaran BPU",
+        "caranya gimana": "cara kanal pendaftaran BPU",
+        "caranya bagaimana": "cara kanal pendaftaran BPU",
+        "cara apa": "cara kanal pendaftaran BPU",
+        "cara daftar": "cara kanal pendaftaran BPU",
+        "cara mendaftar": "cara kanal pendaftaran BPU",
+        "bagaimana cara": "cara kanal pendaftaran BPU",
+        # Iuran/Biaya
+        "berapa iuran": "iuran BPU tarif JKK JKM JHT",
+        "iurannya": "iuran BPU tarif JKK JKM JHT",
+        "iurannya berapa": "iuran BPU tarif JKK JKM JHT",
+        "berapa iurannya": "iuran BPU tarif JKK JKM JHT",
+        "biayanya": "biaya pendaftaran dan iuran BPU",
+        "biayanya berapa": "biaya pendaftaran dan iuran BPU",
+        "berapa biayanya": "biaya pendaftaran dan iuran BPU",
+        "berapa biaya": "biaya pendaftaran dan iuran BPU",
+    }
+    
+    if normalized in patterns:
+        return patterns[normalized]
+    
+    return None
+
+
 def build_retrieval_query(
     question: str,
     history: Iterable[dict[str, Any]] | None,

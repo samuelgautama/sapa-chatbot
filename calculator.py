@@ -224,6 +224,46 @@ def extract_base_income(question: str, *, enforce_minimum: bool = True) -> Optio
     return None
 
 
+def detect_ambiguous_nominal(question: str) -> Optional[str]:
+    """Deteksi nominal ambigu seperti \"1 juta 500\" (tanpa satuan akhir).
+
+    Mengembalikan pesan klarifikasi jika ditemukan pola \"N juta M\" tanpa \"ribu/rb\".
+    Pola yang jelas seperti \"1 juta 500 ribu\" atau \"1 juta\" tidak dianggap ambigu.
+    """
+    text = question.lower()
+
+    # Pola ambigu: "1 juta 500" TANPA "ribu/rb" setelah angka kedua
+    # Negative lookahead untuk memastikan tidak ada "ribu" atau "rb" setelah angka M
+    ambiguous_pattern = r"(?:penghasilan|pendapatan|gaji)?[^0-9]*([0-9]+(?:[.,][0-9]+)?)\s*(?:juta|jt)\s+([0-9]+(?:[.,][0-9]+)?)\s*(?!ribu|rb)"
+
+    match = re.search(ambiguous_pattern, text)
+    if match:
+        # Pastikan tidak ada "ribu" atau "rb" dalam 10 karakter setelah match
+        match_end = match.end()
+        suffix = text[match_end:match_end+10]
+        if "ribu" in suffix or "rb" in suffix:
+            return None  # Bukan ambigu, ada "ribu" setelahnya
+
+        # Hitung kedua kemungkinan
+        try:
+            from decimal import InvalidOperation
+            juta_val = Decimal(match.group(1).replace(",", "."))
+            m_val = Decimal(match.group(2).replace(",", "."))
+
+            option1 = juta_val * Decimal("1000000") + m_val  # 1 juta 500 = 1.000.500
+            option2 = juta_val * Decimal("1000000") + m_val * Decimal("1000")  # 1 juta 500 ribu = 1.500.000
+
+            return (
+                f"Maksudnya **{format_rupiah(option1)}** (1 juta 500) "
+                f"atau **{format_rupiah(option2)}** (1 juta 500 ribu)? "
+                f"Tolong tulis angka yang lengkap beserta satuannya."
+            )
+        except (ValueError, InvalidOperation):
+            pass
+
+    return None
+
+
 def extract_income_attempt(question: str) -> Optional[Decimal]:
     """Nominal uang apa pun yang disebut user (berpenanda Rp/juta/ribu/titik ribuan), tanpa cek minimum.
 
@@ -307,13 +347,14 @@ _BPU_MENTION = re.compile(r"\bbpu\b|bukan\s+penerima\s+upah")
 _PROGRAM_COUNT = re.compile(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b")
 
 
-def detect_calculation_request(question: str, *, has_income_context: bool = False) -> bool:
+def detect_calculation_request(question: str, *, has_income_context: bool = False, history=None) -> bool:
     """Cek apakah pertanyaan cukup jelas merupakan permintaan hitung iuran BPU.
 
-    Pertanyaan informasional ("berapa iuran JHT?", "berapa iuran JKK untuk penerima upah?")
-    TIDAK dianggap simulasi kecuali ada nominal penghasilan, penyebutan jumlah program, atau
-    kata kerja hitung/simulasi yang eksplisit. `has_income_context=True` berarti percakapan
-    sudah punya dasar penghasilan, sehingga follow-up seperti "kalau 3 program?" cukup.
+    Pola pemicu: nominal + (iuran | JKK | JKM | JHT | hitung | simulasi | "N program").
+    Pertanyaan informasional tanpa nominal ("berapa iuran JKK untuk penerima upah?")
+    TIDAK dianggap simulasi.
+    
+    history: untuk deteksi konteks (mis. "Berapa iuran 3 program?" lalu "Penghasilan 5 juta").
     """
     text = question.lower()
 
@@ -327,17 +368,51 @@ def detect_calculation_request(question: str, *, has_income_context: bool = Fals
     has_money = bool(_MONEY_MARKER.search(text))
     has_amount = has_money or bool(re.search(r"\b(?:penghasilan|pendapatan)\b", text))
     has_program = bool(re.search(r"\b(?:jkk|jkm|jht)\b", text))
+    has_calc_word = bool(re.search(r"\b(?:iuran|hitung|simulasi)\b", text))
     asks_value = "berapa" in text or "total" in text
+    has_discount_question = "diskon" in text or "promo" in text or "ada diskon" in text
+
+    # Cek konteks history: apakah ada permintaan kalkulasi sebelumnya
+    has_calc_in_history = False
+    if history:
+        for msg in history[-4:]:  # 4 pesan terakhir
+            if msg.get("role") == "user":
+                content = msg.get("content", "").lower()
+                if any(w in content for w in ["berapa iuran", "hitung", "simulasi", "program", "jkk", "jkm", "jht"]):
+                    has_calc_in_history = True
+                    break
+
+    # C3-1d: "Iuran pedagang 1 juta?" - sektor + nominal + kata "iuran"
+    sector_words = ["pedagang", "ojek", "ojol", "kurir", "petani", "nelayan", "umkm", "transportasi"]
+    has_sector = any(s in text for s in sector_words)
+    if has_sector and has_money and has_calc_word:
+        return True
+
+    # C3-1c: "Ada diskon?" dengan konteks penghasilan + simulasi sebelumnya
+    if has_discount_question and (has_income_context or has_calc_in_history):
+        return True
+
+    # C3-1b: "Hitung iuran" dengan konteks penghasilan
+    if explicit and has_income_context:
+        return True
+
+    # C3-1a: "Penghasilan Rp5 juta" setelah "Berapa iuran 3 program?"
+    if has_money and has_calc_in_history:
+        return True
+
+    # Pola baru: nominal + (iuran | JKK | JKM | JHT | hitung | simulasi | N program)
+    # Tanpa harus ada kata "berapa" (mis. "Iuran JKK & JKM penghasilan 2,5 juta?", "Pedagang 500 ribu iuran?")
+    if has_money and (has_program or has_calc_word or has_count):
+        return True
 
     if explicit:
         return has_amount or has_count or has_program or "per bulan" in text
-    # "Berapa total 3 program untuk penghasilan Rp1.000.000?", "Rp2 juta, berapa JKK dan JKM?"
     if asks_value and has_money and (has_program or has_count or "iuran" in text or "total" in text):
         return True
     if question_form:
         return has_amount or has_count
     # Follow-up pendek di percakapan yang sudah punya penghasilan: "kalau 3 program?"
-    return has_income_context and has_count
+    return has_income_context and (has_count or has_program or has_calc_word)
 
 
 def build_calculation_response(
