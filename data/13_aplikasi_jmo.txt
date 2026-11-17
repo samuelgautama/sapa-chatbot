@@ -1,0 +1,63 @@
+# Panduan Aplikasi JMO (Jamsostek Mobile)
+
+> Catatan: JMO adalah aplikasi resmi BPJS Ketenagakerjaan ("Lebih Cepat, Lebih Mudah, Lebih Lengkap"). Dapat diunduh di Google Play Store (Android) dan Apple App Store (iOS). Untuk langkah klaim JHT lengkap lihat panduan klaim JHT.
+
+## Cara Mendaftar Akun JMO (12 Langkah)
+Untuk peserta yang sudah terdaftar di BPJS Ketenagakerjaan:
+1. Buka aplikasi JMO, klik Buat Akun Baru di halaman Login.
+2. Pilih Ya, Saya Sudah Daftar (tersedia juga opsi Belum Daftar Sebagai Peserta).
+3. Pilih Jenis Kepesertaan: Penerima Upah (PU), Bukan Penerima Upah (BPU), atau Pekerja Migran Indonesia (PMI).
+4. Pilih Kewarganegaraan, klik Selanjutnya.
+5. Isi data diri: NIK, nomor peserta (KPJ), nama lengkap, tanggal lahir.
+6. Masukkan email aktif untuk login.
+7. Masukkan kode verifikasi (OTP) yang dikirim ke email.
+8. Masukkan nomor handphone aktif.
+9. Masukkan kode verifikasi (OTP) yang dikirim lewat SMS.
+10. Buat dan konfirmasi kata sandi.
+11. Baca dan setujui Syarat dan Ketentuan.
+12. Notifikasi pendaftaran berhasil; lanjut ke Pengkinian Data.
+
+## Pengkinian Data Peserta di JMO (9 Langkah)
+Pengkinian data wajib untuk memperbarui informasi kepesertaan dan menjadi syarat layanan seperti klaim JHT via JMO.
+1. Klik pop-up Update datamu sekarang atau menu Pengkinian Data di Layanan Lainnya.
+2. Notifikasi awal: klik Ok, Lanjutkan.
+3. Periksa data kepesertaan (NIK, nomor kartu peserta, nama, tempat dan tanggal lahir sesuai KTP), pilih Sudah.
+4. Verifikasi biometrik dengan swafoto.
+5. Lengkapi data kontak: nomor handphone, email, NPWP (opsional), nomor paspor (opsional).
+6. Lengkapi data kependudukan: jenis kelamin, alamat sesuai KTP/domisili, nama gadis ibu kandung, status perkawinan (sesuai KK dan KTP).
+7. Lengkapi data tambahan (pendidikan terakhir, agama, golongan darah) dan kontak darurat (nama dan nomor handphone).
+8. Periksa ulang, centang pernyataan, klik Konfirmasi.
+9. Layar Berhasil menandakan pengkinian data selesai.
+
+## Cek Saldo JHT di JMO (5 Langkah)
+1. Buka JMO, pilih menu Jaminan Hari Tua di Program Layanan.
+2. Pilih Cek Saldo.
+3. Bila memiliki lebih dari 1 KPJ, klik Pilih Nomor Kartu Peserta (KPJ).
+4. Pilih KPJ yang ingin dilihat.
+5. Detail saldo tampil: nominal saldo JHT, status kepesertaan (aktif/non-aktif), segmen peserta, perusahaan tempat bekerja, upah terakhir dilaporkan, jumlah tenaga kerja, iuran terakhir dan pembayaran iuran terakhir.
+
+## Konfirmasi Beasiswa Pendidikan di JMO
+Bantuan pendidikan untuk maksimal 2 anak. Syarat awal: lakukan enrollment di Kantor Cabang BPJS Ketenagakerjaan terlebih dahulu. Setelah itu ahli waris/penerima manfaat dapat mengajukan beasiswa lanjutan lewat JMO:
+1. Login JMO dengan email dan kata sandi.
+2. Klik menu Konfirmasi Beasiswa, lalu Konfirmasi Sekarang.
+3. Pilih anak penerima beasiswa, klik Konfirmasi Sekarang.
+4. Klik Buka Kamera untuk verifikasi wajah, setujui syarat dan ketentuan, lalu ikuti instruksi verifikasi biometrik.
+5. Klik Lanjutkan dan lengkapi data akademik: periksa data penerima (NIK anak, nama, tempat/tanggal lahir, jenis kelamin, jenjang, tingkat kelas sebelumnya, tahun, nomor rekening), pastikan rekening aktif, pilih tingkat sekolah/kelas sekarang.
+6. Unggah dokumen pendukung: transkrip/raport, surat keterangan aktif sekolah, dan dokumen pendukung lainnya.
+7. Klik Ya, Benar, centang persetujuan, lalu SIMPAN dan LANJUTKAN.
+8. Muncul Konfirmasi Beasiswa Berhasil; klik Cek Status. Status awal Konfirmasi Diproses, lalu diverifikasi petugas Kantor Cabang.
+
+## Konfirmasi Jaminan Pensiun (JP) Berkala di JMO
+Syarat awal: lakukan Aktivasi Layanan di Kantor Cabang BPJS Ketenagakerjaan terdekat. Setelah itu ahli waris/penerima manfaat dapat mengonfirmasi lewat JMO:
+1. Login JMO, pilih menu JP Berkala di beranda penerima manfaat/ahli waris.
+2. Klik Konfirmasi Sekarang, lalu Buka Kamera untuk verifikasi wajah.
+3. Setujui syarat dan ketentuan, lalu lakukan verifikasi biometrik wajah sesuai instruksi.
+4. Muncul notifikasi Konfirmasi JP Berkala berhasil.
+5. Pengajuan diverifikasi petugas Kantor Cabang; tindak lanjut diproses maksimal 3 sampai 15 hari kalender.
+6. Lihat Rincian Total Manfaat bulan berjalan, Catatan Penting, dan jadwal konfirmasi berikutnya.
+
+## Pengajuan Pembiayaan Perumahan Pekerja lewat JMO
+Pengajuan MLT lewat JMO saat ini hanya berlaku untuk pengajuan melalui Bank BTN. Langkahnya ada di dokumen Manfaat Layanan Tambahan (MLT) Perumahan Pekerja.
+
+## Cek Eligibilitas JKP di JMO
+Peserta dapat mengecek eligibilitas program JKP lewat aplikasi JMO. Penjelasan JKP ada di dokumen JKP.

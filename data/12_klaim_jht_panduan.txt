@@ -1,0 +1,72 @@
+# Panduan Klaim Jaminan Hari Tua (JHT) — Dokumen, Lapak Asik, JMO, dan Tracking
+
+> Catatan: panduan ini berlaku untuk peserta JHT (Penerima Upah maupun BPU). Kondisi pencairan (usia 56 tahun, PHK, resign, berhenti usaha pada BPU, dll.) dijelaskan di dokumen program masing-masing. Untuk BPU, berhenti bekerja/usaha memiliki masa tunggu 1 bulan.
+
+## Tiga Cara Mengajukan Klaim JHT
+1. Aplikasi JMO (Jamsostek Mobile): tanpa ke kantor, dengan syarat khusus (saldo hingga Rp15.000.000, sebab klaim mengundurkan diri atau PHK, sudah pengkinian data, status kepesertaan non-aktif).
+2. Lapak Asik (https://lapakasik.bpjsketenagakerjaan.go.id): layanan tanpa kontak fisik, tersedia dalam bentuk online (video call) dan onsite (tatap muka di kantor cabang).
+3. Datang langsung ke Kantor Cabang BPJS Ketenagakerjaan terdekat membawa dokumen asli dan fotokopi.
+
+## Dokumen Klaim JHT: Usia 56 Tahun, Pensiun PKB, atau Kontrak (PKWT) Berakhir
+- Kartu Peserta BPJS Ketenagakerjaan.
+- KTP atau identitas sah lainnya.
+- NPWP, bila saldo JHT lebih dari Rp50.000.000 atau peserta sebelumnya pernah mengajukan klaim sebagian.
+- Untuk kontrak berakhir: surat keterangan habis kontrak.
+
+## Dokumen Klaim JHT: Mengundurkan Diri (Resign)
+- Kartu Peserta BPJS Ketenagakerjaan.
+- KTP atau identitas sah lainnya.
+- Surat keterangan pengunduran diri dari pemberi kerja.
+- NPWP, bila saldo lebih dari Rp50.000.000 atau pernah klaim sebagian.
+
+## Dokumen Klaim JHT: Pemutusan Hubungan Kerja (PHK)
+- Kartu Peserta BPJS Ketenagakerjaan dan KTP atau identitas sah lainnya.
+- Salah satu bukti PHK: (1) tanda terima laporan PHK dari instansi ketenagakerjaan; (2) surat laporan PHK dari pemberi kerja kepada instansi ketenagakerjaan; (3) pemberitahuan PHK dari pemberi kerja beserta pernyataan tidak menolak PHK dari pekerja; (4) perjanjian bersama yang ditandatangani pengusaha dan pekerja/buruh; atau (5) petikan atau salinan putusan Pengadilan Hubungan Industrial.
+- NPWP, bila saldo lebih dari Rp50.000.000 atau pernah klaim sebagian.
+
+## Dokumen Klaim JHT Sebagian 10% (Kepesertaan Minimal 10 Tahun)
+Kartu Peserta BPJS Ketenagakerjaan, KTP atau identitas sah lainnya, dan NPWP (bila saldo lebih dari Rp50.000.000 atau pernah klaim sebagian).
+
+## Dokumen Klaim JHT Sebagian 30% untuk Kepemilikan Rumah
+Kartu Peserta, KTP atau identitas sah lainnya, NPWP (bila saldo lebih dari Rp50.000.000 atau pernah klaim sebagian), serta dokumen perbankan sesuai peruntukan:
+- Uang muka pinjaman rumah: fotokopi perjanjian pinjaman rumah dan fotokopi standing instruction.
+- Cicilan atau angsuran pinjaman rumah: fotokopi perjanjian pinjaman rumah, surat keterangan baki debet (sisa pinjaman), dan fotokopi standing instruction.
+- Pelunasan sisa pinjaman rumah: fotokopi perjanjian pinjaman rumah, formulir pelunasan, surat keterangan baki debet, dan fotokopi standing instruction.
+- Pembelian rumah tunai: fotokopi PPJB (Perjanjian Pengikatan Jual Beli) atau AJB (Akta Jual Beli) sebagai pengganti dokumen perbankan.
+
+## Catatan Pengunggahan Berkas
+Bila Kartu Peserta atau Surat Keterangan Berhenti Bekerja/Habis Kontrak lebih dari satu lembar, gabungkan menjadi 1 file PDF sebelum diunggah. Isi data pengajuan sesuai data sebenarnya.
+
+## Mengenal Lapak Asik
+Lapak Asik (Layanan Tanpa Kontak Fisik) adalah portal resmi BPJS Ketenagakerjaan untuk klaim JHT di https://lapakasik.bpjsketenagakerjaan.go.id. Pilihan layanan: Lapak Asik Online (verifikasi lewat video call dengan petugas, tanpa datang ke kantor cabang) dan Lapak Asik Onsite (verifikasi tatap muka di kantor cabang sesuai jadwal janji temu).
+
+## Langkah Klaim JHT lewat Lapak Asik
+1. Pastikan sebab klaim termasuk yang dilayani (mengundurkan diri, PHK, usia pensiun 56 tahun, dan sebab lain sesuai kategori di atas).
+2. Buka portal Lapak Asik, isi data pengajuan sesuai data sebenarnya.
+3. Unggah seluruh dokumen persyaratan sesuai sebab klaim.
+4. Periksa konfirmasi data input pengajuan, lalu klik SIMPAN.
+5. Pilih kanal layanan: wawancara online (video call) atau kantor cabang terdekat untuk onsite.
+6. Terima jadwal layanan melalui email terdaftar.
+7. Ikuti wawancara video call atau hadir di kantor cabang tepat pada jadwal.
+8. Isi e-survey kepuasan layanan setelah verifikasi selesai.
+
+## Syarat Klaim JHT lewat Aplikasi JMO
+Pengajuan di JMO dapat dilakukan bila: akumulasi saldo JHT hingga Rp15.000.000; sebab klaim mengundurkan diri atau PHK; sudah melakukan pengkinian data; dan status kepesertaan sudah non-aktif. Bila syarat terpenuhi, muncul 3 centang hijau pada layar persyaratan. Bila tidak memenuhi syarat, gunakan Lapak Asik atau kantor cabang.
+
+## Langkah Klaim JHT lewat Aplikasi JMO
+1. Buka aplikasi JMO, pilih menu Jaminan Hari Tua, lalu Klaim JHT.
+2. Pastikan 3 syarat otomatis bertanda centang hijau, klik Selanjutnya.
+3. Pilih Sebab Klaim (Mengundurkan diri atau Pemutusan hubungan kerja).
+4. Periksa Data Kepesertaan (NIK, nomor kartu peserta, nama lengkap, tanggal lahir sesuai KTP, jenis kelamin), pilih Sudah.
+5. Verifikasi biometrik dengan swafoto: wajah terlihat jelas dan menghadap kamera, mata terbuka, latar polos, tanpa filter, tidak di tempat gelap, tanpa kacamata, masker, atau topi.
+6. Isi NPWP (bila ada) dan rekening bank aktif (nama bank, nomor rekening, nama pemilik rekening).
+7. Periksa Rincian Saldo JHT (saldo tahun berjalan, pengembangan, akumulasi saldo, PPh Pasal 21, pembulatan, jumlah JHT dibayar).
+8. Centang pernyataan persetujuan dan klik Konfirmasi.
+9. Muncul layar Berhasil; pantau lewat menu Tracking Klaim.
+
+## Cara Melacak Status Klaim JHT (Tracking Klaim)
+Lewat website resmi: buka https://www.bpjsketenagakerjaan.go.id (menu Cek Status Klaim atau halaman https://www.bpjsketenagakerjaan.go.id/tracking), masukkan Nomor Kartu Peserta (KPJ) atau NIK, lalu klik Lacak Klaim Saya.
+Lewat aplikasi JMO: menu Jaminan Hari Tua, pilih Tracking Klaim, pilih Nomor Kartu Peserta (KPJ) yang diklaim. Tahapan yang tampil: Agenda Klaim, Penetapan Klaim, Persetujuan Klaim, Pembayaran Klaim, hingga Proses Klaim Selesai.
+
+## Bantuan
+Call center BPJS Ketenagakerjaan: 175. Portal klaim online: https://lapakasik.bpjsketenagakerjaan.go.id. Aplikasi resmi: JMO (Jamsostek Mobile).

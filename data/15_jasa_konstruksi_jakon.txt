@@ -1,0 +1,32 @@
+# Program BPJS Ketenagakerjaan untuk Pekerja Jasa Konstruksi (Jakon)
+
+> Catatan: Jasa Konstruksi (Jakon) hanya mengikuti dua program, yaitu JKK dan JKM, dengan iuran dihitung dari nilai proyek. Ini berbeda dari BPU (iuran dari dasar penghasilan) dan PU (iuran dari upah).
+
+## Pengertian dan Kepesertaan Jasa Konstruksi
+Jasa Konstruksi adalah layanan jasa konsultasi perencanaan pekerjaan konstruksi, jasa pelaksanaan pekerjaan konstruksi, dan jasa konsultasi pengawasan pekerjaan konstruksi.
+Peserta Jakon adalah pemberi kerja selain penyelenggara negara pada skala usaha besar, menengah, kecil, dan mikro di bidang jasa konstruksi yang mempekerjakan pekerja harian lepas, pekerja borongan, dan pekerja dengan PKWT. Pemberi kerja wajib mendaftarkan pekerjanya pada program JKK dan JKM untuk proyek APBN, APBD, dana internasional, swasta, dan perseorangan.
+
+## Cara Mendaftar Peserta Jakon
+1. Kontraktor mengisi Formulir Pendaftaran kepesertaan Jasa Konstruksi di Kantor BPJS Ketenagakerjaan atau lewat kanal elektronik e-Jakon.
+2. Formulir dilampiri Surat Perintah Kerja (SPK) atau Surat Perjanjian Pemborong (SPP).
+
+## Layanan e-Jakon
+e-Jakon (https://ejakon.bpjsketenagakerjaan.go.id) adalah aplikasi web bagi pemberi kerja/badan usaha jasa konstruksi atau pelaksana proyek untuk mengelola administrasi kepesertaan. Fitur: simulasi iuran berdasarkan nilai proyek, registrasi proyek baru, pencetakan dokumen kepesertaan (penetapan proyek, sertifikat kepesertaan, dll.), dan monitoring kepesertaan serta pembayaran iuran.
+
+## Tarif Iuran Jakon Berdasarkan Nilai Proyek
+Iuran JKK dan JKM dihitung progresif menurut nilai kontrak/proyek:
+- Sampai Rp100 juta: JKK 0,21% x nilai proyek (hasil (a)); JKM 0,03% x nilai proyek (hasil (b)).
+- Di atas Rp100 juta sampai Rp500 juta: JKK (a) + 0,17% x nilai proyek (hasil (c)); JKM (b) + 0,02% x nilai proyek (hasil (d)).
+- Di atas Rp500 juta sampai Rp1 miliar: JKK (c) + 0,13% x nilai proyek (hasil (e)); JKM (d) + 0,02% x nilai proyek (hasil (f)).
+- Di atas Rp1 miliar sampai Rp5 miliar: JKK (e) + 0,11% x nilai proyek (hasil (g)); JKM (f) + 0,01% x nilai proyek (hasil (h)).
+- Di atas Rp5 miliar: JKK (g) + 0,09% x nilai proyek; JKM (h) + 0,01% x nilai proyek.
+Untuk angka pasti pada proyek tertentu, gunakan fitur Simulasi Iuran di e-Jakon atau tanyakan ke kantor cabang.
+
+## Manfaat JKK Jakon
+Manfaat JKK untuk pekerja jasa konstruksi sama dengan JKK pada umumnya: biaya pengangkutan (darat/sungai/danau maksimal Rp5.000.000, laut Rp2.000.000, udara Rp10.000.000), biaya pengobatan dan perawatan sesuai kebutuhan medis, STMB (100% upah 6 bulan pertama, 100% 6 bulan kedua, 50% selanjutnya), gigi tiruan maksimal Rp5.000.000, alat bantu pendengaran maksimal Rp2.500.000, kacamata maksimal Rp1.000.000, santunan cacat (anatomis: persentase tabel x 80 bulan upah; total tetap: 56 x upah ditambah berkala Rp500.000 x 24 bulan dan beasiswa 2 anak; fungsi: persentase kurang fungsi x persentase tabel x 80 bulan upah), santunan kematian JKK (48 x upah, berkala Rp12.000.000, pemakaman Rp10.000.000), rehabilitasi (orthese/prothese), homecare (maksimal 1 tahun, plafon Rp20.000.000), dan pemeriksaan diagnostik PAK. Rincian lengkap dan ketentuan kadaluarsa PAK ada di dokumen Penerima Upah (JKK).
+
+## Manfaat JKM Jakon
+Bila peserta meninggal bukan akibat kecelakaan kerja atau PAK: santunan kematian Rp20.000.000, santunan berkala Rp12.000.000, biaya pemakaman Rp10.000.000, dan beasiswa pendidikan untuk maksimal 2 anak (masa iur minimal 3 tahun).
+
+## Kanal Pembayaran Iuran Jakon
+Bank BRI, BCA, BNI, BTN, Bukopin, Mandiri, Bank bjb, serta Bank Pembangunan Daerah setempat bila kantor cabang memiliki rekening di BPD.

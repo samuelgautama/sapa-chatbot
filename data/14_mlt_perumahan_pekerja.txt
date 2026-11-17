@@ -1,0 +1,61 @@
+# Manfaat Layanan Tambahan (MLT) Perumahan Pekerja — BPJS Ketenagakerjaan
+
+> Catatan: MLT adalah fasilitas pembiayaan perumahan bagi peserta program Jaminan Hari Tua (JHT). Syarat di bawah ditulis untuk peserta yang bekerja pada perusahaan (Penerima Upah). Ketentuan khusus MLT bagi peserta Bukan Penerima Upah (BPU) belum tersedia di dokumen ini; arahkan calon peserta BPU ke kantor cabang atau call center 175. Slogan program: "Bunga Ringan — Ingat Rumah Ingat BPJAMSOSTEK (Mendukung Program Sejuta Rumah)".
+
+## Pengertian dan Jenis Manfaat MLT
+Manfaat Layanan Tambahan (MLT) adalah fasilitas pembiayaan perumahan dan/atau manfaat lain dari BPJS Ketenagakerjaan bagi peserta JHT. Ada 4 jenis:
+1. Pinjaman Uang Muka Perumahan (PUMP): pinjaman dari Bank Penyalur untuk sebagian atau seluruh uang muka rumah, dengan subsidi bunga BPJS Ketenagakerjaan.
+2. Kredit Pemilikan Rumah (KPR): kredit pemilikan rumah dari Bank Penyalur dengan subsidi bunga BPJS Ketenagakerjaan.
+3. Pinjaman Renovasi Perumahan (PRP): kredit renovasi rumah dari Bank Penyalur dengan subsidi bunga BPJS Ketenagakerjaan.
+4. Fasilitas Pembiayaan Perumahan Pekerja (FPPP) atau Kredit Konstruksi (KK): pembiayaan melalui Bank Penyalur mitra untuk pengembang yang membangun perumahan pekerja.
+
+## Plafon, Tenor, dan Suku Bunga MLT
+- KPR: plafon maksimal Rp500.000.000; tenor maksimal 30 tahun; rumah tapak atau rumah susun; rumah baru, rumah second, atau take over dari KPR umum; berlaku untuk rumah subsidi dan dapat digabung (bundling) dengan PUMP.
+- PUMP: plafon maksimal Rp150.000.000; tenor maksimal 30 tahun (mengikuti ketentuan Bank Penyalur); untuk pembelian rumah pertama (rumah tapak atau rumah susun), berlaku untuk KPR dan rumah subsidi.
+- PRP: plafon maksimal Rp200.000.000; tenor maksimal 15 tahun; khusus renovasi rumah milik peserta.
+- FPPP/KK: maksimal 80% nilai konstruksi (tidak termasuk harga tanah); tenor maksimal 5 tahun; pembangunan rumah tapak atau rumah susun oleh pengembang.
+- Suku bunga KPR, PUMP, dan PRP: acuan BI 7-Day Reverse Repo Rate ditambah maksimal 5%; FPPP/KK: acuan yang sama ditambah maksimal 6%. Besaran pasti mengikuti Bank Penyalur.
+- KPR dan PUMP dapat diperoleh bersamaan.
+
+## Syarat PUMP dan KPR (Peserta)
+- Terdaftar sebagai peserta minimal 1 tahun pada program JHT.
+- Perusahaan tertib administrasi dan iuran, bukan perusahaan Perusahaan Daftar Sebagian (PDS) upah, tenaga kerja, maupun program.
+- Belum memiliki rumah (surat pernyataan bermeterai).
+- Iuran aktif dan tidak menunggak sampai pengajuan.
+- Memenuhi ketentuan Bank Penyalur dan OJK, serta mendapat rekomendasi BPJS Ketenagakerjaan.
+- Bila suami dan istri sama-sama peserta, pengajuan hanya oleh salah satu pihak.
+- Pengajuan KPR/PUMP hanya 1 kali selama menjadi peserta.
+
+## Syarat PRP (Peserta)
+Sama seperti PUMP/KPR (minimal 1 tahun terdaftar di JHT, perusahaan tertib, iuran aktif, memenuhi ketentuan bank dan OJK, rekomendasi BPJS Ketenagakerjaan, hanya salah satu pasangan, hanya 1 kali), dengan perbedaan: peserta memiliki rumah yang akan direnovasi (surat pernyataan bermeterai).
+
+## Syarat FPPP/KK (Pengembang)
+- Badan usaha BUMN, BUMD, atau swasta berbadan hukum PT, anggota asosiasi pengembang.
+- Memiliki lahan siap bangun yang tidak bermasalah.
+- Terdaftar di BPJS Ketenagakerjaan dan mengikutsertakan seluruh pekerja, iuran aktif dan tidak menunggak, bukan perusahaan PDS, serta berkomitmen mendorong mitra usaha ikut program BPJS Ketenagakerjaan.
+- Memenuhi ketentuan Bank Penyalur dan OJK, serta mendapat rekomendasi BPJS Ketenagakerjaan.
+
+## Prosedur Pengajuan MLT lewat Bank atau Kantor Cabang
+Pengajuan dapat lewat Bank Penyalur (Asbanda dan Himbara) atau Kantor Cabang BPJS Ketenagakerjaan:
+1. Peserta/pengembang mengajukan kredit ke kantor cabang Bank Penyalur (atau ke kantor cabang BPJS Ketenagakerjaan); bank melakukan verifikasi awal dan cek SLIK OJK.
+2. Bank Penyalur mengirim surat permohonan kredit beserta fotokopi kartu peserta atau sertifikat kepesertaan ke kantor cabang BPJS Ketenagakerjaan.
+3. Kantor cabang BPJS Ketenagakerjaan memverifikasi kepesertaan dan mengirim formulir rekomendasi ke bank.
+4. Bank memutuskan: menolak atau merealisasikan PUMP, KPR, PRP, atau FPPP/KK.
+
+## Pengajuan MLT lewat Aplikasi JMO
+Saat ini pengajuan lewat JMO hanya berlaku untuk Bank BTN.
+1. Buka dan login JMO.
+2. Pilih Layanan Lainnya, lalu Perumahan Pekerja.
+3. Pilih Jenis Layanan (KPR, PRP, atau PUMP) dan Bank Kerja Sama.
+4. Isi formulir Data Pengajuan, unggah dokumen pendukung, klik Submit.
+
+## Mitra Bank Penyalur dan Pengembang MLT
+- Bank Himbara: Bank BTN, Bank BNI.
+- Bank Pembangunan Daerah (Asbanda): Bank Sumsel Babel, Bank Nagari, Bank bjb, Bank Aceh, Bank Jateng, Bank Bengkulu, Bank Sumut, Bank Lampung, Bank Sulselbar, Bank SulutGo (BSG), BRK Syariah, Bank Kalbar, Bank Maluku Malut.
+- Asosiasi dan pengembang: Perumnas, REI, APERSI, HIMPERRA, ASPRUMNAS.
+
+## Simulasi Cicilan MLT (Referensi)
+Estimasi angsuran per bulan (hanya referensi; hitungan pasti lewat Bank Kerja Sama):
+- KPR Rp500.000.000: 10 tahun Rp6.279.800; 15 tahun Rp4.942.500; 20 tahun Rp4.323.100; 25 tahun Rp3.987.000; 30 tahun Rp3.788.800.
+- PRP Rp200.000.000: 10 tahun Rp2.455.900; 15 tahun Rp1.917.600; 20 tahun Rp1.666.100; 25 tahun Rp1.528.200; 30 tahun Rp1.445.700 (tenor PRP maksimal mengikuti ketentuan, hingga 15 tahun).
+- PUMP Rp150.000.000: 10 tahun Rp1.842.000; 15 tahun Rp1.438.200; 20 tahun Rp1.249.600; 25 tahun Rp1.146.100; 30 tahun Rp1.084.300.

@@ -1,6 +1,6 @@
 # Gambaran Umum BPJS Ketenagakerjaan (Semua Segmen Kepesertaan)
 
-> Catatan penyusunan: dokumen ini adalah versi perluasan dari materi "Info Publik" sebelumnya, ditambah data iuran resmi yang diverifikasi ke bpjsketenagakerjaan.go.id per September 2026. Dokumen ini melengkapi `info_bpu.txt` (yang fokus ke BPU) dengan gambaran menyeluruh semua segmen, termasuk dua program yang KHUSUS untuk Penerima Upah (JP dan JKP) yang tidak dibahas di dokumen BPU.
+> Catatan penyusunan: dokumen ini adalah versi perluasan dari materi "Info Publik" sebelumnya, ditambah data iuran resmi yang diverifikasi ke bpjsketenagakerjaan.go.id per September 2026 dan diperbarui dengan materi layanan klaim, JKP, JMO, dan MLT per November 2026. Dokumen ini melengkapi `info_bpu.txt` (yang fokus ke BPU) dengan gambaran menyeluruh semua segmen, termasuk dua program yang KHUSUS untuk Penerima Upah (JP dan JKP) yang tidak dibahas di dokumen BPU.
 
 ## 1. Apa itu BPJS Ketenagakerjaan
 BPJS Ketenagakerjaan adalah badan hukum publik yang menyelenggarakan program jaminan sosial ketenagakerjaan untuk memberikan perlindungan bagi pekerja dari risiko sosial ekonomi, berdasarkan UU No. 24 Tahun 2011.
@@ -37,9 +37,9 @@ Uang tunai yang diberikan saat peserta memasuki masa pensiun, cacat total tetap,
 
 Klaim sebagian (masa kepesertaan minimal 10 tahun): 10% dari saldo untuk persiapan pensiun, atau 30% dari saldo untuk kepemilikan rumah.
 
-**Dokumen umum untuk klaim JHT:** Kartu peserta BPJAMSOSTEK (KPJ), E-KTP, Kartu Keluarga, buku tabungan atas nama peserta, NPWP (jika saldo di atas ketentuan berlaku), surat keterangan berhenti bekerja/paklaring.
+**Dokumen klaim JHT (sesuai sebab klaim):** Kartu Peserta BPJS Ketenagakerjaan dan KTP atau identitas sah lainnya, ditambah dokumen khusus: surat keterangan pengunduran diri (resign), bukti PHK (PHK), atau dokumen perbankan (klaim 30% untuk rumah). NPWP wajib bila saldo JHT lebih dari Rp50.000.000 atau peserta pernah klaim sebagian. Rincian per sebab klaim ada di panduan klaim JHT.
 
-**Cara klaim:** Online lewat aplikasi JMO (Jamsostek Mobile) atau Lapak Asik di website resmi (tanpa ke kantor cabang), atau offline datang langsung ke kantor cabang terdekat membawa dokumen asli & fotokopi.
+**Cara klaim:** (1) Aplikasi JMO (Jamsostek Mobile), untuk saldo hingga Rp15.000.000 dengan sebab klaim resign atau PHK, sudah pengkinian data, dan status kepesertaan non-aktif; (2) Lapak Asik di website resmi, tersedia online (video call, tanpa ke kantor) maupun onsite (tatap muka di kantor cabang); (3) offline datang langsung ke kantor cabang terdekat membawa dokumen asli dan fotokopi. Langkah lengkap ada di panduan klaim JHT.
 
 ## 5. Jaminan Kecelakaan Kerja (JKK)
 Santunan uang tunai dan/atau pelayanan medis untuk kecelakaan yang terjadi saat bekerja, dalam perjalanan wajar dari/ke tempat kerja, saat perjalanan dinas, atau penyakit akibat kerja (PAK).
@@ -80,18 +80,19 @@ Program bagi pekerja yang mengalami Pemutusan Hubungan Kerja (PHK), bertujuan me
 - Belum berusia 54 tahun saat terdaftar
 - Bekerja di perusahaan skala menengah/besar dengan kepesertaan minimal 4 program (JKK, JKM, JHT, JP), atau di usaha kecil/mikro dengan minimal 3 program (JKK, JKM, JHT)
 - Terdaftar juga sebagai peserta aktif BPJS Kesehatan (JKN)
+- Memiliki masa iur paling sedikit 12 bulan dalam 24 bulan kalender
 - Mengalami PHK (bukan mengundurkan diri, pensiun, cacat total tetap, atau meninggal dunia — kasus tersebut masuk skema JHT/JKM/JP)
 
-**Iuran**: peserta dan perusahaan TIDAK dikenakan iuran tambahan khusus untuk JKP. Pendanaan berasal dari iuran pemerintah pusat (0,22% dari upah) dan sebagian direkomposisi dari iuran JKK yang sudah berjalan (0,14%) — jadi tidak ada potongan gaji tambahan yang dirasakan pekerja/perusahaan.
+**Iuran**: peserta dan perusahaan TIDAK dikenakan iuran tambahan untuk JKP, jadi tidak ada potongan gaji tambahan.
 
 **Manfaat:**
-- Uang tunai bulanan hingga 6 bulan pertama sejak PHK disetujui, dengan formula (45% × upah × 3 bulan) + (25% × upah × 3 bulan); upah dasar dibatasi maksimal Rp5.000.000
+- Uang tunai bulanan sebesar 60% dari upah, paling lama 6 bulan sejak PHK disetujui; upah dasar (upah terakhir yang dilaporkan) dibatasi maksimal Rp5.000.000, sehingga manfaat maksimal Rp3.000.000 per bulan
 - Akses informasi pasar kerja (asesmen diri & konseling karier)
 - Pelatihan kerja (online/offline) lewat lembaga pelatihan pemerintah, swasta, atau perusahaan
 
 Manfaat JKP dapat diklaim maksimal 3 kali seumur masa kerja, dengan jeda minimal 5 tahun antara klaim kedua dan klaim sebelumnya.
 
-Pengajuan klaim JKP dilakukan lewat portal Sistem Informasi Ketenagakerjaan (Sisnaker), dikoordinasikan dengan Kementerian Ketenagakerjaan.
+Pengajuan klaim JKP dilakukan lewat portal/aplikasi SIAPkerja (Kementerian Ketenagakerjaan). Rincian lengkap ada di dokumen JKP.
 
 ## 9. Pendaftaran Peserta Baru (Umum)
 - **Pemberi kerja/perusahaan**: wajib mendaftarkan seluruh pekerjanya sesuai undang-undang
@@ -99,7 +100,10 @@ Pengajuan klaim JKP dilakukan lewat portal Sistem Informasi Ketenagakerjaan (Sis
 
 Dokumen umum yang dibutuhkan: E-KTP, Kartu Keluarga, pas foto, nomor rekening bank aktif untuk pencairan manfaat di kemudian hari.
 
-## 10. Saluran Layanan dan Informasi Resmi
+## 10. Dokumen Pendukung Lain
+Topik lanjutan tersedia di dokumen terpisah: Penerima Upah (PU), JKP, panduan klaim JHT (Lapak Asik dan JMO), panduan aplikasi JMO, MLT perumahan pekerja, dan Jasa Konstruksi (Jakon).
+
+## 11. Saluran Layanan dan Informasi Resmi
 Untuk pertanyaan yang tidak tercakup di dokumen ini, arahkan ke:
 - Layanan Masyarakat BPJS Ketenagakerjaan (care center): **175**
 - Kantor cabang BPJS Ketenagakerjaan terdekat

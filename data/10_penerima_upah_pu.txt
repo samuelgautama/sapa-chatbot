@@ -1,0 +1,115 @@
+# Program BPJS Ketenagakerjaan untuk Pekerja Penerima Upah (PU)
+
+> Catatan: dokumen ini KHUSUS segmen Pekerja Penerima Upah (PU), yaitu pekerja yang menerima gaji/upah dari pemberi kerja. Besaran iuran dan program PU BERBEDA dengan Bukan Penerima Upah (BPU). Untuk calon peserta BPU (pedagang, ojol, petani, freelancer, UMKM), gunakan info_bpu: JKK 1%, JKM Rp6.800 per bulan, JHT 2% dari dasar penghasilan.
+
+## Definisi Pekerja Penerima Upah (PU)
+Pekerja Penerima Upah (PU) adalah setiap orang yang bekerja dengan menerima gaji, upah, atau imbalan dalam bentuk lain dari pemberi kerja, termasuk Warga Negara Asing (WNA) yang bekerja paling singkat 6 bulan di Indonesia.
+
+## Syarat Kepesertaan Penerima Upah (PU)
+1. Memiliki pemberi kerja: orang perseorangan, pengusaha, badan hukum, atau badan lainnya yang mempekerjakan tenaga kerja dengan membayar gaji, upah, atau imbalan lain (sesuai UU No. 24 Tahun 2011 Pasal 1 Ayat 9), termasuk penyelenggara negara yang mempekerjakan pegawai, serta pegawai non-ASN.
+2. Memiliki pekerja yang menerima gaji, upah, atau imbalan dalam bentuk lain.
+3. Memiliki hubungan kerja, yaitu hubungan antara pengusaha dan pekerja/buruh berdasarkan perjanjian kerja yang mempunyai unsur pekerjaan, upah, dan perintah.
+
+## Persyaratan Pendaftaran Penerima Upah (PU)
+Pemberi kerja atau badan usaha mendaftarkan pekerjanya dengan mengisi formulir kepesertaan dan melampirkan:
+1. Formulir Pendaftaran Pemberi Kerja/Badan Usaha.
+2. Formulir Pendaftaran/Perubahan Data Pekerja dan/atau Formulir Laporan Rinci Iuran Pekerja.
+3. NPWP perusahaan.
+4. KTP pemilik perusahaan dan KTP tenaga kerja.
+5. Surat Izin Tempat Usaha (SITU), Surat Izin Usaha Perdagangan (SIUP), atau Nomor Induk Berusaha (NIB).
+
+Untuk badan usaha skala mikro dan kecil, kepesertaan lima program dapat dilakukan secara bertahap sesuai skala usaha yang ditetapkan.
+
+## Lima Program Penerima Upah (PU)
+Peserta PU dapat mengikuti lima program: Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), Jaminan Pensiun (JP), dan Jaminan Kehilangan Pekerjaan (JKP). Program JP dan JKP hanya untuk PU; peserta BPU tidak mengikuti JP maupun JKP.
+
+## Iuran Penerima Upah (PU) per Program
+Iuran dihitung dari persentase upah sebulan yang dilaporkan:
+- JKK (PU): 0,24% sampai 1,74% dari upah, ditanggung penuh pemberi kerja, sesuai tingkat risiko lingkungan kerja. Sangat rendah 0,24%; rendah 0,54%; sedang 0,89%; tinggi 1,27%; sangat tinggi 1,74%.
+- JKM (PU): 0,30% dari upah, ditanggung penuh pemberi kerja.
+- JHT (PU): 5,7% dari upah, terdiri atas 2% ditanggung pekerja dan 3,7% ditanggung pemberi kerja (pemberi kerja selain penyelenggara negara).
+- JP (PU): 3% dari upah, terdiri atas 1% ditanggung pekerja dan 2% ditanggung pemberi kerja. Upah yang dipakai untuk menghitung iuran JP dibatasi batas atas upah yang ditetapkan tiap tahun (tahun 2026: Rp10.547.400).
+- JKP (PU): tidak ada iuran tambahan bagi pekerja maupun pemberi kerja.
+
+## Manfaat JKK untuk Penerima Upah (PU)
+Jaminan Kecelakaan Kerja memberikan pelayanan kesehatan dan/atau santunan uang tunai atas kecelakaan kerja (termasuk dalam perjalanan berangkat dari rumah ke tempat kerja dan pulang kembali) dan Penyakit Akibat Kerja (PAK).
+
+Rincian manfaat JKK:
+- Biaya pengangkutan (maksimum): angkutan darat, sungai, atau danau Rp5.000.000; angkutan laut Rp2.000.000; angkutan udara Rp10.000.000. Bila memakai lebih dari satu jenis angkutan, peserta berhak atas biaya maksimal tiap jenis angkutan yang dipakai.
+- Biaya pengobatan dan perawatan sesuai kebutuhan medis, termasuk komorbiditas dan komplikasi yang berhubungan dengan kecelakaan kerja atau PAK.
+- Santunan Sementara Tidak Mampu Bekerja (STMB): 100% upah sebulan untuk 6 bulan pertama, 100% untuk 6 bulan kedua, dan 50% untuk bulan ketiga dan seterusnya sampai sembuh.
+- Penggantian gigi tiruan maksimal Rp5.000.000; alat bantu pendengaran maksimal Rp2.500.000; kacamata maksimal Rp1.000.000 (untuk gangguan akibat kecelakaan kerja atau PAK).
+- Biaya rehabilitasi berupa alat bantu (orthese) dan/atau alat ganti (prothese), dengan patokan harga pusat rehabilitasi rumah sakit umum pemerintah ditambah 40%, serta biaya rehabilitasi medik.
+- Layanan perawatan di rumah (homecare): maksimal 1 tahun dengan plafon Rp20.000.000, bagi peserta yang tidak memungkinkan melanjutkan perawatan di rumah sakit sesuai rekomendasi dokter.
+- Pemeriksaan diagnostik untuk penyelesaian kasus PAK bila peserta terbukti mengalami PAK.
+
+## Santunan Cacat dan Kematian Akibat Kecelakaan Kerja (JKK)
+- Cacat anatomis: persentase tabel x 80 bulan upah.
+- Cacat fungsi: persentase kurang fungsi x persentase tabel x 80 bulan upah.
+- Cacat total tetap: santunan sekaligus 56 x upah, ditambah santunan berkala 24 bulan @ Rp500.000 (total Rp12.000.000), ditambah beasiswa pendidikan untuk maksimal 2 anak.
+- Meninggal akibat kecelakaan kerja: santunan sekaligus 48 x upah, ditambah santunan berkala 24 bulan @ Rp500.000 (total Rp12.000.000), ditambah biaya pemakaman Rp10.000.000, ditambah beasiswa pendidikan.
+
+## Kadaluarsa dan Gugurnya Hak Klaim JKK dan PAK
+- Klaim PAK kadaluarsa bila tanggal diagnosis PAK melebihi 3 tahun sejak hubungan kerja berakhir.
+- Hak menuntut manfaat kecelakaan kerja dan PAK gugur bila lewat 5 tahun sejak tanggal tegaknya diagnosis PAK (jika diagnosis tidak lebih dari 3 tahun sejak hubungan kerja berakhir), atau lewat 5 tahun sejak tanggal kecelakaan kerja.
+
+## Fasilitas Pendukung JKK dan Program Kembali Bekerja (Return to Work)
+- Pusat Layanan Kecelakaan Kerja (PLKK): jaringan rumah sakit dan klinik mitra untuk penanganan medis kecelakaan kerja dan PAK.
+- Pusat Layanan Kembali Bekerja (PLKB): Balai Latihan Kerja (BLK) mitra yang mendampingi peserta dalam program Return to Work (RTW).
+- Return to Work (RTW) adalah pendampingan bagi peserta yang mengalami kecacatan akibat kecelakaan kerja atau PAK agar kembali produktif: dikembalikan ke posisi semula secepatnya atau bertahap, penyesuaian beban atau lingkungan kerja, atau penempatan pada pekerjaan baru sesuai kondisi fisik.
+- Syarat RTW: peserta bersedia mengikuti seluruh tahapan pendampingan, dan perusahaan bersedia mempekerjakan kembali pekerja yang mengalami disabilitas akibat kecelakaan kerja atau PAK.
+
+## Manfaat JKM untuk Penerima Upah (PU)
+Jaminan Kematian memberi santunan uang tunai kepada ahli waris bila peserta meninggal dunia bukan akibat kecelakaan kerja atau PAK:
+- Santunan kematian Rp20.000.000.
+- Santunan berkala Rp12.000.000.
+- Biaya pemakaman Rp10.000.000.
+- Beasiswa pendidikan untuk maksimal 2 anak bila peserta sudah memiliki masa iur paling singkat 3 tahun.
+
+## Beasiswa Pendidikan Anak (JKK dan JKM)
+Beasiswa diberikan untuk maksimal 2 anak bila peserta meninggal dunia atau cacat total tetap akibat kecelakaan kerja (tanpa minimum masa iur), atau meninggal dunia bukan akibat kecelakaan kerja dengan masa iur minimal 3 tahun.
+
+Besaran per anak:
+- TK sampai SD/sederajat: Rp1.500.000 per tahun, maksimal 8 tahun.
+- SMP/sederajat: Rp2.000.000 per tahun, maksimal 3 tahun.
+- SMA/sederajat: Rp3.000.000 per tahun, maksimal 3 tahun.
+- Pendidikan tinggi (maksimal S1) atau pelatihan: Rp12.000.000 per tahun, maksimal 5 tahun.
+
+Klaim beasiswa diajukan setiap tahun. Untuk anak yang belum usia sekolah saat risiko terjadi, beasiswa diberikan saat anak memasuki usia sekolah. Beasiswa berakhir saat anak berusia 23 tahun, menikah, atau bekerja. Pengajuan beasiswa lanjutan melalui JMO dijelaskan di panduan aplikasi JMO.
+
+## Manfaat JHT untuk Penerima Upah (PU)
+Jaminan Hari Tua berupa uang tunai sebesar akumulasi seluruh iuran ditambah hasil pengembangannya.
+Pencairan sekaligus bila peserta: mencapai usia 56 tahun; berhenti bekerja karena mengundurkan diri atau terkena PHK dan sedang tidak aktif bekerja di mana pun (setelah masa tunggu 1 bulan); meninggalkan wilayah Indonesia untuk selamanya; cacat total tetap; atau meninggal dunia.
+Pencairan sebagian (maksimal 1 kali, masa kepesertaan minimal 10 tahun): maksimal 10% saldo untuk persiapan pensiun, atau maksimal 30% saldo untuk kepemilikan rumah.
+Dokumen dan cara klaim dijelaskan di panduan klaim JHT.
+
+## Manfaat JP untuk Penerima Upah (PU)
+Jaminan Pensiun memberi penghasilan bulanan (manfaat berdasarkan formula) atau uang tunai sekaligus saat peserta pensiun, cacat total tetap, atau meninggal dunia. Jenis manfaat bulanan:
+- Pensiun hari tua: untuk peserta setelah pensiun sampai meninggal dunia.
+- Pensiun cacat: untuk peserta cacat total tetap akibat kecelakaan atau penyakit sampai meninggal dunia.
+- Pensiun janda/duda: untuk pasangan peserta sampai meninggal dunia atau menikah lagi.
+- Pensiun anak: untuk anak peserta sampai usia 23 tahun, bekerja, atau menikah; maksimal 2 anak terdaftar.
+- Pensiun orang tua: untuk salah satu orang tua sampai meninggal dunia, bagi peserta yang tidak memiliki suami/istri/anak.
+Manfaat pensiun bulanan penuh umumnya mensyaratkan masa iur minimal 15 tahun; bila kurang, manfaat dapat dibayarkan sekaligus (akumulasi iuran ditambah hasil pengembangan) sesuai ketentuan.
+
+## Manfaat JKP untuk Penerima Upah (PU)
+Program JKP bagi pekerja yang terkena PHK (uang tunai 60% upah hingga 6 bulan, informasi pasar kerja, pelatihan kerja). Rincian lengkap ada di dokumen JKP.
+
+## Kanal Pendaftaran Kepesertaan Penerima Upah (PU)
+- Kantor Cabang BPJS Ketenagakerjaan terdekat dengan formulir dan dokumen pendukung.
+- Pendaftaran online mandiri melalui website https://www.bpjsketenagakerjaan.go.id dan portal pendaftaran PU https://pom.bpjsketenagakerjaan.go.id/pu.
+- Online Single Submission (OSS).
+- Mitra dan aplikasi pendaftaran online: i.saku, Shopee, Bukalapak/Bukamitra, AYO TOKO by SRC/MY AYO.
+
+## Sistem Pelaporan SIPP Online dan EPS (Penerima Upah)
+SIPP Online (https://sipp.bpjsketenagakerjaan.go.id) adalah website pelaporan peserta untuk perusahaan: memperbarui profil perusahaan, menambah/mengubah/menonaktifkan tenaga kerja, mengubah data upah, melaporkan kecelakaan kerja, memonitor iuran, draft dan submit sensus perusahaan, pembayaran iuran dan perhitungan denda, serta pencetakan dokumen pelaporan.
+Electronic Payment System (EPS, https://eps.bpjsketenagakerjaan.go.id) adalah sistem pembayaran iuran host to host antara perbankan dan BPJS Ketenagakerjaan untuk memudahkan perusahaan memonitor pembayaran.
+
+## Kanal Pembayaran Iuran Penerima Upah (PU)
+- Perbankan dan agen: BRI, BCA, BNI (termasuk BNI Mobile Banking dan Agen46), Mandiri (Livin' by Mandiri), BTN, BSI, CIMB Niaga, Bank Muamalat, Bank bjb, Bank DKI, Bank Jateng, Bank Jatim, BRImo, Agen BRILink, Pospay, serta Bank Pembangunan Daerah setempat bila kantor cabang memiliki rekening di BPD.
+- Dompet digital dan QRIS: DANA, ShopeePay, OVO, GoPay, LinkAja!, QRIS.
+- Aplikasi dan e-commerce: Grab, Gojek, Tokopedia, Shopee, Blibli.
+- Gerai ritel: Alfamart, Alfamidi, Indomaret, Lawson Station, DAN+DAN.
+
+## Layanan Informasi Resmi
+Call center BPJS Ketenagakerjaan: 175. Website: https://www.bpjsketenagakerjaan.go.id. Aplikasi peserta: JMO (Jamsostek Mobile).

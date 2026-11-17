@@ -1,0 +1,102 @@
+# Jaminan Kehilangan Pekerjaan (JKP) — Kemnaker RI dan BPJS Ketenagakerjaan
+
+> Catatan: JKP khusus untuk pekerja Penerima Upah (PU). Peserta Bukan Penerima Upah (BPU) tidak mengikuti JKP. Slogan program: "Manfaat Meningkat, Cari Kerja Makin Giat — Kerja Lebih Aman dan Tenang".
+
+## Pengertian dan Tujuan JKP
+Jaminan Kehilangan Pekerjaan (JKP) adalah jaminan bagi pekerja/buruh yang mengalami Pemutusan Hubungan Kerja (PHK) berupa: (1) manfaat uang tunai, (2) akses informasi pasar kerja, dan (3) pelatihan kerja.
+Tujuannya mempertahankan derajat kehidupan yang layak saat pekerja kehilangan pekerjaan, sehingga dapat memenuhi kebutuhan dasar sambil berusaha mendapatkan pekerjaan kembali.
+
+## Penyelenggara JKP
+- Manfaat uang tunai: BPJS Ketenagakerjaan.
+- Manfaat akses informasi pasar kerja dan pelatihan kerja: Pemerintah (Kementerian Ketenagakerjaan).
+
+## Besaran Manfaat Uang Tunai JKP
+- Diberikan setiap bulan paling lama 6 bulan sejak PHK dan syarat penerima manfaat terpenuhi.
+- Besarnya 60% dari upah per bulan, paling lama 6 bulan.
+- Upah yang dipakai adalah upah terakhir yang dilaporkan kepada BPJS Ketenagakerjaan, dengan batas atas upah Rp5.000.000. Contoh: upah terakhir Rp5.000.000 atau lebih memberi manfaat 60% x Rp5.000.000 = Rp3.000.000 per bulan selama 6 bulan.
+
+## Manfaat Akses Informasi Pasar Kerja dan Pelatihan Kerja
+- Akses informasi pasar kerja: layanan informasi pasar kerja dan/atau bimbingan jabatan.
+- Pelatihan kerja berbasis kompetensi kerja, melalui lembaga pelatihan kerja milik pemerintah, swasta, atau perusahaan yang terdaftar dan terverifikasi pada Sistem Informasi Ketenagakerjaan, secara daring (online) maupun luring (offline).
+
+## Syarat Mengikuti Program JKP
+1. Warga Negara Indonesia (WNI).
+2. Belum mencapai usia 54 tahun saat mendaftar.
+3. Memiliki hubungan kerja dengan pengusaha, baik PKWTT (pegawai tetap) maupun PKWT (pegawai kontrak).
+4. Bekerja pada pemberi kerja/badan usaha skala menengah dan besar yang mengikuti 4 program (JKK, JKM, JHT, dan JP), atau skala kecil dan mikro yang mengikuti minimal 3 program (JKK, JKM, dan JHT).
+5. Terdaftar sebagai peserta JKN BPJS Kesehatan.
+
+## Iuran JKP
+Tidak ada penambahan iuran untuk pemberi kerja/badan usaha maupun pekerja dalam program JKP.
+
+## Kriteria Peserta yang Mendapat Manfaat JKP
+1. Mengalami PHK (PKWTT maupun PKWT) sesuai PP No. 37 Tahun 2021 Pasal 19 ayat 1, KECUALI PHK karena: mengundurkan diri (resign), cacat total tetap, pensiun, meninggal dunia, atau PKWT yang masa kerjanya berakhir sesuai jangka waktu kontrak.
+2. Memiliki masa iur paling sedikit 12 bulan dalam 24 bulan kalender.
+3. Berkeinginan bekerja kembali.
+Peserta yang resign, pensiun, cacat total tetap, atau meninggal dunia tidak mendapat JKP, tetapi manfaatnya masuk skema JHT, JP, atau JKM.
+
+## Ketentuan Pengajuan Manfaat JKP (Maksimal 3 Kali)
+Manfaat JKP diberikan paling banyak 3 kali selama masa usia kerja:
+1. Manfaat pertama: diajukan setelah terpenuhi masa iuran dan kepesertaan JKP.
+2. Manfaat kedua: diajukan setelah terpenuhi masa iuran 5 tahun sejak memperoleh manfaat pertama.
+3. Manfaat ketiga: diajukan setelah terpenuhi masa iuran 5 tahun sejak memperoleh manfaat kedua.
+
+## Penyebab Hilangnya Hak JKP
+Hak atas manfaat JKP hilang bila: (1) tidak mengajukan klaim dalam 6 bulan sejak PHK; (2) sudah mendapat pekerjaan kembali; atau (3) meninggal dunia.
+
+## Skema Laporan PHK dan Bukti PHK
+Pelaporan melalui pemberi kerja:
+1. Pemberi kerja mendaftarkan perusahaan di Portal Wajib Lapor (https://wajiblapor.kemnaker.go.id).
+2. Pemberi kerja melaporkan PHK ke Disnaker kabupaten/kota atau provinsi, atau langsung melalui Portal Wajib Lapor.
+3. Setelah proses perselisihan hubungan industrial selesai dan pemberi kerja memperoleh Bukti PHK, pemberi kerja menonaktifkan peserta di SIPP Online (https://sipp.bpjsketenagakerjaan.go.id) dan melaporkan PHK di Portal Wajib Lapor.
+
+Pelaporan melalui peserta (bila perusahaan belum melapor):
+1. Aktifkan akun SIAPkerja (https://siapkerja.kemnaker.go.id) dan cek eligibilitas JKP.
+2. Dapatkan Bukti PHK dari pemberi kerja.
+3. Laporkan PHK secara mandiri di SIAPkerja dengan mengunggah Bukti PHK, paling lambat 6 bulan sejak PHK.
+
+Bukti PHK yang diakui (salah satu): (1) bukti diterima kasus PHK dan tanda terima Disnaker kabupaten/kota/provinsi atau Kemnaker; (2) Perjanjian Bersama dan akta pendaftaran pada Pengadilan Hubungan Industrial (PHI) atau tanda terima Disnaker; (3) petikan putusan PHI yang berkekuatan hukum tetap. Surat pemberitahuan PHK dari perusahaan juga dapat dipakai saat lapor mandiri di aplikasi SIAPkerja.
+
+## Cara Klaim JKP Bulan Pertama di SIAPkerja
+1. Login ke portal SIAPkerja.
+2. Pilih menu Ajukan Klaim.
+3. Lengkapi data pribadi, nomor rekening bank, dan tandatangani surat Komitmen Aktivitas Pencarian Kerja (KAPK).
+4. Peserta menerima email pemberitahuan proses klaim.
+5. Manfaat JKP masuk ke rekening peserta.
+
+## Cara Klaim JKP Bulan ke-2 sampai Bulan ke-6
+1. Lakukan Asesmen Diri di SIAPkerja.
+2. Wajib melamar pekerjaan: minimal 5 lamaran kerja atau 1 wawancara kerja setiap bulan.
+3. Konseling kerja (opsional).
+4. Pelatihan kerja (opsional) sesuai rekomendasi Pengantar Kerja pada bulan ke-2 sampai ke-5, dengan kehadiran minimal 80%.
+5. Ajukan klaim bulan berikutnya sesuai tanggal yang tertera di akun SIAPkerja.
+6. Manfaat masuk ke rekening peserta.
+
+## Panduan Membuat Akun SIAPkerja
+1. Unduh aplikasi SIAPkerja di Google Play Store atau Apple App Store.
+2. Buka menu Akun (pojok kanan bawah).
+3. Klik Daftar Sekarang.
+4. Isi NIK dan data diri, klik Berikutnya.
+5. Isi email, nomor HP, dan password, klik Daftar Sekarang.
+6. Masukkan kode verifikasi (OTP) dari email atau WhatsApp.
+7. Login ke akun SIAPkerja.
+8. Lengkapi biodata sampai langkah terakhir.
+
+## Panduan Lapor PHK dan Ajukan Klaim JKP di Aplikasi SIAPkerja
+1. Bila terdaftar sebagai peserta JKP, lencana JKP muncul di beranda; klik lencana tersebut.
+2. Bila perusahaan belum melaporkan PHK di Wajib Lapor, klik Lapor PHK. Siapkan salah satu bukti PHK yang sah dan ajukan paling lambat 6 bulan sejak PHK.
+3. Isi data persyaratan PHK (tipe perjanjian kerja PKWT/PKWTT, dasar PHK), lalu Selanjutnya.
+4. Isi data laporan PHK (nama dan alamat perusahaan, tipe perjanjian kerja, tanggal mulai/berakhir kontrak), klik Buat Laporan.
+5. Isi formulir klaim JKP: NPWP, nomor rekening, nama pemilik rekening, dan nama bank.
+6. Lakukan swafoto verifikasi wajah.
+7. Baca dan setujui surat pernyataan KAPK, lalu Simpan dan Kirim. Poin KAPK: bersedia mencari dan menerima pekerjaan, melapor paling lambat 7 hari kerja setelah diterima bekerja kembali, dan bersedia manfaat dihentikan bila terbukti sudah bekerja kembali.
+8. Muncul konfirmasi pengajuan klaim JKP berhasil.
+
+## Kanal Cek Eligibilitas JKP
+Eligibilitas JKP dapat dicek melalui aplikasi/portal SIAPkerja (Kemnaker), aplikasi JMO (BPJS Ketenagakerjaan), atau Kantor Cabang BPJS Ketenagakerjaan terdekat.
+
+## Landasan Hukum JKP
+UUD 1945 Pasal 5 ayat (2); UU No. 40 Tahun 2004 (SJSN); UU No. 24 Tahun 2011 (BPJS); UU No. 6 Tahun 2023 (Cipta Kerja); PP No. 37 Tahun 2021 tentang Penyelenggaraan JKP; PP No. 6 Tahun 2025 tentang perubahan PP No. 37 Tahun 2021; Permenaker No. 15 Tahun 2021 tentang cara pemberian manfaat JKP; Permenaker No. 2 Tahun 2025 tentang perubahan Permenaker No. 15 Tahun 2021.
+
+## Portal Resmi JKP
+SIAPkerja https://siapkerja.kemnaker.go.id; Wajib Lapor https://wajiblapor.kemnaker.go.id; SIPP Online https://sipp.bpjsketenagakerjaan.go.id; informasi dan bantuan JKP https://www.jkp.go.id dan https://halo.jkp.go.id; Kemnaker https://www.kemnaker.go.id; website BPJS Ketenagakerjaan https://www.bpjsketenagakerjaan.go.id; call center 175.
