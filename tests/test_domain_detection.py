@@ -1,7 +1,7 @@
 def test_off_domain_in_middle_of_bpu_conversation():
     """Test bahwa off-domain tetap off-domain meski setelah percakapan BPU."""
     from sapa.calculator import extract_base_income, extract_programs, detect_sector
-    from chatbot import is_domain_relevant
+    from sapa.chatbot import is_domain_relevant
     
     # Setelah "Saya pedagang" dan "Penghasilan 2 juta"
     # Pertanyaan "Siapa presiden Indonesia?" harus tetap off-domain

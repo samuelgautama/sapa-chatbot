@@ -11,7 +11,7 @@ from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
-from chatbot import load_retriever, load_llm, ask_stream
+from sapa.chatbot import load_retriever, load_llm, ask_stream
 from theme import get_custom_css, get_layout_script
 
 

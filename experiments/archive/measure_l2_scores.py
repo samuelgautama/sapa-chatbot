@@ -2,7 +2,7 @@
 """Ukur distribusi skor L2 FAISS untuk in-domain vs off-domain."""
 
 import json
-from chatbot import load_retriever
+from sapa.chatbot import load_retriever
 
 def main():
     ret = load_retriever()

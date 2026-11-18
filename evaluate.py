@@ -34,7 +34,7 @@ from typing import Any
 
 from sapa.calculator import calculate_bpu_contribution, extract_base_income, extract_programs, detect_discount_request, detect_sector, promo_status
 from sapa.privacy_guard import sanitize_user_input
-from chatbot import MIN_RELEVANCE_SCORE
+from sapa.chatbot import MIN_RELEVANCE_SCORE
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_DATASET = ROOT / "evaluation_dataset.json"
@@ -73,7 +73,7 @@ def _content_matches_keywords(doc: Any, keywords: list[str]) -> bool:
 
 
 def retrieval_test_case(case: dict[str, Any], retriever: Any, top_k: int) -> dict[str, Any]:
-    from chatbot import retrieve_documents
+    from sapa.chatbot import retrieve_documents
 
     question = case["question"]
     history = case.get("history", [])
@@ -198,7 +198,7 @@ def fallback_test_case(case: dict[str, Any], retriever: Any, min_score: float) -
     Test ini memverifikasi bahwa query off-domain atau injection akan menghasilkan
     dokumen kosong atau gate_status="rejected".
     """
-    from chatbot import retrieve_documents
+    from sapa.chatbot import retrieve_documents
     
     try:
         docs, retrieval_query, details = retrieve_documents(
@@ -241,7 +241,7 @@ def fallback_test_case(case: dict[str, Any], retriever: Any, min_score: float) -
 
 
 def answer_smoke_test(cases: list[dict[str, Any]], retriever: Any, llm: Any) -> list[dict[str, Any]]:
-    from chatbot import ask
+    from sapa.chatbot import ask
 
     results = []
     for case in cases:
@@ -309,7 +309,7 @@ def main() -> int:
     if retrieval_cases or fallback_cases or args.with_llm:
         try:
             from check_index_fresh import check_index_fresh
-            from chatbot import load_retriever, load_llm
+            from sapa.chatbot import load_retriever, load_llm
             
             # Check index freshness sebelum evaluasi
             is_fresh = check_index_fresh(warn_only=True)

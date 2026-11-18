@@ -2,7 +2,7 @@
 """Extract top-1 scores per retrieval query untuk kalibrasi threshold dua tingkat."""
 
 import json
-from chatbot import load_retriever
+from sapa.chatbot import load_retriever
 
 def main():
     ret = load_retriever()
