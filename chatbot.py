@@ -474,7 +474,7 @@ def sanitize_assistant_output(text: str) -> str:
 # Bagian FALLBACK (daftar kontak) dibangun dinamis dari contacts_config.py agar
 # tidak ada duplikasi hardcode saat kontak berubah.
 
-from contacts_config import build_fallback_section
+from sapa.contacts_config import build_fallback_section
 
 _SYSTEM_PROMPT_CORE = """Kamu adalah **SAPA** — **Sistem Asisten Pendamping Aktivitas** (Teman Magang, Siap Membantu) yang mendampingi mahasiswa magang
 BPJS Ketenagakerjaan saat bekerja di lapangan. Tujuanmu bukan sekadar menjawab FAQ, tetapi
@@ -1010,7 +1010,7 @@ def _fallback_response(intent_name, domain_relevant=True):
         return _off_domain_response()
 
     # Import lokal untuk menghindari circular dependency
-    from contacts_config import INTENT_TO_CONTACT, format_contacts
+    from sapa.contacts_config import INTENT_TO_CONTACT, format_contacts
     
     category = INTENT_TO_CONTACT.get(intent_name, "operasional_magang")
     
