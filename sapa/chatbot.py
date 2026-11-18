@@ -133,6 +133,9 @@ DOMAIN_KEYWORDS = (
     "penghasilan", "pendapatan", "diskon", "promo", "potongan",
     "pedagang", "petani", "nelayan", "ojol", "ojek", "kurir", "sopir",
     "freelancer", "umkm",
+    # Keyword baru dari knowledge base (L-2)
+    "jkp", "jmo", "pensiun", "phk", "kpr", "lapak asik", "beasiswa", "jakon", "mlt", 
+    "perumahan", "siapkerja", "sipp", "penerima upah",
 )
 
 logger = logging.getLogger(__name__)
@@ -141,8 +144,18 @@ _logged_retrieval_issues: set = set()
 
 def is_domain_relevant(text) -> bool:
     """True bila teks memuat istilah domain BPJS/BPU/magang."""
+    import re
     lowered = (text or "").lower()
-    return any(keyword in lowered for keyword in DOMAIN_KEYWORDS)
+    
+    for keyword in DOMAIN_KEYWORDS:
+        # Kata pendek (3 huruf atau kurang) harus cocok sebagai kata utuh
+        if len(keyword) <= 3 and keyword.isalpha():
+            # Gunakan regex word boundaries untuk kata pendek
+            if re.search(r'\b' + re.escape(keyword) + r'\b', lowered):
+                return True
+        elif keyword in lowered:
+            return True
+    return False
 
 
 def _log_retrieval_issue(key: str, message: str, *args, exc_info=False):
