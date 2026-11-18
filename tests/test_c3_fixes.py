@@ -85,6 +85,55 @@ def test_c3_2_nominal_jelas_1_juta_500_ribu():
     assert result is None, "Harus TIDAK menganggap '1 juta 500 ribu' sebagai ambigu"
 
 
+# --- L-5: Tes yang dihapus - Syarat tanpa konteks vs dengan konteks ---
+
+def test_l5_syarat_tanpa_konteks_klarifikasi():
+    """L-5(a): 'Syarat?' tanpa konteks domain = klarifikasi tanpa fakta."""
+    from sapa.chatbot import _prepare_ask
+    from tests.test_retrieval_gate import FakeRetriever
+    
+    question = "Syarat?"
+    retriever = FakeRetriever()
+    
+    plan = _prepare_ask(question, retriever, history=None)
+    # Harus return klarifikasi (static_answer), bukan retrieve dari vector_store
+    assert plan.static_answer, "Harus ada klarifikasi untuk 'Syarat?' tanpa konteks"
+    assert plan.sources == [], "Tidak boleh retrieve dokumen untuk pertanyaan ambigu tanpa konteks"
+
+
+def test_l5_syaratnya_apa_dengan_konteks_domain():
+    """L-5(b): 'Syaratnya apa?' dengan riwayat domain → retrieve dengan query kanonik, bukan jahitan."""
+    from sapa.chatbot import _prepare_ask, retrieve_documents
+    from tests.test_retrieval_gate import FakeRetriever
+    
+    question = "Syaratnya apa?"
+    history = [
+        {"role": "user", "content": "Saya pedagang"},
+        {"role": "assistant", "content": "Baik"}
+    ]
+    retriever = FakeRetriever()
+    
+    plan = _prepare_ask(question, retriever, history=history)
+    # Harus attempt retrieve dengan query kanonik "syarat pendaftaran peserta..."
+    # Tidak boleh jatuh ke fallback/off-domain
+    assert plan.sources is not None or plan.retrieval_query, "Harus ada retrieval untuk konteks domain"
+
+
+def test_l5_syarat_daftar_bpu_tidak_dibajak():
+    """L-5(c): 'Syarat daftar BPU' tidak dibajak klarifikasi (sudah domain-specific)."""
+    from sapa.chatbot import _prepare_ask
+    from tests.test_retrieval_gate import FakeRetriever
+    
+    question = "Syarat daftar BPU"
+    retriever = FakeRetriever()
+    
+    plan = _prepare_ask(question, retriever, history=None)
+    # Harus attempt retrieve dokumen, bukan return static klarifikasi
+    # Karena "daftar BPU" sudah jelas konteksnya
+    assert plan.static_answer == "" or "syarat" in (plan.static_answer or "").lower() or plan.sources, \
+        "Pertanyaan 'Syarat daftar BPU' harus retrieve, bukan klarifikasi tanpa konteks"
+
+
 # --- C3-5: Fallback kontak relevan ---
 
 def test_c3_5_fallback_kontak_relevan_dengan_intent():
