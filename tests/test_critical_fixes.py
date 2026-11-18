@@ -10,7 +10,7 @@ import types
 from decimal import Decimal
 
 from sapa.calculator import detect_calculation_request, extract_base_income, extract_programs
-from conversation_context import build_conversation_context
+from sapa.conversation_context import build_conversation_context
 
 
 def _import_chatbot():

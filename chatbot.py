@@ -40,7 +40,7 @@ from sapa.retrieval_utils import (
     needs_history_for_retrieval,
     rerank_scored_documents,
 )
-from conversation_context import ConversationContext, build_conversation_context
+from sapa.conversation_context import ConversationContext, build_conversation_context
 
 from sapa.calculator import (
     build_calculation_response,
@@ -1280,7 +1280,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         # Jika tidak ada penanda penghasilan DAN tidak ada riwayat domain, batalkan base_income
         if not has_income_marker and not has_domain_history:
             # Buat ulang context tanpa base_income
-            from conversation_context import ConversationContext
+            from sapa.conversation_context import ConversationContext
             conversation_context = ConversationContext(
                 base_income=None,
                 programs=conversation_context.programs,

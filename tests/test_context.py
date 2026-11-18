@@ -3,7 +3,7 @@
 from decimal import Decimal
 
 from sapa.calculator import detect_calculation_request, extract_programs
-from conversation_context import build_conversation_context
+from sapa.conversation_context import build_conversation_context
 from sapa.retrieval_utils import needs_history_for_retrieval, build_retrieval_query
 
 
