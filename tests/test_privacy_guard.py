@@ -3,7 +3,7 @@
 import json
 import pathlib
 
-from privacy_guard import privacy_warning, sanitize_user_input
+from sapa.privacy_guard import privacy_warning, sanitize_user_input
 
 NIK = "3271234567890123"
 

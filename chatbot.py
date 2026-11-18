@@ -33,7 +33,7 @@ from langchain_groq import ChatGroq
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
-from privacy_guard import sanitize_user_input
+from sapa.privacy_guard import sanitize_user_input
 from retrieval_utils import (
     build_canonical_query,
     build_retrieval_query,
