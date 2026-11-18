@@ -42,7 +42,7 @@ from sapa.retrieval_utils import (
 )
 from conversation_context import ConversationContext, build_conversation_context
 
-from calculator import (
+from sapa.calculator import (
     build_calculation_response,
     calculate_bpu_contribution,
     detect_ambiguous_nominal,
@@ -360,7 +360,7 @@ def _short_question_clarification(text: str, history=None) -> Optional[str]:
     
     # Pengecualian: "berapa iurannya/iurannya berapa" dijawab dari konstanta
     if normalized in ("berapa iurannya", "iurannya berapa"):
-        from calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
+        from sapa.calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
         jkk_pct = int(JKK_RATE * 100)
         jht_pct = int(JHT_RATE * 100)
         return (

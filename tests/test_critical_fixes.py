@@ -9,7 +9,7 @@ import sys
 import types
 from decimal import Decimal
 
-from calculator import detect_calculation_request, extract_base_income, extract_programs
+from sapa.calculator import detect_calculation_request, extract_base_income, extract_programs
 from conversation_context import build_conversation_context
 
 

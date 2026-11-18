@@ -10,7 +10,7 @@ C3-5: Fallback kontak relevan dengan intent
 
 import re
 from decimal import Decimal
-from calculator import detect_ambiguous_nominal, detect_calculation_request, format_rupiah
+from sapa.calculator import detect_ambiguous_nominal, detect_calculation_request, format_rupiah
 from sapa.retrieval_utils import build_retrieval_query, needs_history_for_retrieval
 
 

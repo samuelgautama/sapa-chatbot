@@ -32,7 +32,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from calculator import calculate_bpu_contribution, extract_base_income, extract_programs, detect_discount_request, detect_sector, promo_status
+from sapa.calculator import calculate_bpu_contribution, extract_base_income, extract_programs, detect_discount_request, detect_sector, promo_status
 from sapa.privacy_guard import sanitize_user_input
 from chatbot import MIN_RELEVANCE_SCORE
 

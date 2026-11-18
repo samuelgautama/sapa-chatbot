@@ -9,7 +9,7 @@ Bug 4: String dengan backslash ganda literal
 
 import re
 from test_critical_fixes import chatbot
-from calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
+from sapa.calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
 
 
 # --- BUG 1: _short_question_clarification ---
