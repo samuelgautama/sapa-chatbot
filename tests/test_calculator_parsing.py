@@ -1,6 +1,6 @@
 def test_parse_money_compound():
     """Test parsing nominal majemuk seperti '1 juta 500 ribu'."""
-    from calculator import _parse_money
+    from sapa.calculator import _parse_money
     from decimal import Decimal
     
     # Majemuk: 1 juta 500 ribu = 1.500.000

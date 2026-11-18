@@ -33,16 +33,16 @@ from langchain_groq import ChatGroq
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
-from privacy_guard import sanitize_user_input
-from retrieval_utils import (
+from sapa.privacy_guard import sanitize_user_input
+from sapa.retrieval_utils import (
     build_canonical_query,
     build_retrieval_query,
     needs_history_for_retrieval,
     rerank_scored_documents,
 )
-from conversation_context import ConversationContext, build_conversation_context
+from sapa.conversation_context import ConversationContext, build_conversation_context
 
-from calculator import (
+from sapa.calculator import (
     build_calculation_response,
     calculate_bpu_contribution,
     detect_ambiguous_nominal,
@@ -55,7 +55,7 @@ from calculator import (
     promo_status,
     MIN_INCOME,
 )
-from promo_config import maintenance_warnings, promo_timeline, today_jakarta
+from sapa.promo_config import maintenance_warnings, promo_timeline, today_jakarta
 # SystemMessage -> untuk mengirim "aturan main" / persona tetap ke LLM (system prompt)
 # HumanMessage  -> untuk mengirim isi pesan dari user (konteks + pertanyaan) secara terpisah
 # Memisahkan keduanya adalah cara yang lebih benar dibanding menggabung semuanya
@@ -360,7 +360,7 @@ def _short_question_clarification(text: str, history=None) -> Optional[str]:
     
     # Pengecualian: "berapa iurannya/iurannya berapa" dijawab dari konstanta
     if normalized in ("berapa iurannya", "iurannya berapa"):
-        from calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
+        from sapa.calculator import JKK_RATE, JKM_FLAT, JHT_RATE, format_rupiah
         jkk_pct = int(JKK_RATE * 100)
         jht_pct = int(JHT_RATE * 100)
         return (
@@ -474,7 +474,7 @@ def sanitize_assistant_output(text: str) -> str:
 # Bagian FALLBACK (daftar kontak) dibangun dinamis dari contacts_config.py agar
 # tidak ada duplikasi hardcode saat kontak berubah.
 
-from contacts_config import build_fallback_section
+from sapa.contacts_config import build_fallback_section
 
 _SYSTEM_PROMPT_CORE = """Kamu adalah **SAPA** — **Sistem Asisten Pendamping Aktivitas** (Teman Magang, Siap Membantu) yang mendampingi mahasiswa magang
 BPJS Ketenagakerjaan saat bekerja di lapangan. Tujuanmu bukan sekadar menjawab FAQ, tetapi
@@ -1010,7 +1010,7 @@ def _fallback_response(intent_name, domain_relevant=True):
         return _off_domain_response()
 
     # Import lokal untuk menghindari circular dependency
-    from contacts_config import INTENT_TO_CONTACT, format_contacts
+    from sapa.contacts_config import INTENT_TO_CONTACT, format_contacts
     
     category = INTENT_TO_CONTACT.get(intent_name, "operasional_magang")
     
@@ -1280,7 +1280,7 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         # Jika tidak ada penanda penghasilan DAN tidak ada riwayat domain, batalkan base_income
         if not has_income_marker and not has_domain_history:
             # Buat ulang context tanpa base_income
-            from conversation_context import ConversationContext
+            from sapa.conversation_context import ConversationContext
             conversation_context = ConversationContext(
                 base_income=None,
                 programs=conversation_context.programs,

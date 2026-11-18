@@ -79,7 +79,7 @@ Sistem membutuhkan data referensi untuk RAG.
 Setiap kali ada perubahan atau penambahan dokumen di dalam folder `data/`, Anda wajib memperbarui indeks.
 
 ```bash
-python ingest.py
+python -m scripts.ingest
 ```
 (Perintah ini akan memproses dokumen dan membuat folder `vector_store/` yang berisi indeks pencarian).
 
@@ -99,20 +99,20 @@ Browser akan otomatis terbuka. Anda dapat langsung menguji chatbot dengan pertan
 
 Proyek ini dilengkapi dengan modul evaluasi (benchmark awal di `evaluation_dataset.json` dan runner di `evaluate.py`) untuk mengukur akurasi dari metrik Hit@1, Hit@3, dan MRR.
 
-> ⚠️ Penting: Pastikan vector store sudah dibuat/diperbarui dengan menjalankan `python ingest.py` sebelum melakukan evaluasi.
+> ⚠️ Penting: Pastikan vector store sudah dibuat/diperbarui dengan menjalankan `python -m scripts.ingest` sebelum melakukan evaluasi.
 
 **Evaluasi Tanpa LLM**
 Menguji retrieval hit@k, privacy guard, kalkulator deterministik, dan respons fallback untuk pertanyaan di luar domain.
 
 ```bash
-python evaluate.py
+python -m scripts.evaluate
 ```
 
 **Evaluasi Menggunakan LLM**
 Menambahkan smoke test generation berdasarkan ekspektasi kata kunci (expected keywords). Mode ini berguna sebagai pengecekan otomatis, namun tidak menggantikan tinjauan manual/manusia.
 
 ```bash
-python evaluate.py --with-llm
+python -m scripts.evaluate --with-llm
 ```
 Laporan lengkap hasil evaluasi akan disimpan secara otomatis ke dalam `evaluation_results.json`.
 
@@ -123,5 +123,5 @@ Laporan lengkap hasil evaluasi akan disimpan secara otomatis ke dalam `evaluatio
 | Isu / Kendala | Solusi yang Disarankan |
 | -------- | -------- |
 | Error "GROQ_API_KEY belum diatur" | Cek kembali apakah file `.env` sudah dibuat dan API Key telah diisi dengan benar. |
-| Error saat memuat vector store | Anda belum membuat indeks. Jalankan perintah `python ingest.py` terlebih dahulu. |
+| Error saat memuat vector store | Anda belum membuat indeks. Jalankan perintah `python -m scripts.ingest` terlebih dahulu. |
 | Jawaban terasa kurang relevan | Tambahkan lebih banyak dokumen pendukung di folder `data/`, atau lakukan penyesuaian nilai `CHUNK_SIZE / TOP_K` pada file `ingest.py` dan `chatbot.py`. |

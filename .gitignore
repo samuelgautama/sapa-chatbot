@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 *.log
 evaluation_results.json
+venv/
+.venv/
+.pytest_cache/
+.DS_Store
+.idea/

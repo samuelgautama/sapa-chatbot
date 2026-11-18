@@ -29,7 +29,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any, Iterable, Optional
 
-from calculator import detect_sector, extract_base_income, extract_programs
+from sapa.calculator import detect_sector, extract_base_income, extract_programs
 
 
 # Slot hanya diwarisi dari N pesan user terakhir. Tanpa batas, penghasilan calon peserta

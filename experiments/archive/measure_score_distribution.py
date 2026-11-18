@@ -12,7 +12,7 @@ USAGE:
 """
 
 import statistics
-from chatbot import load_retriever, DOMAIN_KEYWORDS
+from sapa.chatbot import load_retriever, DOMAIN_KEYWORDS
 
 # Sample queries untuk baseline measurement
 IN_DOMAIN_QUERIES = [
@@ -69,7 +69,7 @@ def measure_distribution(queries, label):
         print(f"   MAX:    {max(all_scores):.4f}")
         
         # Hitung berapa persen yang lolos threshold
-        from chatbot import MIN_RELEVANCE_SCORE
+        from sapa.chatbot import MIN_RELEVANCE_SCORE
         above_threshold = sum(1 for s in all_scores if s >= MIN_RELEVANCE_SCORE)
         print(f"\n   Skor >= {MIN_RELEVANCE_SCORE} (MIN_RELEVANCE_SCORE): {above_threshold}/{len(all_scores)} ({100*above_threshold/len(all_scores):.1f}%)")
         

@@ -31,7 +31,7 @@ SUPPORTED_PROGRAMS = ("JKK", "JKM", "JHT")
 
 # Periode promo didefinisikan SATU kali di promo_config.py (diimpor ulang di sini agar
 # `from calculator import PROMO_PERIODS` lama tetap berfungsi).
-from promo_config import PROMO_PERIODS, today_jakarta
+from sapa.promo_config import PROMO_PERIODS, today_jakarta
 
 TRANSPORT_KEYWORDS = ("ojek online", "ojol", "kurir", "sopir angkutan", "transportasi")
 NON_TRANSPORT_KEYWORDS = ("pedagang", "petani", "nelayan", "umkm", "usaha kecil", "usaha mandiri")

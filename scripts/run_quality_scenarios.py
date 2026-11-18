@@ -38,7 +38,7 @@ SCENARIOS = [
 ]
 
 def run_scenario(id, title, history, questions, mock_today=None):
-    from chatbot import ask_stream, load_retriever, load_llm
+    from sapa.chatbot import ask_stream, load_retriever, load_llm
     ret = load_retriever()
     llm = load_llm()
     h = list(history)

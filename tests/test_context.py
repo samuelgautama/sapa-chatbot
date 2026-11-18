@@ -2,9 +2,9 @@
 
 from decimal import Decimal
 
-from calculator import detect_calculation_request, extract_programs
-from conversation_context import build_conversation_context
-from retrieval_utils import needs_history_for_retrieval, build_retrieval_query
+from sapa.calculator import detect_calculation_request, extract_programs
+from sapa.conversation_context import build_conversation_context
+from sapa.retrieval_utils import needs_history_for_retrieval, build_retrieval_query
 
 
 def test_follow_up_three_programs_uses_previous_income():

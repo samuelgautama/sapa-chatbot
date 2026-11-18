@@ -1,6 +1,6 @@
 """Regression tests untuk temuan audit #10-#15 dan #20 (intent, sanitasi output, retrieval query, error LLM)."""
 
-from retrieval_utils import (
+from sapa.retrieval_utils import (
     build_retrieval_query, lexical_overlap_score, needs_history_for_retrieval,
     normalize_tokens, rerank_scored_documents,
 )

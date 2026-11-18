@@ -2,12 +2,12 @@
 """Ukur distribusi skor L2 FAISS untuk in-domain vs off-domain."""
 
 import json
-from chatbot import load_retriever
+from sapa.chatbot import load_retriever
 
 def main():
     ret = load_retriever()
     vs = ret.vectorstore
-    cases = json.load(open('evaluation_dataset.json', 'r', encoding='utf-8'))
+    cases = json.load(open('evaluation/evaluation_dataset.json', 'r', encoding='utf-8'))
     
     in_d = []
     off_d = []

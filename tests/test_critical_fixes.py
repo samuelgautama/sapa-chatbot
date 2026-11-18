@@ -9,13 +9,13 @@ import sys
 import types
 from decimal import Decimal
 
-from calculator import detect_calculation_request, extract_base_income, extract_programs
-from conversation_context import build_conversation_context
+from sapa.calculator import detect_calculation_request, extract_base_income, extract_programs
+from sapa.conversation_context import build_conversation_context
 
 
 def _import_chatbot():
     try:
-        import chatbot
+        from sapa import chatbot
         return chatbot
     except ImportError:
         class _Msg:
@@ -37,7 +37,7 @@ def _import_chatbot():
             module = types.ModuleType(name)
             module.__dict__.update(attrs)
             sys.modules[name] = module
-        import chatbot
+        from sapa import chatbot
         return chatbot
 
 

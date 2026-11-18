@@ -6,12 +6,12 @@ import tempfile
 import types
 from datetime import date
 
-import promo_config
-from calculator import PROMO_PERIODS as CALC_PERIODS, promo_status
+import sapa.promo_config as promo_config
+from sapa.calculator import PROMO_PERIODS as CALC_PERIODS, promo_status
 from test_critical_fixes import chatbot
 from test_retrieval_gate import Doc
 
-DATA_DIR = pathlib.Path(__file__).with_name("data")
+DATA_DIR = pathlib.Path(__file__).resolve().parents[1] / "data"
 
 
 def states(on):

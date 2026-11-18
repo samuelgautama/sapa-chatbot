@@ -3,7 +3,7 @@
 import json
 import pathlib
 
-from privacy_guard import privacy_warning, sanitize_user_input
+from sapa.privacy_guard import privacy_warning, sanitize_user_input
 
 NIK = "3271234567890123"
 
@@ -77,7 +77,7 @@ def test_warning_text():
 
 
 def test_eval_dataset_privacy_cases_still_pass():
-    path = pathlib.Path(__file__).with_name("evaluation_dataset.json")
+    path = pathlib.Path(__file__).resolve().parents[1] / "evaluation" / "evaluation_dataset.json"
     cases = [c for c in json.loads(path.read_text(encoding="utf-8")) if c["category"] == "privacy"]
     assert cases
     for case in cases:
