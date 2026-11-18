@@ -1271,6 +1271,14 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
         ans = SMALL_TALK_RESPONSES[small_talk]
         return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
 
+    # L-4: Deteksi nominal ambigu SEBELUM slot disimpan
+    # "1 juta 500" bisa berarti Rp1.500.000 atau Rp1.000.500, harus klarifikasi dulu
+    ambiguous_clarification = detect_ambiguous_nominal(question)
+    if ambiguous_clarification:
+        if pii_warning:
+            ambiguous_clarification = pii_warning + ambiguous_clarification
+        return _AskPlan(sources=[], static_answer=ambiguous_clarification)
+
     # Slot-filling: cek apakah ada slot baru tanpa kata tanya
     conversation_context = build_conversation_context(question, history)
     
