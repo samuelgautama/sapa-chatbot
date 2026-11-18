@@ -36,7 +36,7 @@ from sapa.calculator import calculate_bpu_contribution, extract_base_income, ext
 from sapa.privacy_guard import sanitize_user_input
 from sapa.chatbot import MIN_RELEVANCE_SCORE
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = ROOT / "evaluation_dataset.json"
 RESULTS_PATH = ROOT / "evaluation_results.json"
 
