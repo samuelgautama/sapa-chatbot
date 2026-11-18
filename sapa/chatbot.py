@@ -1309,10 +1309,13 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     ])
     
     # Ganti pengecekan is_question berbasis substring dengan regex batas kata atau tanda tanya
-    is_question = bool(re.search(r'\b(apa|apakah|berapa|bagaimana|gimana|kapan|siapa|kenapa|mengapa)\b', question.lower()) or '?' in question)
+    # Pesan dengan kata tanya atau kata topik harus lanjut ke jalur RAG/LLM, bukan slot-filling
+    question_words = r'\b(apa|apakah|berapa|bagaimana|gimana|kapan|siapa|kenapa|mengapa|cara|syarat|klaim|dokumen|manfaat)\b'
+    is_question = bool(re.search(question_words, question.lower()) or '?' in question)
 
-    # Jika ada slot baru DAN bukan kalimat tanya
-    if new_slot_count > 0 and not is_question:
+    # Jika ada slot baru DAN bukan kalimat tanya DAN pesan pendek (maksimal 6 kata)
+    word_count = len(question.split())
+    if new_slot_count > 0 and not is_question and word_count <= 6:
         # Cek apakah ini sapaan + sektor ("Halo, saya ojek online")
         has_greeting = any(g in question.lower() for g in ("halo", "hai", "selamat", "pagi", "siang", "sore", "malam"))
         
