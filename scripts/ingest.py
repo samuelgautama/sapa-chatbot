@@ -199,7 +199,7 @@ def main():
     build_vector_store(chunks)                    # langkah 3: ubah chunk jadi embedding & simpan sebagai vector store
 
     # Langkah 4: record metadata dokumen untuk deteksi index stale
-    from check_index_fresh import record_index_metadata
+    from scripts.check_index_fresh import record_index_metadata
     record_index_metadata()
     print("[INFO] Index metadata berhasil dicatat untuk monitoring freshness")
 

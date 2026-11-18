@@ -1,38 +1,68 @@
 {
-  "recorded_at": "2026-11-06T05:16:10.241576+00:00",
+  "recorded_at": "2026-11-18T09:21:46.379765+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
-      "mtime": 1790518716.4588275,
+      "mtime": 1794905093.3133292,
       "size": 8231,
       "hash": "36f79186b28d54a65a58043a14cabd03ebae4f52c9e6ee81cb4860b041058ed1"
     },
     "08_faq_lapangan_bpu.txt": {
-      "mtime": 1790521083.3848567,
+      "mtime": 1794905093.3289201,
       "size": 10379,
       "hash": "b8a7fae98ef4380f74ddfbd0aee09a25b46edb4e1086c4595b8b88364e88b291"
     },
     "09_objection_handling_bpu.txt": {
-      "mtime": 1790521087.9936762,
+      "mtime": 1794905093.3527193,
       "size": 8696,
       "hash": "8e5a2b55ca426fe442cc5e4826f99ecc37e9061c0f72d255d3f35ee08d5ffd50"
     },
+    "10_penerima_upah_pu.txt": {
+      "mtime": 1794905093.367074,
+      "size": 10954,
+      "hash": "4c0a1581e156b1a6f974f3dac61647e3afed21a142586669bcb71699ff5b9873"
+    },
+    "11_jkp_jaminan_kehilangan_pekerjaan.txt": {
+      "mtime": 1794905093.382208,
+      "size": 7647,
+      "hash": "c224d59f522c87a86e3c245554799a10dda8361c103fd636005dffc7026f233d"
+    },
+    "12_klaim_jht_panduan.txt": {
+      "mtime": 1794905093.3859565,
+      "size": 6143,
+      "hash": "639b84f96ade1d023c540ecda4ae81b440d04cbc21d75d01f69323abd7357d65"
+    },
+    "13_aplikasi_jmo.txt": {
+      "mtime": 1794905093.4112215,
+      "size": 4548,
+      "hash": "66544690b968578de02148672cd3c5d80f5ae2e26e05dc6cab433acf18c364bb"
+    },
+    "14_mlt_perumahan_pekerja.txt": {
+      "mtime": 1794905093.4231236,
+      "size": 5446,
+      "hash": "4ecdfe44645f2bfc30612eca367cee342558f453430b9ccf245dac9d6179a874"
+    },
+    "15_jasa_konstruksi_jakon.txt": {
+      "mtime": 1794905093.4372056,
+      "size": 3656,
+      "hash": "59217cb0a88825bf41c63cb131ddca7ce8792665f7664fbdfaf86c92beb5a39c"
+    },
     "info_bpu.txt": {
-      "mtime": 1790244586.3455667,
+      "mtime": 1794905093.4490452,
       "size": 10304,
       "hash": "f1c462b9f0dfb05f731e16445b215eab1e0a06ec7de853ea6151b112ac0c196c"
     },
     "info_magang.txt": {
-      "mtime": 1793942011.9190507,
+      "mtime": 1794905093.4650152,
       "size": 5418,
       "hash": "e14a72ff5099f5a1a58ab0671438540e72fb357509000111476f2bac36da12ab"
     },
     "info_umum_bpjs_tk.txt": {
-      "mtime": 1790244588.7477152,
-      "size": 7790,
-      "hash": "11b6e882b7169f70022957e8929233f02b4cc176e966981f5eee8b818bd802ad"
+      "mtime": 1794905093.479295,
+      "size": 8393,
+      "hash": "5f206628db6c05eedf53ee5b334f7344565fc9d76d582010ee6b51930dd9734a"
     },
     "proses_pendaftaran_bpu.txt": {
-      "mtime": 1790558916.4846497,
+      "mtime": 1794905093.491383,
       "size": 1002,
       "hash": "1ea1d15725fd85430c9defe9e1368e06d8a08fa5a92cb45cfb9f9c19ea2f2e73"
     }
