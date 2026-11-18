@@ -11,7 +11,7 @@ from calculator import PROMO_PERIODS as CALC_PERIODS, promo_status
 from test_critical_fixes import chatbot
 from test_retrieval_gate import Doc
 
-DATA_DIR = pathlib.Path(__file__).with_name("data")
+DATA_DIR = pathlib.Path(__file__).resolve().parents[1] / "data"
 
 
 def states(on):
