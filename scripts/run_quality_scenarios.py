@@ -43,9 +43,12 @@ def run_scenario(id, title, history, questions, mock_today=None):
     llm = load_llm()
     h = list(history)
     results = []
+    if mock_today:
+        print(f"[{id}] Skenario Promo Basi - Tanggal Sistem Dipatch: {mock_today}")
     for q in questions:
         if mock_today:
-            with patch("promo_config.today_jakarta", return_value=mock_today):
+            with patch("sapa.chatbot.today_jakarta", return_value=mock_today), \
+                 patch("sapa.calculator.today_jakarta", return_value=mock_today):
                 ans = "".join(ask_stream(q, ret, llm, history=h))
         else:
             ans = "".join(ask_stream(q, ret, llm, history=h))
