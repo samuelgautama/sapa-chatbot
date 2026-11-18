@@ -6,7 +6,7 @@ import tempfile
 import types
 from datetime import date
 
-import promo_config
+import sapa.promo_config as promo_config
 from calculator import PROMO_PERIODS as CALC_PERIODS, promo_status
 from test_critical_fixes import chatbot
 from test_retrieval_gate import Doc

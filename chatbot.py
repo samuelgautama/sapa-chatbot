@@ -55,7 +55,7 @@ from calculator import (
     promo_status,
     MIN_INCOME,
 )
-from promo_config import maintenance_warnings, promo_timeline, today_jakarta
+from sapa.promo_config import maintenance_warnings, promo_timeline, today_jakarta
 # SystemMessage -> untuk mengirim "aturan main" / persona tetap ke LLM (system prompt)
 # HumanMessage  -> untuk mengirim isi pesan dari user (konteks + pertanyaan) secara terpisah
 # Memisahkan keduanya adalah cara yang lebih benar dibanding menggabung semuanya
