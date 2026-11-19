@@ -128,6 +128,42 @@ def _extract_sections(document):
     return sections
 
 
+def _is_chunk_useful(content: str) -> bool:
+    """Filter chunk yang hanya berisi judul/metadata tanpa substansi.
+    
+    Parameter:
+        content: Isi chunk termasuk prefix "Bagian: ..."
+    
+    Return:
+        True jika chunk memiliki substansi (panjang konten >=25 karakter setelah
+        menghapus baris 'Bagian:' dan baris yang hanya berisi heading/judul).
+    """
+    lines = content.split('\n')
+    relevant_lines = []
+    
+    for line in lines:
+        line_stripped = line.strip()
+        # Lewati baris:
+        # 1. Baris "Bagian: ..." (prefix yang ditambahkan oleh split_documents)
+        # 2. Baris kosong
+        # 3. Baris yang hanya berisi heading/judul (diawali #, ##, ###, atau hanya judul tanpa konten)
+        if line_stripped.startswith('Bagian:'):
+            continue
+        if not line_stripped:
+            continue
+        if line_stripped.startswith('#') or line_stripped.startswith('##') or line_stripped.startswith('###'):
+            # Jika ini heading, hanya skip jika heading itu satu-satunya konten di chunk
+            continue
+        
+        relevant_lines.append(line_stripped)
+    
+    # Gabungkan kembali konten yang relevan
+    relevant_content = ' '.join(relevant_lines)
+    
+    # Konten harus minimal 25 karakter
+    return len(relevant_content) >= 25
+
+
 def split_documents(documents):
     """Memecah dokumen menjadi chunk sambil membawa metadata sumber dan section."""
     splitter = RecursiveCharacterTextSplitter(
@@ -137,6 +173,8 @@ def split_documents(documents):
     )
 
     chunks = []
+    skipped_chunks = []
+    
     for document in documents:
         source_path = document.metadata.get("source", "unknown")
         source_name = _friendly_source_name(source_path)
@@ -159,13 +197,24 @@ def split_documents(documents):
 
                 # Ulangi judul section pada setiap chunk. Ini membantu embedding mengenali
                 # konteks topik walaupun chunk bukan potongan pertama dari section tersebut.
-                chunk.page_content = (
-                    f"Bagian: {section_title}\n\n"
-                    f"{chunk.page_content.strip()}"
-                )
+                full_content = f"Bagian: {section_title}\n\n{chunk.page_content.strip()}"
+                
+                # Filter chunk yang hanya berisi judul
+                if not _is_chunk_useful(full_content):
+                    chunk_info = f"{source_name} - {section_title[:50]}"
+                    skipped_chunks.append(chunk_info)
+                    continue
+                
+                chunk.page_content = full_content
                 chunks.append(chunk)
 
     print(f"[INFO] Dokumen berhasil dipecah menjadi {len(chunks)} chunk dengan metadata sumber/section")
+    if skipped_chunks:
+        print(f"[INFO] Melewati {len(skipped_chunks)} chunk yang hanya berisi judul:")
+        for i, chunk_info in enumerate(skipped_chunks[:10], 1):  # Tampilkan maksimal 10
+            print(f"  {i}. {chunk_info}")
+        if len(skipped_chunks) > 10:
+            print(f"  ... dan {len(skipped_chunks) - 10} chunk lainnya")
     return chunks
 
 
