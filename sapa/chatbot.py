@@ -588,7 +588,7 @@ def load_retriever():
     
     # Cek fresh index dengan warning log (bukan exception)
     try:
-        from check_index_fresh import check_index_fresh
+        from scripts.check_index_fresh import check_index_fresh
         check_index_fresh(warn_only=True)
     except Exception as exc:
         # Jika check_index_fresh gagal, log warning tapi lanjutkan
