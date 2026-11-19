@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-18T09:21:46.379765+00:00",
+  "recorded_at": "2026-11-19T08:19:13.006990+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
       "mtime": 1794905093.3133292,
@@ -27,9 +27,9 @@
       "hash": "c224d59f522c87a86e3c245554799a10dda8361c103fd636005dffc7026f233d"
     },
     "12_klaim_jht_panduan.txt": {
-      "mtime": 1794905093.3859565,
-      "size": 6143,
-      "hash": "639b84f96ade1d023c540ecda4ae81b440d04cbc21d75d01f69323abd7357d65"
+      "mtime": 1795076094.217712,
+      "size": 6172,
+      "hash": "de797eb782b732be77ec172c581bb0e2e656a8f3b4a33865b54bac812cab39cd"
     },
     "13_aplikasi_jmo.txt": {
       "mtime": 1794905093.4112215,
@@ -62,9 +62,9 @@
       "hash": "5f206628db6c05eedf53ee5b334f7344565fc9d76d582010ee6b51930dd9734a"
     },
     "proses_pendaftaran_bpu.txt": {
-      "mtime": 1794905093.491383,
-      "size": 1002,
-      "hash": "1ea1d15725fd85430c9defe9e1368e06d8a08fa5a92cb45cfb9f9c19ea2f2e73"
+      "mtime": 1795076066.0824761,
+      "size": 659,
+      "hash": "14f61b433ea725b3c8aaa936da2e7c09b5979fab967d790903ae8505f8966e9d"
     }
   }
 }

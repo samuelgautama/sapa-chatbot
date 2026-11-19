@@ -37,7 +37,7 @@ Kartu Peserta, KTP atau identitas sah lainnya, NPWP (bila saldo lebih dari Rp50.
 ## Catatan Pengunggahan Berkas
 Bila Kartu Peserta atau Surat Keterangan Berhenti Bekerja/Habis Kontrak lebih dari satu lembar, gabungkan menjadi 1 file PDF sebelum diunggah. Isi data pengajuan sesuai data sebenarnya.
 
-## Mengenal Lapak Asik
+## Apa itu Lapak Asik? (Layanan Tanpa Kontak Fisik)
 Lapak Asik (Layanan Tanpa Kontak Fisik) adalah portal resmi BPJS Ketenagakerjaan untuk klaim JHT di https://lapakasik.bpjsketenagakerjaan.go.id. Pilihan layanan: Lapak Asik Online (verifikasi lewat video call dengan petugas, tanpa datang ke kantor cabang) dan Lapak Asik Onsite (verifikasi tatap muka di kantor cabang sesuai jadwal janji temu).
 
 ## Langkah Klaim JHT lewat Lapak Asik
