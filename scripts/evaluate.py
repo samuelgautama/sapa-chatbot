@@ -308,7 +308,7 @@ def main() -> int:
 
     if retrieval_cases or fallback_cases or args.with_llm:
         try:
-            from check_index_fresh import check_index_fresh
+            from scripts.check_index_fresh import check_index_fresh
             from sapa.chatbot import load_retriever, load_llm
             
             # Check index freshness sebelum evaluasi
