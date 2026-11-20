@@ -14,6 +14,7 @@ Tujuannya mempertahankan derajat kehidupan yang layak saat pekerja kehilangan pe
 - Diberikan setiap bulan paling lama 6 bulan sejak PHK dan syarat penerima manfaat terpenuhi.
 - Besarnya 60% dari upah per bulan, paling lama 6 bulan.
 - Upah yang dipakai adalah upah terakhir yang dilaporkan kepada BPJS Ketenagakerjaan, dengan batas atas upah Rp5.000.000. Contoh: upah terakhir Rp5.000.000 atau lebih memberi manfaat 60% x Rp5.000.000 = Rp3.000.000 per bulan selama 6 bulan.
+- Catatan: JKP hanya untuk pekerja Penerima Upah (PU). Peserta BPU tidak mengikuti JKP.
 
 ## Manfaat Akses Informasi Pasar Kerja dan Pelatihan Kerja
 - Akses informasi pasar kerja: layanan informasi pasar kerja dan/atau bimbingan jabatan.
@@ -25,6 +26,7 @@ Tujuannya mempertahankan derajat kehidupan yang layak saat pekerja kehilangan pe
 3. Memiliki hubungan kerja dengan pengusaha, baik PKWTT (pegawai tetap) maupun PKWT (pegawai kontrak).
 4. Bekerja pada pemberi kerja/badan usaha skala menengah dan besar yang mengikuti 4 program (JKK, JKM, JHT, dan JP), atau skala kecil dan mikro yang mengikuti minimal 3 program (JKK, JKM, dan JHT).
 5. Terdaftar sebagai peserta JKN BPJS Kesehatan.
+- Catatan: JKP hanya untuk pekerja Penerima Upah (PU). Peserta BPU tidak mengikuti JKP.
 
 ## Iuran JKP
 Tidak ada penambahan iuran untuk pemberi kerja/badan usaha maupun pekerja dalam program JKP.

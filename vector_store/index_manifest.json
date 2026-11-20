@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-19T08:19:13.006990+00:00",
+  "recorded_at": "2026-11-20T09:40:24.123960+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
       "mtime": 1794905093.3133292,
@@ -22,19 +22,19 @@
       "hash": "4c0a1581e156b1a6f974f3dac61647e3afed21a142586669bcb71699ff5b9873"
     },
     "11_jkp_jaminan_kehilangan_pekerjaan.txt": {
-      "mtime": 1794905093.382208,
-      "size": 7647,
-      "hash": "c224d59f522c87a86e3c245554799a10dda8361c103fd636005dffc7026f233d"
+      "mtime": 1795164858.6772785,
+      "size": 7823,
+      "hash": "9c002f34e529f00399ac4e26f9268ec1df733b3e1fdada7696c7ba4fd0b7c91d"
     },
     "12_klaim_jht_panduan.txt": {
-      "mtime": 1795076094.217712,
-      "size": 6172,
-      "hash": "de797eb782b732be77ec172c581bb0e2e656a8f3b4a33865b54bac812cab39cd"
+      "mtime": 1795081587.1554494,
+      "size": 6244,
+      "hash": "af553e2558d6fd4a1890ee8c54ca31f965f28c626710cf7a45fbaee87931dc1b"
     },
     "13_aplikasi_jmo.txt": {
-      "mtime": 1794905093.4112215,
-      "size": 4548,
-      "hash": "66544690b968578de02148672cd3c5d80f5ae2e26e05dc6cab433acf18c364bb"
+      "mtime": 1795164860.9424198,
+      "size": 4496,
+      "hash": "cf1b4e88c5e592887462fe0ad9d6f3ca1e774ddfd5dd3d4aa14e7492a49867aa"
     },
     "14_mlt_perumahan_pekerja.txt": {
       "mtime": 1794905093.4231236,
@@ -62,9 +62,9 @@
       "hash": "5f206628db6c05eedf53ee5b334f7344565fc9d76d582010ee6b51930dd9734a"
     },
     "proses_pendaftaran_bpu.txt": {
-      "mtime": 1795076066.0824761,
-      "size": 659,
-      "hash": "14f61b433ea725b3c8aaa936da2e7c09b5979fab967d790903ae8505f8966e9d"
+      "mtime": 1795167498.5371902,
+      "size": 1217,
+      "hash": "60c4008c8986f0085e0ff4f723bbd45687db39dde2b08d421dbbe69b9cea2811"
     }
   }
 }

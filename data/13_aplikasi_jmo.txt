@@ -2,19 +2,19 @@
 
 > Catatan: JMO adalah aplikasi resmi BPJS Ketenagakerjaan ("Lebih Cepat, Lebih Mudah, Lebih Lengkap"). Dapat diunduh di Google Play Store (Android) dan Apple App Store (iOS). Untuk langkah klaim JHT lengkap lihat panduan klaim JHT.
 
-## Cara Mendaftar Akun JMO (12 Langkah)
+## Cara Daftar Akun JMO (12 Langkah)
 Untuk peserta yang sudah terdaftar di BPJS Ketenagakerjaan:
-1. Buka aplikasi JMO, klik Buat Akun Baru di halaman Login.
-2. Pilih Ya, Saya Sudah Daftar (tersedia juga opsi Belum Daftar Sebagai Peserta).
+1. Buka JMO, klik Buat Akun Baru di halaman Login.
+2. Pilih Ya, Saya Sudah Daftar (ada juga opsi Belum Daftar Sebagai Peserta).
 3. Pilih Jenis Kepesertaan: Penerima Upah (PU), Bukan Penerima Upah (BPU), atau Pekerja Migran Indonesia (PMI).
 4. Pilih Kewarganegaraan, klik Selanjutnya.
 5. Isi data diri: NIK, nomor peserta (KPJ), nama lengkap, tanggal lahir.
 6. Masukkan email aktif untuk login.
-7. Masukkan kode verifikasi (OTP) yang dikirim ke email.
+7. Masukkan kode OTP yang dikirim ke email.
 8. Masukkan nomor handphone aktif.
-9. Masukkan kode verifikasi (OTP) yang dikirim lewat SMS.
+9. Masukkan kode OTP yang dikirim lewat SMS.
 10. Buat dan konfirmasi kata sandi.
-11. Baca dan setujui Syarat dan Ketentuan.
+11. Setujui Syarat dan Ketentuan.
 12. Notifikasi pendaftaran berhasil; lanjut ke Pengkinian Data.
 
 ## Pengkinian Data Peserta di JMO (9 Langkah)
