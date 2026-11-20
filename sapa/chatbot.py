@@ -291,6 +291,50 @@ SMALL_TALK_RESPONSES = {
     ),
 }
 
+# L-13: Jawaban tetap untuk pertanyaan presis "cara daftar BPU"
+CARA_DAFTAR_BPU_ANSWER = """### Cara Daftar BPU (Bukan Penerima Upah)
+
+**Lewat mahasiswa magang:**
+1. **Formulir** — Calon peserta mengisi Form Pendaftaran yang dibawakan mahasiswa magang.
+2. **Proses petugas** — Petugas BPJS Ketenagakerjaan memproses dalam 1×24 jam setelah form diisi.
+3. **Bayar iuran** — Setelah 1×24 jam, bayar iuran memakai NIK lewat kanal pembayaran resmi (perbankan, dompet digital/QRIS, atau ritel mitra).
+4. **Konfirmasi** — Mahasiswa magang menghubungi peserta untuk memastikan iuran sudah dibayar.
+5. **Bukti kepesertaan** — Pastikan kartu kepesertaan (fisik atau digital) diterima peserta: diantar mahasiswa, atau didampingi mengambilnya ke kantor BPJS Ketenagakerjaan.
+
+**Kanal pendaftaran lain:** website resmi BPJS Ketenagakerjaan, aplikasi JMO (Jamsostek Mobile), kantor BPJS Ketenagakerjaan, Agen Perisai, wadah, atau payment point. Langkah rinci mengikuti petunjuk di masing-masing kanal.
+
+*Catatan:* kanal pendaftaran berbeda dengan kanal pembayaran. Peserta BPU dapat memilih 2 program (JKK + JKM) atau 3 program (JKK + JKM + JHT). Sebutkan dasar penghasilan per bulan bila ingin disimulasikan iurannya."""
+
+
+def _is_cara_daftar_bpu_exact(question: str) -> bool:
+    """Deteksi apakah pertanyaan PERSIS salah satu variasi 'cara daftar BPU'.
+    
+    Harus setelah: huruf kecil, hapus tanda baca, hapus spasi ganda.
+    TIDAK boleh menangkap kalimat yang memuat topik lain.
+    """
+    import re
+    
+    # Normalisasi: huruf kecil, hapus tanda baca, hapus spasi ganda
+    text = question.lower().strip()
+    # Hapus semua tanda baca
+    text = re.sub(r'[^\w\s]', '', text)
+    # Hapus spasi ganda
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    # Daftar pertanyaan presis yang memicu jawaban tetap
+    exact_triggers = {
+        "cara daftar bpu",
+        "cara mendaftar bpu",
+        "bagaimana cara daftar bpu",
+        "bagaimana cara mendaftar bpu",
+        "cara daftar peserta bpu",
+        "gimana cara daftar bpu",
+        "daftar bpu gimana",
+        "daftar bpu bagaimana",
+    }
+    
+    return text in exact_triggers
+
 
 def detect_small_talk(question):
     """Mendeteksi percakapan ringan yang tidak memerlukan RAG."""
@@ -1280,6 +1324,13 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     if small_talk is not None:
         ans = SMALL_TALK_RESPONSES[small_talk]
         return _AskPlan(sources=[], static_answer=ans, pii_warning=pii_warning)
+
+    # L-13: Jawaban tetap untuk pertanyaan presis "cara daftar BPU"
+    if _is_cara_daftar_bpu_exact(question):
+        ans = CARA_DAFTAR_BPU_ANSWER
+        if pii_warning:
+            ans = pii_warning + ans
+        return _AskPlan(sources=[], static_answer=ans)
 
     # L-4: Deteksi nominal ambigu SEBELUM slot disimpan
     # "1 juta 500" bisa berarti Rp1.500.000 atau Rp1.000.500, harus klarifikasi dulu
