@@ -54,7 +54,7 @@ Saat ini pengajuan lewat JMO hanya berlaku untuk Bank BTN.
 - Bank Pembangunan Daerah (Asbanda): Bank Sumsel Babel, Bank Nagari, Bank bjb, Bank Aceh, Bank Jateng, Bank Bengkulu, Bank Sumut, Bank Lampung, Bank Sulselbar, Bank SulutGo (BSG), BRK Syariah, Bank Kalbar, Bank Maluku Malut.
 - Asosiasi dan pengembang: Perumnas, REI, APERSI, HIMPERRA, ASPRUMNAS.
 
-## Simulasi Cicilan MLT (Referensi)
+## Cicilan KPR, PRP, dan PUMP per Bulan (Simulasi Cicilan MLT)
 Estimasi angsuran per bulan (hanya referensi; hitungan pasti lewat Bank Kerja Sama):
 - KPR Rp500.000.000: 10 tahun Rp6.279.800; 15 tahun Rp4.942.500; 20 tahun Rp4.323.100; 25 tahun Rp3.987.000; 30 tahun Rp3.788.800.
 - PRP Rp200.000.000: 10 tahun Rp2.455.900; 15 tahun Rp1.917.600; 20 tahun Rp1.666.100; 25 tahun Rp1.528.200; 30 tahun Rp1.445.700 (tenor PRP maksimal mengikuti ketentuan, hingga 15 tahun).
