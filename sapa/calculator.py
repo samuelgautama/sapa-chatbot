@@ -341,7 +341,8 @@ _QUESTION_CALC_WORDS = (
     "berapa iuran", "berapa bayar", "bayar per bulan", "biaya per bulan", "iuran per bulan",
 )
 _NON_BPU_CONTEXT = re.compile(
-    r"\b(?:penerima\s+upah|pemberi\s+kerja|perusahaan|pekerja\s+formal|klaim|santunan)\b"
+    r"\b(?:penerima\s+upah|pemberi\s+kerja|perusahaan|pekerja\s+formal|klaim|santunan|"
+    r"kpr|mlt|cicil|cicilan|angsur|angsuran|tenor|plafon|pinjaman|kredit|pump|prp|fppp|rumah|perumahan)\b"
 )
 _BPU_MENTION = re.compile(r"\bbpu\b|bukan\s+penerima\s+upah")
 _PROGRAM_COUNT = re.compile(r"\b(?:2|3|dua|tiga)\s*(?:program|jaminan)\b")
@@ -358,9 +359,19 @@ def detect_calculation_request(question: str, *, has_income_context: bool = Fals
     """
     text = question.lower()
 
-    # Pertanyaan tentang Penerima Upah / klaim / perusahaan bukan simulasi iuran BPU.
+    # Pertanyaan tentang Penerima Upah / klaim / perusahaan / KPR / MLT bukan simulasi iuran BPU.
+    # Kecuali jika jelas menyebut "iuran" atau "simulasi" (mis. "simulasi iuran untuk KPR")
     if _NON_BPU_CONTEXT.search(text) and not _BPU_MENTION.search(text):
-        return False
+        # Jika memuat kata KPR/MLT/cicilan/dll dan tidak ada kata "iuran" atau "simulasi", skip
+        has_kpr_mlt = bool(re.search(
+            r"\b(?:kpr|mlt|cicil|cicilan|angsur|angsuran|tenor|plafon|pinjaman|kredit|pump|prp|fppp|rumah|perumahan)\b",
+            text
+        ))
+        if has_kpr_mlt and not any(w in text for w in ["iuran", "simulasi"]):
+            return False
+        # Untuk non-BPU context lainnya (PU, perusahaan, klaim), tetap return False
+        if not has_kpr_mlt:
+            return False
 
     explicit = any(word in text for word in _EXPLICIT_CALC_WORDS)
     question_form = any(word in text for word in _QUESTION_CALC_WORDS)
