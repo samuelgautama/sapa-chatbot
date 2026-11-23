@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-20T09:40:24.123960+00:00",
+  "recorded_at": "2026-11-23T20:29:19.280585+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
       "mtime": 1794905093.3133292,
@@ -27,9 +27,9 @@
       "hash": "9c002f34e529f00399ac4e26f9268ec1df733b3e1fdada7696c7ba4fd0b7c91d"
     },
     "12_klaim_jht_panduan.txt": {
-      "mtime": 1795081587.1554494,
-      "size": 6244,
-      "hash": "af553e2558d6fd4a1890ee8c54ca31f965f28c626710cf7a45fbaee87931dc1b"
+      "mtime": 1795465501.5942426,
+      "size": 6115,
+      "hash": "93804949f78aa2813e91cc2e6dc1e3416d0c07a2fce4049a5d0a0ca20b0074ae"
     },
     "13_aplikasi_jmo.txt": {
       "mtime": 1795164860.9424198,

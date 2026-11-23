@@ -53,16 +53,16 @@ Lapak Asik (Layanan Tanpa Kontak Fisik) adalah portal resmi BPJS Ketenagakerjaan
 ## Syarat Klaim JHT lewat Aplikasi JMO
 Pengajuan di JMO dapat dilakukan bila: akumulasi saldo JHT hingga Rp15.000.000; sebab klaim mengundurkan diri atau PHK; sudah melakukan pengkinian data; dan status kepesertaan sudah non-aktif. Bila syarat terpenuhi, muncul 3 centang hijau pada layar persyaratan. Bila tidak memenuhi syarat, gunakan Lapak Asik atau kantor cabang.
 
-## Langkah Klaim JHT lewat Aplikasi JMO
-1. Buka aplikasi JMO, pilih menu Jaminan Hari Tua, lalu Klaim JHT.
-2. Pastikan 3 syarat otomatis bertanda centang hijau, klik Selanjutnya.
-3. Pilih Sebab Klaim (Mengundurkan diri atau Pemutusan hubungan kerja).
-4. Periksa Data Kepesertaan (NIK, nomor kartu peserta, nama lengkap, tanggal lahir sesuai KTP, jenis kelamin), pilih Sudah.
-5. Verifikasi biometrik dengan swafoto: wajah terlihat jelas dan menghadap kamera, mata terbuka, latar polos, tanpa filter, tidak di tempat gelap, tanpa kacamata, masker, atau topi.
-6. Isi NPWP (bila ada) dan rekening bank aktif (nama bank, nomor rekening, nama pemilik rekening).
-7. Periksa Rincian Saldo JHT (saldo tahun berjalan, pengembangan, akumulasi saldo, PPh Pasal 21, pembulatan, jumlah JHT dibayar).
-8. Centang pernyataan persetujuan dan klik Konfirmasi.
-9. Muncul layar Berhasil; pantau lewat menu Tracking Klaim.
+## Cara Klaim JHT lewat JMO (9 Langkah)
+1. Buka JMO, pilih menu Jaminan Hari Tua, lalu Klaim JHT.
+2. Pastikan 3 syarat bertanda centang hijau, klik Selanjutnya.
+3. Pilih Sebab Klaim (Mengundurkan diri atau PHK).
+4. Periksa Data Kepesertaan (NIK, nomor kartu peserta, nama, tanggal lahir, jenis kelamin), pilih Sudah.
+5. Verifikasi biometrik dengan swafoto: wajah jelas menghadap kamera, mata terbuka, latar polos, tanpa filter, tidak gelap, tanpa kacamata, masker, atau topi.
+6. Isi NPWP (bila ada) dan rekening bank aktif (nama bank, nomor, nama pemilik).
+7. Periksa Rincian Saldo JHT (saldo berjalan, pengembangan, akumulasi, PPh 21, pembulatan, jumlah dibayar).
+8. Centang pernyataan persetujuan, klik Konfirmasi.
+9. Muncul layar Berhasil; pantau lewat Tracking Klaim.
 
 ## Cara Melacak Status Klaim JHT (Tracking Klaim)
 Lewat website resmi: buka https://www.bpjsketenagakerjaan.go.id (menu Cek Status Klaim atau halaman https://www.bpjsketenagakerjaan.go.id/tracking), masukkan Nomor Kartu Peserta (KPJ) atau NIK, lalu klik Lacak Klaim Saya.
