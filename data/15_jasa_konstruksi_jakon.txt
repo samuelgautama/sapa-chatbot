@@ -2,7 +2,7 @@
 
 > Catatan: Jasa Konstruksi (Jakon) hanya mengikuti dua program, yaitu JKK dan JKM, dengan iuran dihitung dari nilai proyek. Ini berbeda dari BPU (iuran dari dasar penghasilan) dan PU (iuran dari upah).
 
-## Pengertian dan Kepesertaan Jasa Konstruksi
+## Apa itu Jakon? Pengertian dan Kepesertaan Jasa Konstruksi (Jakon)
 Jasa Konstruksi adalah layanan jasa konsultasi perencanaan pekerjaan konstruksi, jasa pelaksanaan pekerjaan konstruksi, dan jasa konsultasi pengawasan pekerjaan konstruksi.
 Peserta Jakon adalah pemberi kerja selain penyelenggara negara pada skala usaha besar, menengah, kecil, dan mikro di bidang jasa konstruksi yang mempekerjakan pekerja harian lepas, pekerja borongan, dan pekerja dengan PKWT. Pemberi kerja wajib mendaftarkan pekerjanya pada program JKK dan JKM untuk proyek APBN, APBD, dana internasional, swasta, dan perseorangan.
 
@@ -13,7 +13,7 @@ Peserta Jakon adalah pemberi kerja selain penyelenggara negara pada skala usaha 
 ## Layanan e-Jakon
 e-Jakon (https://ejakon.bpjsketenagakerjaan.go.id) adalah aplikasi web bagi pemberi kerja/badan usaha jasa konstruksi atau pelaksana proyek untuk mengelola administrasi kepesertaan. Fitur: simulasi iuran berdasarkan nilai proyek, registrasi proyek baru, pencetakan dokumen kepesertaan (penetapan proyek, sertifikat kepesertaan, dll.), dan monitoring kepesertaan serta pembayaran iuran.
 
-## Tarif Iuran Jakon Berdasarkan Nilai Proyek
+## Berapa Iuran Jakon? Tarif Iuran Jakon Berdasarkan Nilai Proyek
 Iuran Jakon (JKK dan JKM) ditentukan dari nilai kontrak/proyek. Tarif per tingkat nilai kontrak:
 - Sampai Rp100 juta: JKK 0,21%; JKM 0,03%.
 - Rp100 juta sampai Rp500 juta: JKK 0,17%; JKM 0,02%.

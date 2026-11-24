@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-23T23:22:43.266436+00:00",
+  "recorded_at": "2026-11-24T03:48:28.755010+00:00",
   "docs": {
     "00_glosarium_faq_bpu.txt": {
       "mtime": 1794905093.3133292,
@@ -42,9 +42,9 @@
       "hash": "12d9826dd5d30fd1444ca04eac8e15cf6c4ad02ae11609cd461bff3f5a591812"
     },
     "15_jasa_konstruksi_jakon.txt": {
-      "mtime": 1795474297.161172,
-      "size": 3504,
-      "hash": "b83d3f94aa53aa9d7979654146c89a366491b2daaaac0d0164f854d032640b55"
+      "mtime": 1795491992.461396,
+      "size": 3547,
+      "hash": "3d219c7341c2fc5b366bc8ffac8d4f60f82f43af335696f370a71aa57d6d1a2d"
     },
     "info_bpu.txt": {
       "mtime": 1794905093.4490452,
