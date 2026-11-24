@@ -305,6 +305,24 @@ CARA_DAFTAR_BPU_ANSWER = """### Cara Daftar BPU (Bukan Penerima Upah)
 
 *Catatan:* kanal pendaftaran berbeda dengan kanal pembayaran. Peserta BPU dapat memilih 2 program (JKK + JKM) atau 3 program (JKK + JKM + JHT). Sebutkan dasar penghasilan per bulan bila ingin disimulasikan iurannya."""
 
+# L-16: Jawaban tetap untuk pertanyaan presis "cara klaim JHT lewat JMO"
+CARA_KLAIM_JHT_JMO_ANSWER = """### Cara Klaim JHT lewat JMO
+
+**Syarat klaim lewat JMO:** saldo JHT hingga Rp15.000.000; sebab klaim mengundurkan diri atau PHK; sudah melakukan pengkinian data; dan status kepesertaan sudah non-aktif. Bila syarat terpenuhi, muncul 3 centang hijau pada layar persyaratan.
+
+**Langkah:**
+1. Buka JMO, pilih menu Jaminan Hari Tua, lalu Klaim JHT.
+2. Pastikan 3 syarat bertanda centang hijau, klik Selanjutnya.
+3. Pilih Sebab Klaim (Mengundurkan diri atau PHK).
+4. Periksa Data Kepesertaan (NIK, nomor kartu, nama, tanggal lahir, jenis kelamin), pilih Sudah.
+5. Verifikasi biometrik dengan swafoto: wajah jelas menghadap kamera, mata terbuka, latar polos, tanpa filter, tidak gelap, tanpa kacamata, masker, atau topi.
+6. Isi NPWP (bila ada) dan rekening bank aktif (nama bank, nomor, nama pemilik).
+7. Periksa Rincian Saldo JHT (saldo berjalan, pengembangan, akumulasi, PPh 21, pembulatan, jumlah dibayar).
+8. Centang pernyataan persetujuan, klik Konfirmasi.
+9. Muncul layar Berhasil; pantau lewat Tracking Klaim.
+
+*Catatan:* bila syarat tidak terpenuhi, gunakan Lapak Asik atau kantor cabang."""
+
 
 def _is_cara_daftar_bpu_exact(question: str) -> bool:
     """Deteksi apakah pertanyaan PERSIS salah satu variasi 'cara daftar BPU'.
@@ -331,6 +349,37 @@ def _is_cara_daftar_bpu_exact(question: str) -> bool:
         "gimana cara daftar bpu",
         "daftar bpu gimana",
         "daftar bpu bagaimana",
+    }
+    
+    return text in exact_triggers
+
+
+def _is_cara_klaim_jht_jmo_exact(question: str) -> bool:
+    """Deteksi apakah pertanyaan PERSIS salah satu variasi 'cara klaim JHT lewat JMO'.
+    
+    Harus setelah: huruf kecil, hapus tanda baca, hapus spasi ganda.
+    TIDAK boleh menangkap kalimat yang memuat topik lain atau detail tambahan.
+    """
+    import re
+    
+    # Normalisasi: huruf kecil, hapus tanda baca, hapus spasi ganda
+    text = question.lower().strip()
+    # Hapus semua tanda baca
+    text = re.sub(r'[^\w\s]', '', text)
+    # Hapus spasi ganda
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    # Daftar pertanyaan presis yang memicu jawaban tetap
+    exact_triggers = {
+        "cara klaim jht lewat jmo",
+        "cara klaim jht di jmo",
+        "cara klaim jht via jmo",
+        "cara klaim jht lewat aplikasi jmo",
+        "bagaimana cara klaim jht lewat jmo",
+        "gimana cara klaim jht lewat jmo",
+        "langkah klaim jht lewat jmo",
+        "klaim jht lewat jmo",
+        "klaim jht di jmo",
     }
     
     return text in exact_triggers
@@ -1329,6 +1378,13 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     # L-13: Jawaban tetap untuk pertanyaan presis "cara daftar BPU"
     if _is_cara_daftar_bpu_exact(question):
         ans = CARA_DAFTAR_BPU_ANSWER
+        if pii_warning:
+            ans = pii_warning + ans
+        return _AskPlan(sources=[], static_answer=ans)
+
+    # L-16: Jawaban tetap untuk pertanyaan presis "cara klaim JHT lewat JMO"
+    if _is_cara_klaim_jht_jmo_exact(question):
+        ans = CARA_KLAIM_JHT_JMO_ANSWER
         if pii_warning:
             ans = pii_warning + ans
         return _AskPlan(sources=[], static_answer=ans)
