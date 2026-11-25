@@ -323,6 +323,20 @@ CARA_KLAIM_JHT_JMO_ANSWER = """### Cara Klaim JHT lewat JMO
 
 *Catatan:* bila syarat tidak terpenuhi, gunakan Lapak Asik atau kantor cabang."""
 
+# L-18: Jawaban tetap untuk pertanyaan presis "cara klaim JHT" umum
+CARA_KLAIM_JHT_UMUM_ANSWER = """### Cara Klaim JHT
+
+Berlaku sama untuk peserta JHT, baik Penerima Upah (PU) maupun BPU. Ada tiga cara mengajukan klaim:
+1. **Aplikasi JMO** — tanpa ke kantor, dengan syarat: saldo JHT hingga Rp15.000.000; sebab klaim mengundurkan diri atau PHK; sudah pengkinian data; status kepesertaan non-aktif.
+2. **Lapak Asik** (https://lapakasik.bpjsketenagakerjaan.go.id) — layanan tanpa kontak fisik, tersedia online (video call) dan onsite (tatap muka di kantor cabang).
+3. **Kantor Cabang BPJS Ketenagakerjaan terdekat** — bawa dokumen asli dan fotokopi.
+
+Dokumen yang dibutuhkan bergantung pada sebab klaim (resign, PHK, usia 56 tahun, dan lainnya). Untuk rincian, tanyakan misalnya "Cara klaim JHT lewat JMO" atau "Dokumen klaim JHT kalau resign".
+
+Status klaim yang sudah diajukan dapat dipantau lewat menu Tracking Klaim di JMO atau halaman Cek Status Klaim di website BPJS Ketenagakerjaan.
+
+*Catatan:* untuk BPU, berhenti bekerja/usaha memiliki masa tunggu 1 bulan."""
+
 
 def _is_cara_daftar_bpu_exact(question: str) -> bool:
     """Deteksi apakah pertanyaan PERSIS salah satu variasi 'cara daftar BPU'.
@@ -380,6 +394,52 @@ def _is_cara_klaim_jht_jmo_exact(question: str) -> bool:
         "langkah klaim jht lewat jmo",
         "klaim jht lewat jmo",
         "klaim jht di jmo",
+    }
+    
+    return text in exact_triggers
+
+
+def _is_cara_klaim_jht_umum_exact(question: str) -> bool:
+    """Deteksi apakah pertanyaan PERSIS salah satu variasi 'cara klaim JHT' umum.
+    
+    Harus setelah: huruf kecil, hapus tanda baca, hapus spasi ganda.
+    TIDAK boleh menangkap kalimat yang memuat topik lain atau detail tambahan
+    seperti "lewat jmo", "lapak asik", "dokumen", "resign", "phk", saldo, dll.
+    """
+    import re
+    
+    # Normalisasi: huruf kecil, hapus tanda baca, hapus spasi ganda
+    text = question.lower().strip()
+    # Hapus semua tanda baca
+    text = re.sub(r'[^\w\s]', '', text)
+    # Hapus spasi ganda
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    # Daftar pertanyaan presis yang memicu jawaban tetap L-18
+    exact_triggers = {
+        "cara klaim jht",
+        "klaim jht",
+        "bagaimana cara klaim jht",
+        "gimana cara klaim jht",
+        "cara mengajukan klaim jht",
+        "prosedur klaim jht",
+        "cara klaim jht untuk pu",
+        "cara klaim jht untuk bpu",
+        "cara klaim jht untuk penerima upah",
+        "cara klaim jht untuk bukan penerima upah",
+        "cara klaim jht pu",
+        "cara klaim jht bpu",
+        "cara klaim jht peserta pu",
+        "cara klaim jht peserta bpu",
+        # Variasi dengan "gimana" dan "bagaimana"
+        "gimana cara klaim jht untuk pu",
+        "gimana cara klaim jht untuk bpu",
+        "gimana cara klaim jht untuk penerima upah",
+        "gimana cara klaim jht untuk bukan penerima upah",
+        "bagaimana cara klaim jht untuk pu",
+        "bagaimana cara klaim jht untuk bpu",
+        "bagaimana cara klaim jht untuk penerima upah",
+        "bagaimana cara klaim jht untuk bukan penerima upah",
     }
     
     return text in exact_triggers
@@ -1385,6 +1445,13 @@ def _prepare_ask(question, retriever, history=None) -> _AskPlan:
     # L-16: Jawaban tetap untuk pertanyaan presis "cara klaim JHT lewat JMO"
     if _is_cara_klaim_jht_jmo_exact(question):
         ans = CARA_KLAIM_JHT_JMO_ANSWER
+        if pii_warning:
+            ans = pii_warning + ans
+        return _AskPlan(sources=[], static_answer=ans)
+
+    # L-18: Jawaban tetap untuk pertanyaan presis "cara klaim JHT" umum
+    if _is_cara_klaim_jht_umum_exact(question):
+        ans = CARA_KLAIM_JHT_UMUM_ANSWER
         if pii_warning:
             ans = pii_warning + ans
         return _AskPlan(sources=[], static_answer=ans)
